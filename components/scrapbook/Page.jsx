@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import ComponentSelector from './ComponentSelector';
 import ImageElement from './ImageElement';
 import TextElement from './TextElement';
+import CoverElement from './CoverElement';
 
 export default function Page({ data, onUpdate, side, isCover, readOnly, bgPattern, bgColor, onOpenDrawer }) {
   // data: { id, type, content }
@@ -35,7 +36,6 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
       }
   };
 
-
   return (
     <div 
         className={`w-full h-full relative overflow-hidden group ${isCover ? 'bg-gray-100' : ''}`}
@@ -57,7 +57,7 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
                         <Plus className={`${isCover ? 'w-12 h-12' : 'w-8 h-8'}`} />
                     </button>
                 )}
-                {isCover && !showSelector && !readOnly && (
+                {isCover && !readOnly && (
                     <div className="absolute bottom-10 text-gray-400 font-bold uppercase tracking-widest text-sm pointer-events-none">
                         {side === 'left' ? 'Front Cover' : 'Back Cover'}
                     </div>
@@ -67,12 +67,19 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
 
         {/* FILLED STATE */}
         <div className="relative z-10 w-full h-full">
+            {/* Image type */}
             {data.type === 'image' && (
                 <ImageElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
             )}
 
+            {/* Text type (with background color for covers) */}
             {data.type === 'text' && (
-                <TextElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} />
+                <TextElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
+            )}
+
+            {/* Cover type (image + text overlay) - new option */}
+            {data.type === 'cover' && (
+                <CoverElement content={data.content} onUpdate={handleContentUpdate} side={side} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
             )}
         </div>
 
@@ -94,3 +101,4 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
     </div>
   );
 }
+

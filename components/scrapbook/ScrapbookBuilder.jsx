@@ -6,6 +6,8 @@ import BookPreview from './BookPreview';
 import Link from 'next/link';
 import ComponentSelector from './ComponentSelector';
 import StyleEditorDrawer from './StyleEditorDrawer';
+import TextStyleEditorDrawer from './TextStyleEditorDrawer';
+import CoverStyleEditorDrawer from './CoverStyleEditorDrawer';
 import BackgroundEditorDrawer from './BackgroundEditorDrawer';
 import { Palette } from 'lucide-react';
 
@@ -263,6 +265,30 @@ export default function ScrapbookBuilder() {
                    soundOptions={SOUND_OPTIONS}
                    animOptions={ANIM_OPTIONS}
                    onClose={closeDrawer}
+              />
+          )}
+
+          {activeDrawer.type === 'TEXT_STYLE' && (
+              <TextStyleEditorDrawer
+                  currentFontStyle={activeDrawer.data.currentFontStyle}
+                  currentBgColor={activeDrawer.data.currentBgColor}
+                  isCover={activeDrawer.data.isCover}
+                  onFontChange={(fontStyleId) => activeDrawer.onAction.onFontChange(fontStyleId)}
+                  onColorChange={(color) => activeDrawer.onAction.onColorChange(color)}
+                  onClose={closeDrawer}
+              />
+          )}
+
+          {activeDrawer.type === 'COVER_STYLE' && (
+              <CoverStyleEditorDrawer
+                  currentFontStyle={activeDrawer.data.currentFontStyle}
+                  currentOverlayColor={activeDrawer.data.currentOverlayColor}
+                  currentOverlayOpacity={activeDrawer.data.currentOverlayOpacity}
+                  currentTextColor={activeDrawer.data.currentTextColor}
+                  onFontChange={(fontStyleId) => activeDrawer.onAction.onFontChange(fontStyleId)}
+                  onOverlayChange={(color, opacity) => activeDrawer.onAction.onOverlayChange(color, opacity)}
+                  onTextColorChange={(color) => activeDrawer.onAction.onTextColorChange?.(color)}
+                  onClose={closeDrawer}
               />
           )}
 
