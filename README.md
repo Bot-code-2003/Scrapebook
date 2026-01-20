@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DigiGift - Digital Gifting Platform
 
-## Getting Started
+A modern digital gifting platform built with Next.js, MongoDB, and Tailwind CSS featuring a premium neo-brutalist design.
 
-First, run the development server:
+## 🎁 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Digital Gift Categories**: Courses, Subscriptions, Games, Gift Cards, Money & more
+- **User Authentication**: Secure login/signup with JWT tokens
+- **Neo-Brutalist Design**: Premium, bold, and memorable UI
+- **Fully Responsive**: Works beautifully on all devices
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- MongoDB (local or Atlas)
+
+### Setup
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Configure environment variables**:
+   Create a `.env.local` file in the root directory:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/digigift
+   JWT_SECRET=your-super-secret-jwt-key-here
+   NODE_ENV=development
+   ```
+
+3. **Start MongoDB** (if using local):
+   ```bash
+   mongod
+   ```
+
+4. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 16, React 19, Tailwind CSS 4
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JWT with HTTP-only cookies
+- **Icons**: Lucide React
+
+## 📁 Project Structure
+
+```
+digigift/
+├── app/
+│   ├── api/auth/      # Authentication API routes
+│   ├── globals.css    # Global styles
+│   ├── layout.js      # Root layout with providers
+│   └── page.js        # Homepage
+├── components/
+│   ├── AuthModal.js   # Login/Signup modal
+│   └── Header.js      # Navigation header
+├── context/
+│   └── AuthContext.js # Authentication context
+├── lib/
+│   ├── auth.js        # JWT utilities
+│   ├── mongodb.js     # Database connection
+│   └── models/
+│       └── User.js    # User model
+└── public/            # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Design System
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+The app uses a **Neo-Brutalist** design language:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Colors**: 
+  - Primary: `#FF6B6B` (Coral Red)
+  - Secondary: `#4ECDC4` (Teal)
+  - Accent: `#FFE66D` (Yellow)
+  - Background: `#FFFEF0` (Cream)
+  
+- **Typography**: Space Grotesk font family
+- **Borders**: Bold 3-4px black borders
+- **Shadows**: Offset box shadows for depth
+- **Animations**: Subtle hover transitions
 
-## Learn More
+## 📝 License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License - feel free to use for personal and commercial projects.
