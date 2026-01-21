@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import Page from './Page';
 import { Trash2 } from 'lucide-react';
 
-export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly, bgPattern, bgColor, onOpenDrawer }) {
+export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   
   // ============================================
   // EDIT MODE: Display pages as vertical pairs (spreads)
@@ -59,6 +59,7 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                         readOnly={false}
                         bgPattern={bgPattern}
                         bgColor={bgColor}
+                        pageBorder={pageBorder}
                         onOpenDrawer={onOpenDrawer}
                     />
                     <div className="absolute bottom-2 left-4 font-mono text-xs text-gray-400 font-bold">
@@ -81,6 +82,7 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                             readOnly={false}
                             bgPattern={bgPattern}
                             bgColor={bgColor}
+                            pageBorder={pageBorder}
                             onOpenDrawer={onOpenDrawer}
                         />
                         <div className="absolute bottom-2 right-4 font-mono text-xs text-gray-400 font-bold">

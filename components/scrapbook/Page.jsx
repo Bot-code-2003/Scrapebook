@@ -6,7 +6,7 @@ import ImageElement from './ImageElement';
 import TextElement from './TextElement';
 import CoverElement from './CoverElement';
 
-export default function Page({ data, onUpdate, side, isCover, readOnly, bgPattern, bgColor, onOpenDrawer }) {
+export default function Page({ data, onUpdate, side, isCover, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   // data: { id, type, content }
   const [showSelector, setShowSelector] = useState(false);
 
@@ -36,6 +36,29 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
       }
   };
 
+  const getBorderClass = (border) => {
+      switch(border) {
+          case 'solid': return 'border-2 border-black';
+          case 'double': return 'border-4 border-double border-black';
+          case 'dashed': return 'border-2 border-dashed border-black';
+          case 'dotted': return 'border-2 border-dotted border-black';
+          case 'doodle': return 'border-2 border-black rounded-[255px_15px_225px_15px/15px_225px_15px_255px]';
+          case 'cute-flower': return 'border-[8px] border-pink-300 border-dashed';
+          case 'cute-rainbow': return 'border-[6px] border-transparent';
+          default: return '';
+      }
+  };
+
+  const getBorderStyle = (border) => {
+      if (border === 'cute-rainbow') {
+          return {
+              borderImageSource: 'linear-gradient(to right, #ff9999, #ffff99, #99ff99, #99ffff, #9999ff, #ff99ff)',
+              borderImageSlice: 1
+          };
+      }
+      return {};
+  };
+
   return (
     <div 
         className={`w-full h-full relative overflow-hidden group ${isCover ? 'bg-gray-100' : ''}`}
@@ -44,6 +67,14 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
         {/* Background Texture */}
         {!isCover && bgPattern !== 'plain' && (
             <div className="absolute inset-0 opacity-40 pointer-events-none" style={getBgStyle()}></div>
+        )}
+
+        {/* Page Border Overlay */}
+        {!isCover && pageBorder && pageBorder !== 'none' && (
+             <div 
+                className={`absolute inset-3 md:inset-4 pointer-events-none z-20 ${getBorderClass(pageBorder)}`} 
+                style={getBorderStyle(pageBorder)}
+             ></div>
         )}
 
         {/* EMPTY STATE */}

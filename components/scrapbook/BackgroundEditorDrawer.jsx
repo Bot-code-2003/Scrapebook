@@ -39,7 +39,7 @@ function AccordionSection({ title, icon, isOpen, onToggle, selectedLabel, childr
   );
 }
 
-export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColor, setBgColor, soundId, setSoundId, animId, setAnimId, bookStyle, setBookStyle, bgOptions, colorOptions, soundOptions, animOptions, bookStyleOptions, onClose }) {
+export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColor, setBgColor, pageBorder, setPageBorder, soundId, setSoundId, animId, setAnimId, bookStyle, setBookStyle, bgOptions, colorOptions, borderOptions, soundOptions, animOptions, bookStyleOptions, onClose }) {
   // Track which section is open (only one at a time)
   const [openSection, setOpenSection] = useState(null);
 
@@ -50,6 +50,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
   // Get current selection labels
   const getSelectedTextureLabel = () => bgOptions?.find(opt => opt.id === bgPattern)?.label || 'Grid';
   const getSelectedColorLabel = () => colorOptions?.find(opt => opt.value === bgColor)?.label || 'Cream';
+  const getSelectedBorderLabel = () => borderOptions?.find(opt => opt.id === pageBorder)?.label || 'None';
   const getSelectedAnimLabel = () => animOptions?.find(opt => opt.id === animId)?.label || 'Classic Flip';
   const getSelectedSoundLabel = () => soundOptions?.find(opt => opt.id === soundId)?.label || 'Silent';
 
@@ -127,6 +128,36 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         >
                           {opt.id === 'dots' && <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>}
                           {opt.id === 'lines' && <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px)', backgroundSize: '100% 10px' }}></div>}
+                        </div>
+                        <span className="font-bold uppercase text-xs">{opt.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </AccordionSection>
+
+                {/* BORDERS SECTION */}
+                <AccordionSection
+                  title="Page Border"
+                  icon="🖼️"
+                  isOpen={openSection === 'border'}
+                  onToggle={() => toggleSection('border')}
+                  selectedLabel={getSelectedBorderLabel()}
+                >
+                  <div className="grid grid-cols-2 gap-3">
+                    {borderOptions?.map(opt => (
+                      <button
+                        key={opt.id}
+                        onClick={() => setPageBorder(opt.id)}
+                        className={`p-3 border-2 flex flex-col items-center justify-center gap-2 aspect-square transition-all ${
+                          pageBorder === opt.id 
+                            ? 'border-black bg-white shadow-[4px_4px_0px_0px_black] -translate-y-1' 
+                            : 'border-gray-200 hover:border-black hover:bg-gray-50'
+                        }`}
+                      >
+                        <div 
+                          className={`w-full flex-1 mb-1 bg-[#FAFAFA] ${opt.preview}`}
+                          style={opt.id === 'cute-rainbow' ? { backgroundImage: 'linear-gradient(to right, #ff9999, #ffff99, #99ff99, #99ffff, #9999ff, #ff99ff)' } : {}}
+                        >
                         </div>
                         <span className="font-bold uppercase text-xs">{opt.label}</span>
                       </button>

@@ -48,17 +48,24 @@ const COLOR_PRESETS = [
 export default function TextStyleEditorDrawer({ 
   currentFontStyle, 
   currentBgColor, 
+  currentTextColor,
   onFontChange, 
   onColorChange, 
+  onTextColorChange,
   onClose,
   isCover = false
 }) {
   const [activeTab, setActiveTab] = useState('font');
-  const [localColor, setLocalColor] = useState(currentBgColor || '#000000');
+  const [colorMode, setColorMode] = useState(isCover ? 'background' : 'text'); // text or background
+  const [localColor, setLocalColor] = useState(isCover ? currentBgColor : (currentTextColor || '#000000'));
 
   const handleColorChange = (color) => {
     setLocalColor(color);
-    onColorChange(color);
+    if (colorMode === 'background') {
+        onColorChange && onColorChange(color);
+    } else {
+        onTextColorChange && onTextColorChange(color);
+    }
   };
 
   return (
@@ -89,19 +96,17 @@ export default function TextStyleEditorDrawer({
           <Type className="w-4 h-4" />
           Fonts
         </button>
-        {isCover && (
-          <button
-            onClick={() => setActiveTab('color')}
-            className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm transition-all ${
-              activeTab === 'color' 
-                ? 'bg-black text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Palette className="w-4 h-4" />
-            Color
-          </button>
-        )}
+        <button
+          onClick={() => setActiveTab('color')}
+          className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm transition-all ${
+            activeTab === 'color' 
+              ? 'bg-black text-white' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          <Palette className="w-4 h-4" />
+          Color
+        </button>
       </div>
 
       {/* Font Styles Tab */}
@@ -147,9 +152,33 @@ export default function TextStyleEditorDrawer({
         </div>
       )}
 
-      {/* Color Tab (only for covers) */}
-      {activeTab === 'color' && isCover && (
+      {/* Color Tab */}
+      {activeTab === 'color' && (
         <div className="flex flex-col gap-4 overflow-y-auto flex-1 pb-4">
+          
+          {/* If Cover, show toggle for Text vs Background */}
+          {isCover && (
+              <div className="flex bg-gray-100 p-1 rounded-lg mb-2">
+                  <button 
+                    onClick={() => {
+                        setColorMode('text');
+                        setLocalColor(currentTextColor || '#000000');
+                    }}
+                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all ${colorMode === 'text' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:bg-gray-200'}`}
+                  >
+                    Text Color
+                  </button>
+                  <button 
+                    onClick={() => {
+                        setColorMode('background');
+                        setLocalColor(currentBgColor || '#000000');
+                    }}
+                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all ${colorMode === 'background' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:bg-gray-200'}`}
+                  >
+                    Background
+                  </button>
+              </div>
+          )}
           {/* Color Wheel / Native Picker */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
             <input

@@ -9,7 +9,7 @@ export async function POST(request) {
     await connectDB();
     
     const body = await request.json();
-    const { pages, bgPattern, bgColor, animId, bookStyle, title } = body;
+    const { pages, bgPattern, bgColor, pageBorder, animId, soundId, bookStyle, title } = body;
 
     // Check if user is authenticated (optional)
     const cookieStore = await cookies();
@@ -31,7 +31,9 @@ export async function POST(request) {
       pages,
       bgPattern,
       bgColor,
+      pageBorder,
       animId: animId || 'default',
+      soundId: soundId || 'page-flip',
       bookStyle: bookStyle || 'classic',
       title: title || 'Untitled Scrapbook',
       createdBy: userId,

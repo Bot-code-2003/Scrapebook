@@ -74,6 +74,8 @@ export default function ScrapbookViewer({ scrapbook }) {
         pages={scrapbook.pages} 
         bgPattern={scrapbook.bgPattern} 
         bgColor={scrapbook.bgColor}
+        pageBorder={scrapbook.pageBorder}
+        soundId={scrapbook.soundId}
         animId={scrapbook.animId}
         bookStyle={scrapbook.bookStyle}
       />

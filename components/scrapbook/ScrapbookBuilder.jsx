@@ -24,7 +24,9 @@ export default function ScrapbookBuilder() {
   const [isPreview, setIsPreview] = useState(false);
   const [bgPattern, setBgPattern] = useState('graphy'); // options: graphy, dots, lines, plain
   const [bgColor, setBgColor] = useState('#FFFDF5');
+  const [pageBorder, setPageBorder] = useState('none'); // options: none, solid, dashed, dotted, doodle, cute-heart, cute-star
   const [soundId, setSoundId] = useState('page-flip'); // options: none, page-flip
+  const [title, setTitle] = useState('My Scrapbook');
 
   const [animId, setAnimId] = useState('default'); // options: default, slide
 
@@ -64,6 +66,17 @@ export default function ScrapbookBuilder() {
       { id: 'peach', value: '#FFEDD5', label: 'Peach' },
       { id: 'green', value: '#F0FDF4', label: 'Green' },
       { id: 'mint', value: '#D1FAE5', label: 'Mint' },
+  ];
+
+  const BORDER_OPTIONS = [
+      { id: 'none', label: 'None', preview: 'border-0' },
+      { id: 'solid', label: 'Single', preview: 'border-2 border-black' },
+      { id: 'double', label: 'Double', preview: 'border-4 border-double border-black' },
+      { id: 'dashed', label: 'Dashed', preview: 'border-2 border-dashed border-black' },
+      { id: 'dotted', label: 'Dotted', preview: 'border-2 border-dotted border-black' },
+      { id: 'doodle', label: 'Doodle', preview: 'border-2 border-black rounded-[255px_15px_225px_15px/15px_225px_15px_255px]' },
+      { id: 'cute-flower', label: 'Flowers', preview: 'border-[6px] border-pink-300 border-dashed' },
+      { id: 'cute-rainbow', label: 'Rainbow', preview: 'border-[4px] border-transparent bg-clip-border' },
   ];
 
   const SOUND_OPTIONS = [
@@ -106,7 +119,7 @@ export default function ScrapbookBuilder() {
       const res = await fetch('/api/scrapbook/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pages, bgPattern, bgColor }),
+        body: JSON.stringify({ pages, bgPattern, bgColor, pageBorder, title, soundId }),
       });
       const data = await res.json();
       if (data.success) {
@@ -213,9 +226,23 @@ export default function ScrapbookBuilder() {
       {/* Main Workspace */}
       <main className={`flex-1 overflow-auto relative flex flex-col items-center py-10 transition-colors duration-500 ${isPreview ? 'bg-[#222]' : 'bg-[#f0f0f0]'}`}>
           
+          
+          {/* Title Input */}
+          {!isPreview && (
+            <div className="mb-6 w-full max-w-sm flex flex-col items-center z-10 relative">
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="text-center text-xl md:text-2xl font-black uppercase tracking-tight bg-transparent border-b-2 border-transparent hover:border-black/20 focus:border-black focus:outline-none placeholder-gray-400 w-full pb-1"
+                    placeholder="UNTITLED SCRAPBOOK"
+                />
+            </div>
+          )}
+
           <div className={`${isPreview ? 'scale-90' : ''} transition-transform duration-500`}>
               {isPreview ? (
-                <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} soundId={soundId} animId={animId} />
+                <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} pageBorder={pageBorder} soundId={soundId} animId={animId} />
               ) : (
                 <BookLayout 
                     pages={pages} 
@@ -224,6 +251,7 @@ export default function ScrapbookBuilder() {
                     readOnly={false} 
                     bgPattern={bgPattern} 
                     bgColor={bgColor}
+                    pageBorder={pageBorder}
                     onOpenDrawer={openDrawer}
                 />
               )}
@@ -256,12 +284,15 @@ export default function ScrapbookBuilder() {
                    setBgPattern={setBgPattern}
                    bgColor={bgColor}
                    setBgColor={setBgColor}
+                   pageBorder={pageBorder}
+                   setPageBorder={setPageBorder}
                    soundId={soundId}
                    setSoundId={setSoundId}
                    animId={animId}
                    setAnimId={setAnimId}
                    bgOptions={BG_OPTIONS}
                    colorOptions={COLOR_OPTIONS}
+                   borderOptions={BORDER_OPTIONS}
                    soundOptions={SOUND_OPTIONS}
                    animOptions={ANIM_OPTIONS}
                    onClose={closeDrawer}
@@ -272,9 +303,11 @@ export default function ScrapbookBuilder() {
               <TextStyleEditorDrawer
                   currentFontStyle={activeDrawer.data.currentFontStyle}
                   currentBgColor={activeDrawer.data.currentBgColor}
+                  currentTextColor={activeDrawer.data.currentTextColor}
                   isCover={activeDrawer.data.isCover}
                   onFontChange={(fontStyleId) => activeDrawer.onAction.onFontChange(fontStyleId)}
                   onColorChange={(color) => activeDrawer.onAction.onColorChange(color)}
+                  onTextColorChange={(color) => activeDrawer.onAction.onTextColorChange?.(color)}
                   onClose={closeDrawer}
               />
           )}

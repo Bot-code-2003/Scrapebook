@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Page from './Page';
 import DefaultFlip from './animations/DefaultFlip';
 import SlideFlip from './animations/SlideFlip';
@@ -8,33 +9,34 @@ import BinderFlip from './animations/BinderFlip';
 // Book style configurations
 const BOOK_STYLES = {
   classic: {
-    border: 'border-4 border-black',
-    shadow: 'shadow-[8px_8px_0px_0px_black]',
-    rounded: '',
+    border: 'border border-gray-800',
+    shadow: 'shadow-2xl shadow-black/50',
+    rounded: 'rounded-sm',
   },
   leather: {
-    border: 'border-4 border-amber-900',
-    shadow: 'shadow-lg',
+    border: 'border-2 border-amber-900',
+    shadow: 'shadow-2xl shadow-amber-900/40',
     rounded: 'rounded-sm',
   },
   modern: {
-    border: 'border-2 border-gray-300',
-    shadow: 'shadow-xl',
-    rounded: 'rounded-lg',
+    border: 'border border-gray-200',
+    shadow: 'shadow-2xl shadow-gray-200/50',
+    rounded: 'rounded-xl',
   },
   vintage: {
-    border: 'border-4 border-amber-700',
-    shadow: 'shadow-md',
-    rounded: '',
+    border: 'border-2 border-amber-800/80',
+    shadow: 'shadow-xl shadow-amber-900/20',
+    rounded: 'rounded-r-md',
   },
   minimal: {
-    border: 'border border-gray-200',
-    shadow: 'shadow-sm',
-    rounded: 'rounded-xl',
+    border: 'border border-gray-100',
+    shadow: 'shadow-lg shadow-gray-200/50',
+    rounded: 'rounded-2xl',
   },
 };
 
-export default function BookPreview({ pages, bgPattern, bgColor, soundId, animId, bookStyle = 'classic' }) {
+export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, soundId, animId, bookStyle = 'classic', defaultPage = 0 }) {
+
   
   const styleConfig = BOOK_STYLES[bookStyle] || BOOK_STYLES.classic;
   
@@ -96,7 +98,7 @@ export default function BookPreview({ pages, bgPattern, bgColor, soundId, animId
   }, [pages]);
 
   // Current Sheet Index (0 = Cover is visible)
-  const [currentSheetIndex, setCurrentSheetIndex] = useState(0);
+  const [currentSheetIndex, setCurrentSheetIndex] = useState(defaultPage);
 
   // Audio Ref
   const audioRef = React.useRef(null);
@@ -145,12 +147,13 @@ export default function BookPreview({ pages, bgPattern, bgColor, soundId, animId
         readOnly={true}
         bgPattern={bgPattern}
         bgColor={bgColor}
+        pageBorder={pageBorder}
       />
     );
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full sm:min-h-[700px] relative overflow-hidden" style={{ perspective: '2000px' }}>
+    <div className="flex flex-col items-center justify-center w-full h-full max-h-[350px] sm:min-h-[700px] relative overflow-hidden" style={{ perspective: '2000px' }}>
       
       {/* Book Component */}
       {animId === 'slide' ? (
@@ -187,24 +190,20 @@ export default function BookPreview({ pages, bgPattern, bgColor, soundId, animId
 
       
       {/* Navigation Arrows */}
-      <div className="flex gap-6 -mt-36 md:mt-8 relative z-10 transition-all duration-300">
+      <div className="flex gap-4 mt-4 md:mt-8 relative z-10 transition-all duration-300">
         <button 
           onClick={flipPrev} 
           disabled={currentSheetIndex === 0}
-          className="p-3 bg-white/20 hover:bg-white/30 rounded-full shadow disabled:opacity-30 transition-all cursor-pointer"
+          className="group p-3 rounded-full bg-white/30 backdrop-blur-sm border border-white/50 shadow-lg text-gray-800 hover:bg-white/50 hover:scale-110 transition-all disabled:opacity-0 disabled:cursor-not-allowed"
         >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
         </button>
         <button 
           onClick={flipNext} 
           disabled={currentSheetIndex >= sheets.length}
-          className="p-3 bg-white/20 hover:bg-white/30 rounded-full shadow disabled:opacity-30 transition-all cursor-pointer"
+          className="group p-3 rounded-full bg-white/30 backdrop-blur-sm border border-white/50 shadow-lg text-gray-800 hover:bg-white/50 hover:scale-110 transition-all disabled:opacity-0 disabled:cursor-not-allowed"
         >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
 

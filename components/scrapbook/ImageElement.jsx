@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Image as ImageIcon, Upload, PenTool, X, Check, Play, SkipBack, SkipForward, Heart, Music, ArrowLeft, ArrowRight, Search, Sparkles, Palette } from 'lucide-react';
+import { Image as ImageIcon, Upload, PenTool, X, Check, Play, SkipBack, SkipForward, Heart, Music, ArrowLeft, ArrowRight, Search, Sparkles, Palette, Type } from 'lucide-react';
 import StyleEditorDrawer from './StyleEditorDrawer';
 
 // Redefine Styles as Categories - Super Cute Edition
@@ -189,6 +189,8 @@ const STYLE_CATEGORIES = [
     }
 ];
 
+// ... (previous imports)
+
 export default function ImageElement({ content, onUpdate, isCover, readOnly, onOpenDrawer }) {
   // Helpers to find flatten style config
   const getStyleConfig = (styleId) => {
@@ -198,12 +200,16 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
       }
       return STYLE_CATEGORIES[0].options[0]; // Default to original
   };
-  // Parse content which might be string (legacy) or object {url, style}
+  // Parse content
   const initialUrl = typeof content === 'string' ? content : content?.url;
   const initialStyleId = typeof content === 'object' ? content?.style : 'original';
+  const initialText = (typeof content === 'object' && content?.text) ? content.text : { title: '', subtitle: '' };
 
   const [preview, setPreview] = useState(initialUrl || null);
   const [currentStyle, setCurrentStyle] = useState(initialStyleId || 'original');
+  const [textData, setTextData] = useState(initialText);
+  const [isEditingText, setIsEditingText] = useState(false);
+  
   const [inputType, setInputType] = useState('file'); // 'file' or 'url'
   const [urlInput, setUrlInput] = useState('');
 
@@ -211,7 +217,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
       e.preventDefault();
       if(urlInput) {
           setPreview(urlInput);
-          updateParent(urlInput, currentStyle);
+          updateParent(urlInput, currentStyle, textData);
       }
   };
 
@@ -226,25 +232,29 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
       reader.onloadend = () => {
          const base64 = reader.result;
          setPreview(base64);
-         updateParent(base64, currentStyle);
+         updateParent(base64, currentStyle, textData);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const updateParent = (url, style) => {
-    // If it's a cover, we enforce original style effectively, or just don't use the style object if we don't want to.
-    // But keeping it consistent is fine.
-    onUpdate({ url, style });
+  const updateParent = (url, style, text) => {
+    onUpdate({ url, style, text });
   };
 
   const handleStyleSelect = (styleId) => {
       setCurrentStyle(styleId);
-      updateParent(preview, styleId);
-      // Don't close immediately so they can try others? Or close? Let's keep open.
+      updateParent(preview, styleId, textData);
+  };
+
+  const handleTextUpdate = (field, value) => {
+      const newText = { ...textData, [field]: value };
+      setTextData(newText);
+      updateParent(preview, currentStyle, newText);
   };
 
   const activeStyleConfig = getStyleConfig(currentStyle);
+  const hasText = textData.title || textData.subtitle;
 
   if (preview) {
     return (
@@ -253,8 +263,9 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
         {/* Render Image with Style Container */}
         <div 
           className={`transition-all duration-300 relative ${isCover ? 'w-full h-full' : activeStyleConfig.containerClass}`}
-
         >
+
+
 
              
 
@@ -491,6 +502,50 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                 className={`max-w-full max-h-full transition-all duration-300 relative z-10 ${isCover ? 'w-full h-full object-cover' : activeStyleConfig.class}`}
             />
 
+            {/* ----------------- COVER TEXT OVERLAY ----------------- */}
+            {isCover && (hasText || isEditingText) && (
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 text-center transition-all bg-black/30">
+                    
+                    {isEditingText ? (
+                        <div className="flex flex-col gap-4 w-full max-w-lg animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
+                             <input 
+                                type="text" 
+                                value={textData.title}
+                                onChange={(e) => handleTextUpdate('title', e.target.value)}
+                                placeholder="Add a Title"
+                                className="bg-transparent border-b-2 border-white/50 text-white text-4xl md:text-6xl font-black uppercase text-center focus:outline-none focus:border-white placeholder-white/50 drop-shadow-md"
+                                autoFocus
+                             />
+                             <textarea 
+                                value={textData.subtitle}
+                                onChange={(e) => handleTextUpdate('subtitle', e.target.value)}
+                                placeholder="Add a short description or date..."
+                                className="bg-transparent border-b-2 border-white/50 text-white text-lg md:text-xl font-bold text-center focus:outline-none focus:border-white placeholder-white/50 resize-none min-h-[4rem] drop-shadow-md font-mono"
+                             />
+                             <button 
+                                onClick={() => setIsEditingText(false)}
+                                className="bg-[#A3E635] text-black font-bold uppercase py-2 px-4 rounded-full self-center hover:scale-110 transition-transform shadow-lg border-2 border-black"
+                             >
+                                Done
+                             </button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-4 drop-shadow-lg" onClick={() => !readOnly && setIsEditingText(true)}>
+                             {textData.title && (
+                                <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight leading-tight">
+                                    {textData.title}
+                                </h2>
+                             )}
+                             {textData.subtitle && (
+                                <p className="text-lg md:text-xl font-bold text-white/90 font-mono">
+                                    {textData.subtitle}
+                                </p>
+                             )}
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* ----------------- RETRO PLAYER CONTROLS ----------------- */}
             
             {/* Blue Player Controls */}
@@ -647,23 +702,46 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
             )}
         </div>
 
-        {/* CONTROLS (Only if not cover) */}
-        {!isCover && !readOnly && (
+        {/* CONTROLS */}
+        {!readOnly && (
             <>
-                {/* Edit Style Button (Pen) */}
-                <button 
-                    onClick={() => onOpenDrawer('STYLE', { categories: STYLE_CATEGORIES, currentStyle }, handleStyleSelect, 'Image Style')}
-                    className={`absolute top-4 right-4 bg-white text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-30 transition-all`}
-                    title="Edit Style"
-                >
-                    <PenTool className="w-4 h-4" />
-                </button>
+                {/* Debug Badge (Temporary - remove if visible) */}
+                {isCover && (
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-[10px] px-2 rounded-full pointer-events-none z-50">
+                        COVER MODE
+                    </div>
+                )}
 
-                {/* Change Image Button */}
-                <label className="absolute bottom-4 right-4 bg-black text-white p-2 rounded-full cursor-pointer opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-lg border-2 border-white hover:scale-110">
-                    <Upload className="w-4 h-4" />
-                    <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                </label>
+                {/* 1. Edit Style Button (Pen) - Non-Covers Only */}
+                {!isCover && (
+                    <button 
+                        onClick={() => onOpenDrawer('STYLE', { categories: STYLE_CATEGORIES, currentStyle }, handleStyleSelect, 'Image Style')}
+                        className={`absolute top-4 right-4 bg-white text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-50 transition-all`}
+                        title="Edit Style"
+                    >
+                        <PenTool className="w-4 h-4" />
+                    </button>
+                )}
+
+                {/* 2. Add/Edit Text Button - Covers Only */}
+                {isCover && (
+                    <button 
+                        onClick={() => setIsEditingText(true)}
+                        className={`absolute top-4 right-4 bg-white text-black border-2 border-black py-2 px-3 rounded-lg hover:bg-[#A3E635] shadow-[2px_2px_0px_0px_black] z-50 transition-all flex items-center gap-2 ${isEditingText ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                        title="Add Text"
+                    >
+                        <Type className="w-4 h-4" />
+                        <span className="text-xs font-black uppercase">Add Text</span>
+                    </button>
+                )}
+
+                {/* 3. Change Image Button - All */}
+                {!isEditingText && (
+                    <label className={`absolute bottom-4 right-4 bg-black text-white p-2 rounded-full cursor-pointer transition-all z-40 shadow-lg border-2 border-white hover:scale-110 ${!isCover ? 'opacity-100 md:opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
+                        <Upload className="w-4 h-4" />
+                        <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                    </label>
+                )}
             </>
         )}
 

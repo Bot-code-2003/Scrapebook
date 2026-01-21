@@ -22,6 +22,8 @@ export default async function ViewScrapbook({ params }) {
       bgPattern: scrapbook.bgPattern,
       bgColor: scrapbook.bgColor,
       animId: scrapbook.animId || 'default',
+      soundId: scrapbook.soundId || 'page-flip',
+      pageBorder: scrapbook.pageBorder || 'none',
       bookStyle: scrapbook.bookStyle || 'classic',
       title: scrapbook.title || 'Untitled Scrapbook',
     }));

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PenTool } from 'lucide-react';
 
 // Font style presets - each uses the SAME font for heading and body (cleaner look)
@@ -37,27 +37,54 @@ const FONT_STYLES = [
 export { FONT_STYLES };
 
 export default function TextElement({ content, onUpdate, isCover, readOnly, onOpenDrawer }) {
-  const [data, setData] = useState(content || { heading: '', body: '', bgColor: '#000000', fontStyle: 'classic' });
+  const [data, setData] = useState(content || { heading: '', body: '', bgColor: '#000000', fontStyle: 'classic', textColor: null });
+
+  // Use refs to track latest data/prop to avoid stale closures in callbacks passed to Drawer
+  const dataRef = useRef(data);
+  const onUpdateRef = useRef(onUpdate);
+
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
 
   // Sync with external content changes
   useEffect(() => {
     if (content) {
-      setData({ 
+      const newData = { 
         ...content, 
         bgColor: content.bgColor || '#000000',
-        fontStyle: content.fontStyle || 'classic'
-      });
+        fontStyle: content.fontStyle || 'classic',
+        textColor: content.textColor || (isCover ? null : '#000000') // Default to black for inner pages, null for covers (auto)
+      };
+      setData(newData);
+      dataRef.current = newData;
     }
-  }, [content]);
+  }, [content, isCover]);
+
+  // Also sync ref when state changes locally
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
 
   const handleChange = (field, value) => {
-    const newData = { ...data, [field]: value };
+    // Use ref to get the absolute latest data, ignoring closure staleness
+    const currentData = dataRef.current;
+    const newData = { ...currentData, [field]: value };
+    
     setData(newData);
-    onUpdate(newData);
+    dataRef.current = newData;
+    
+    if (onUpdateRef.current) {
+        onUpdateRef.current(newData);
+    }
   };
 
   const handleColorChange = (color) => {
     handleChange('bgColor', color);
+  };
+
+  const handleTextColorChange = (color) => {
+    handleChange('textColor', color);
   };
 
   const handleFontChange = (fontStyleId) => {
@@ -80,13 +107,15 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
       onOpenDrawer('TEXT_STYLE', {
         currentFontStyle: data.fontStyle || 'classic',
         currentBgColor: data.bgColor || '#000000',
+        currentTextColor: data.textColor || (isCover ? getTextColor(data.bgColor || '#000000') : '#000000'),
         isCover: isCover
-      }, { onFontChange: handleFontChange, onColorChange: handleColorChange }, 'Text Style');
+      }, { onFontChange: handleFontChange, onColorChange: handleColorChange, onTextColorChange: handleTextColorChange }, 'Text Style');
     }
   };
 
   const coverBgColor = data.bgColor || '#000000';
-  const coverTextColor = isCover ? getTextColor(coverBgColor) : undefined;
+  // Use explicit textColor if set, otherwise calculate contrast for covers, otherwise black
+  const computedTextColor = data.textColor || (isCover ? getTextColor(coverBgColor) : '#000000');
   
   // Get current font style
   const currentFontStyle = FONT_STYLES.find(f => f.id === (data.fontStyle || 'classic')) || FONT_STYLES[0];
@@ -94,7 +123,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
   return (
     <div 
       className={`w-full h-full flex flex-col justify-center items-center text-center relative ${isCover ? 'p-12' : 'p-8'}`}
-      style={isCover ? { backgroundColor: coverBgColor, color: coverTextColor } : undefined}
+      style={isCover ? { backgroundColor: coverBgColor, color: computedTextColor } : { color: computedTextColor }}
     >
         {/* Edit Style Button - Opens Sidebar Drawer */}
         {!readOnly && (
@@ -120,7 +149,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
                 ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
             `}
             style={{ 
-              color: isCover ? 'inherit' : undefined,
+              color: computedTextColor,
               fontFamily: currentFontStyle.headingFont,
               fontWeight: currentFontStyle.headingWeight
             }}
@@ -148,7 +177,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
                     hover:border-dashed hover:border-current/20 focus:outline-none focus:border-[#A3E635]
                 `}
                 style={{ 
-                  color: isCover ? 'inherit' : undefined,
+                  color: computedTextColor,
                   fontFamily: currentFontStyle.bodyFont,
                   fontWeight: currentFontStyle.bodyWeight
                 }}
