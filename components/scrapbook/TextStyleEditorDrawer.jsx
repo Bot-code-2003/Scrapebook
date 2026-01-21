@@ -69,28 +69,28 @@ export default function TextStyleEditorDrawer({
   };
 
   return (
-    <div className="fixed left-0 top-0 bottom-0 z-[9999] flex flex-col w-80 bg-white border-r-4 border-black shadow-[10px_0px_0px_0px_rgba(0,0,0,0.1)] p-6 animate-in slide-in-from-left duration-300">
+    <div className="fixed left-0 top-0 bottom-0 z-[9999] flex flex-col w-80 bg-white border-r border-gray-100 shadow-2xl p-6 animate-in slide-in-from-left duration-300">
       <button 
         onClick={onClose} 
-        className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+        className="absolute top-4 right-4 p-2 text-gray-400 hover:bg-gray-50 hover:text-black rounded-full transition-colors"
         title="Close"
       >
-        <X className="w-6 h-6" />
+        <X className="w-5 h-5" />
       </button>
 
       <header className="mb-6 mt-2">
-        <h2 className="text-2xl font-black uppercase tracking-tighter mb-2">Text Style</h2>
-        <div className="h-1 w-12 bg-[#A3E635]"></div>
+        <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">Text Style</h2>
+        <div className="h-1 w-12 bg-lime-400 rounded-full"></div>
       </header>
 
       {/* Tab Switcher */}
-      <div className="flex gap-2 mb-6 border-b-2 border-gray-200 pb-2">
+      <div className="flex gap-2 mb-6 border-b border-gray-100 pb-1">
         <button
           onClick={() => setActiveTab('font')}
-          className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 font-medium text-sm transition-all border-b-2 ${
             activeTab === 'font' 
-              ? 'bg-black text-white' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'border-black text-black' 
+              : 'border-transparent text-gray-500 hover:text-gray-800'
           }`}
         >
           <Type className="w-4 h-4" />
@@ -98,10 +98,10 @@ export default function TextStyleEditorDrawer({
         </button>
         <button
           onClick={() => setActiveTab('color')}
-          className={`flex items-center gap-2 px-4 py-2 font-bold uppercase text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 font-medium text-sm transition-all border-b-2 ${
             activeTab === 'color' 
-              ? 'bg-black text-white' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'border-black text-black' 
+              : 'border-transparent text-gray-500 hover:text-gray-800'
           }`}
         >
           <Palette className="w-4 h-4" />
@@ -116,21 +116,21 @@ export default function TextStyleEditorDrawer({
             <button
               key={font.id}
               onClick={() => onFontChange(font.id)}
-              className={`w-full text-left p-4 rounded-lg border-3 transition-all hover:scale-[1.02] ${
+              className={`w-full text-left p-4 rounded-xl border transition-all ${
                 currentFontStyle === font.id 
-                  ? 'border-[#A3E635] bg-[#A3E635]/10 border-4' 
-                  : 'border-gray-200 hover:border-gray-400 border-2'
+                  ? 'border-lime-400 bg-lime-50/50 shadow-sm ring-1 ring-lime-400' 
+                  : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl">{font.emoji}</span>
-                <span className="font-bold text-sm text-gray-700">{font.label}</span>
+                <span className="text-xl">{font.emoji}</span>
+                <span className={`font-bold text-sm ${currentFontStyle === font.id ? 'text-lime-700' : 'text-gray-700'}`}>{font.label}</span>
                 {currentFontStyle === font.id && (
-                  <Check className="ml-auto w-5 h-5 text-[#A3E635]" />
+                  <Check className="ml-auto w-5 h-5 text-lime-600" />
                 )}
               </div>
               <div 
-                className="text-2xl truncate text-gray-800"
+                className="text-2xl truncate text-gray-900"
                 style={{ 
                   fontFamily: font.headingFont,
                   fontWeight: font.headingWeight
@@ -164,7 +164,7 @@ export default function TextStyleEditorDrawer({
                         setColorMode('text');
                         setLocalColor(currentTextColor || '#000000');
                     }}
-                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all ${colorMode === 'text' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:bg-gray-200'}`}
+                    className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${colorMode === 'text' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-gray-700'}`}
                   >
                     Text Color
                   </button>
@@ -173,23 +173,23 @@ export default function TextStyleEditorDrawer({
                         setColorMode('background');
                         setLocalColor(currentBgColor || '#000000');
                     }}
-                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all ${colorMode === 'background' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:bg-gray-200'}`}
+                    className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${colorMode === 'background' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-gray-700'}`}
                   >
                     Background
                   </button>
               </div>
           )}
           {/* Color Wheel / Native Picker */}
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
+          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
             <input
               type="color"
               value={localColor}
               onChange={(e) => handleColorChange(e.target.value)}
-              className="w-16 h-16 cursor-pointer border-4 border-black rounded-lg shadow-[3px_3px_0px_0px_black]"
+              className="w-14 h-14 cursor-pointer rounded-lg border-0 bg-transparent p-0 overflow-hidden shadow-sm"
               title="Pick a color"
             />
             <div className="flex-1">
-              <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">HEX Code</label>
+              <label className="text-xs font-bold text-gray-500 mb-1 block uppercase tracking-wide">HEX Code</label>
               <input
                 type="text"
                 value={localColor.toUpperCase()}
@@ -205,7 +205,7 @@ export default function TextStyleEditorDrawer({
                     handleColorChange('#000000');
                   }
                 }}
-                className="w-full px-3 py-2 border-2 border-black font-mono text-lg uppercase shadow-[2px_2px_0px_0px_black]"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                 placeholder="#000000"
               />
             </div>
@@ -213,16 +213,16 @@ export default function TextStyleEditorDrawer({
 
           {/* Preset Colors */}
           <div>
-            <div className="text-xs font-bold text-gray-500 mb-3 uppercase">Preset Colors</div>
+            <div className="text-xs font-bold text-gray-500 mb-3 uppercase tracking-wide">Preset Colors</div>
             <div className="grid grid-cols-6 gap-2">
               {COLOR_PRESETS.map((color) => (
                 <button
                   key={color}
                   onClick={() => handleColorChange(color)}
-                  className={`w-9 h-9 rounded-lg border-2 transition-all hover:scale-110 ${
+                  className={`w-9 h-9 rounded-full border transition-all hover:scale-110 ${
                     localColor === color 
-                      ? 'border-[#A3E635] ring-2 ring-[#A3E635] ring-offset-1' 
-                      : 'border-black hover:shadow-[2px_2px_0px_0px_black]'
+                      ? 'border-gray-300 ring-2 ring-lime-400 ring-offset-2' 
+                      : 'border-black/5 hover:border-black/20 hover:shadow-sm'
                   }`}
                   style={{ backgroundColor: color }}
                   title={color}
@@ -236,7 +236,7 @@ export default function TextStyleEditorDrawer({
       <div className="mt-auto pt-4 border-t border-gray-100">
         <button 
           onClick={onClose}
-          className="w-full py-3 bg-black text-white font-bold uppercase hover:bg-gray-800 transition-colors"
+          className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-black/5"
         >
           Done
         </button>

@@ -508,12 +508,16 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                     
                     {isEditingText ? (
                         <div className="flex flex-col gap-4 w-full max-w-lg animate-in fade-in zoom-in duration-200" onClick={(e) => e.stopPropagation()}>
-                             <input 
-                                type="text" 
+                             <textarea 
                                 value={textData.title}
                                 onChange={(e) => handleTextUpdate('title', e.target.value)}
                                 placeholder="Add a Title"
-                                className="bg-transparent border-b-2 border-white/50 text-white text-4xl md:text-6xl font-black uppercase text-center focus:outline-none focus:border-white placeholder-white/50 drop-shadow-md"
+                                className="bg-transparent border-b-2 border-white/50 text-white text-xl md:text-3xl font-black uppercase text-center focus:outline-none focus:border-white placeholder-white/50 drop-shadow-md resize-none h-auto overflow-hidden min-h-[3rem]"
+                                rows={1}
+                                onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = e.target.scrollHeight + 'px';
+                                }}
                                 autoFocus
                              />
                              <textarea 
@@ -532,7 +536,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                     ) : (
                         <div className="flex flex-col gap-4 drop-shadow-lg" onClick={() => !readOnly && setIsEditingText(true)}>
                              {textData.title && (
-                                <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight leading-tight">
+                                <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-tight whitespace-pre-wrap px-4">
                                     {textData.title}
                                 </h2>
                              )}

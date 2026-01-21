@@ -9,29 +9,29 @@ import BinderFlip from './animations/BinderFlip';
 // Book style configurations
 const BOOK_STYLES = {
   classic: {
-    border: 'border border-gray-800',
-    shadow: 'shadow-2xl shadow-black/50',
+    border: 'border border-gray-200',
+    shadow: 'shadow-2xl shadow-black/20',
     rounded: 'rounded-sm',
   },
   leather: {
-    border: 'border-2 border-amber-900',
-    shadow: 'shadow-2xl shadow-amber-900/40',
-    rounded: 'rounded-sm',
+    border: 'border border-amber-900/30',
+    shadow: 'shadow-xl shadow-amber-900/20',
+    rounded: 'rounded-md',
   },
   modern: {
-    border: 'border border-gray-200',
+    border: 'border border-gray-100',
     shadow: 'shadow-2xl shadow-gray-200/50',
     rounded: 'rounded-xl',
   },
   vintage: {
-    border: 'border-2 border-amber-800/80',
-    shadow: 'shadow-xl shadow-amber-900/20',
+    border: 'border border-amber-800/20',
+    shadow: 'shadow-xl shadow-amber-900/10',
     rounded: 'rounded-r-md',
   },
   minimal: {
-    border: 'border border-gray-100',
-    shadow: 'shadow-lg shadow-gray-200/50',
-    rounded: 'rounded-2xl',
+    border: 'border border-gray-50',
+    shadow: 'shadow-lg shadow-gray-100',
+    rounded: 'rounded-3xl',
   },
 };
 

@@ -138,22 +138,28 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
           </button>
         )}
 
-        <input 
-            type="text" 
-            readOnly={readOnly}
-            placeholder={!readOnly ? (isCover ? "TITLE HERE" : "HEADLINE GOES HERE") : ""}
-            value={data.heading}
-            onChange={(e) => handleChange('heading', e.target.value)}
-            className={`w-full text-center bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50
-                ${isCover ? 'text-3xl md:text-4xl' : 'text-3xl placeholder-gray-300'}
-                ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
-            `}
-            style={{ 
-              color: computedTextColor,
-              fontFamily: currentFontStyle.headingFont,
-              fontWeight: currentFontStyle.headingWeight
-            }}
-        />
+        {(!readOnly || data.heading) && (
+          <textarea 
+              readOnly={readOnly}
+              placeholder={!readOnly ? (isCover ? "TITLE HERE" : "HEADLINE GOES HERE") : ""}
+              value={data.heading}
+              onChange={(e) => handleChange('heading', e.target.value)}
+              className={`w-full text-center bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
+                  ${isCover ? 'text-3xl md:text-4xl' : 'text-3xl placeholder-gray-300'}
+                  ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
+              `}
+              rows={1}
+              onInput={(e) => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+              style={{ 
+                color: computedTextColor,
+                fontFamily: currentFontStyle.headingFont,
+                fontWeight: currentFontStyle.headingWeight
+              }}
+          />
+        )}
         
         {readOnly ? (
              <div 
@@ -173,7 +179,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
                 value={data.body}
                 onChange={(e) => handleChange('body', e.target.value)}
                 className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-4 rounded-md
-                    ${isCover ? 'text-lg opacity-80 h-32 placeholder-current/40' : 'flex-1 text-lg text-gray-700 placeholder-gray-300'}
+                    ${isCover ? 'text-lg opacity-80 h-48 placeholder-current/40' : 'flex-1 text-lg text-gray-700 placeholder-gray-300'}
                     hover:border-dashed hover:border-current/20 focus:outline-none focus:border-[#A3E635]
                 `}
                 style={{ 

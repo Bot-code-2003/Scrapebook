@@ -1,18 +1,83 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   Book, Plus, ArrowRight, Scissors, User, LogOut, Sparkles, Heart, Zap, Star, 
   Cake, Gift, Palette, FileText, Send, Scroll, PenTool, Paperclip, 
-  Volume2, Ship, Plane, PartyPopper, MessageCircle
+  Volume2, Ship, Plane, PartyPopper, MessageCircle, Type, Smartphone, Bookmark
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import BookPreview from '@/components/scrapbook/BookPreview';
 import { HOME_BOOK } from '@/app/constants/home-book';
 import MidSection from '@/components/homepage/MidSection.jsx';
 
+// Book Card Component - looks like a physical book
+function BookCard({ book, onClick }) {
+  const coverImage = book.pages?.[0]?.content?.url;
+  const bgColor = book.bgColor || '#FFFDF5';
+  
+  return (
+    <div 
+      onClick={onClick}
+      className="group block cursor-pointer select-none"
+    >
+      {/* Book Container with 3D effect */}
+      <div className="relative transition-all duration-300 group-hover:-translate-y-2 group-hover:rotate-1">
+        {/* Book Spine */}
+        <div 
+          className="absolute left-0 top-2 bottom-2 w-4 bg-gradient-to-r from-gray-400 to-gray-300 rounded-l-sm transform -skew-y-3 origin-left"
+          style={{ backgroundColor: bgColor, filter: 'brightness(0.7)' }}
+        />
+        
+        {/* Book Pages (side view) */}
+        <div className="absolute left-2.5 top-1 bottom-1 w-2 bg-gradient-to-r from-gray-200 to-gray-100 rounded-r-xs z-0">
+          <div className="h-full w-full flex flex-col justify-evenly py-2">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="h-px bg-gray-300" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Book Cover */}
+        <div 
+          className="relative ml-4 aspect-[3/4] rounded-r-md overflow-hidden border-2 border-black shadow-[8px_8px_0px_0px_black] group-hover:shadow-[12px_12px_0px_0px_black] transition-shadow w-[260px] md:w-[300px] z-10"
+          style={{ backgroundColor: bgColor }}
+        >
+          {/* Cover Image or Pattern */}
+          {coverImage ? (
+            <img 
+              src={coverImage} 
+              alt={book.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Book className="w-20 h-20 text-gray-300" />
+            </div>
+          )}
+           
+          {/* Binding/Crease effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-r from-black/20 to-transparent pointer-events-none"></div>
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+        </div>
+      </div>
+      
+      {/* Book Info */}
+      <div className="mt-8 ml-4 text-center">
+        <h3 className="font-black text-2xl truncate group-hover:text-lime-600 transition-colors">
+          {book.title || 'Untitled Scrapbook'}
+        </h3>
+        <p className="text-sm font-medium text-gray-400 mt-2">{book.pages?.length || 0} Pages • Custom Made</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const { user, loading, logout } = useAuth();
+  const [openedBookIndex, setOpenedBookIndex] = useState(null);
 
   return (
     <div className="min-h-screen text-black font-sans selection:text-black">
@@ -60,269 +125,281 @@ export default function Home() {
       </nav>
 
       {/* HERO SECTION - REFINED */}
-      <main className="relative overflow-hidden">
-        {/* Background Pattern - Softer */}
+      <main className="relative overflow-hidden py-10">
         
-        <div className="relative max-w-[1600px] mx-auto px-4 py-10">
+        {/* Background Pattern - Softer */}
+        <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-40 pointer-events-none">
+            <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-lime-200/40 to-yellow-200/40 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-pink-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative max-w-[1600px] mx-auto px-4">
           
           {/* Top Badge */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-green-100 border border-black/10 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-              <Sparkles className="w-4 h-4" />
+          <div className="flex justify-center mb-8 relative z-10">
+            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md border border-gray-200/50 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
+              <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" />
               <span>The most meaningful way to send a message</span>
             </div>
           </div>
 
           {/* Main Hero Content */}
-          <div className="text-center mb-16 md:mb-20">
+          <div className="text-center mb-10 relative z-10">
             
+            {/* Flower Decoration Left */}
+            <img 
+                src="/svg/flower1.svg" 
+                alt="" 
+                className="absolute left-[10%] top-[20%] w-16 h-16 sm:w-24 sm:h-24 opacity-80 md:opacity-100 rotate-[-15deg] hidden lg:block animate-in fade-in zoom-in duration-1000 delay-300" 
+            />
+
+             {/* Flower Decoration Right */}
+             <img 
+                src="/svg/flower1.svg" 
+                alt="" 
+                className="absolute right-[10%] top-[40%] w-12 h-12 sm:w-20 sm:h-20 opacity-60 md:opacity-100 rotate-[35deg] hidden lg:block animate-in fade-in zoom-in duration-1000 delay-500 scale-x-[-1]" 
+            />
+
             {/* Headline */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 text-gray-900">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter mb-6 text-gray-900 leading-[0.9] sm:leading-[0.9]">
               Not just a text.
               <br />
-              <span className="relative inline-block mt-2">
-                <span className="relative z-10 text-black">
+              <span className="relative inline-block mt-1 sm:mt-2">
+                <span className="relative z-10 bg-gradient-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent">
                   It's a digital gift.
                 </span>
-                <span className="absolute bottom-2 left-0 w-full h-4 bg-yellow-200 -z-10 rounded-sm transform -rotate-1"></span>
+                <span className="absolute -bottom-2 sm:-bottom-4 left-0 w-full h-3 sm:h-6 bg-lime-300/60 -z-10 rounded-full transform -rotate-1 skew-x-6 mix-blend-multiply"></span>
               </span>
             </h1>
 
             {/* Subheadline */}
             <div className="max-w-2xl mx-auto mb-10">
-              <p className="text-xl text-gray-600 leading-relaxed">
-                Create a digital scrapbook — one page at a time — and send it as a meaningful flipping book. No sign up needed to start.
+              <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed font-medium">
+                Create a digital scrapbook — one page at a time — and gift it as a <span className="font-serif italic text-gray-500">flipping book.</span>
               </p>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            {/* CTA Buttons - Clean & Centered */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-20">
               <Link 
                 href="/scrapbook"
-                className="group relative inline-flex items-center gap-2 bg-black text-white rounded-full px-8 py-4 text-lg font-bold hover:bg-gray-800 transition-all hover:scale-105"
+                className="group relative inline-flex items-center gap-3 bg-black text-white rounded-full px-10 py-5 text-xl font-bold hover:bg-gray-800 transition-all hover:scale-105 shadow-xl shadow-black/20"
               >
-                <span>Create a Book</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <div className="flex items-center gap-2 px-6 py-4 text-sm font-medium text-gray-600">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span>Takes 5 mins • Free forever</span>
-              </div>
-            </div>
-
-            {/* Trust Pills - Simplified */}
-            <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-500">
-              {[
-                "No Account Required",
-                "Share with a Link",
-                "Interactive 3D Flip"
-              ].map((text, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                  <span>{text}</span>
+                <span>Make a Book</span>
+                <div className="bg-white/20 rounded-full p-1 group-hover:translate-x-1 transition-transform">
+                    <ArrowRight className="w-5 h-5" />
                 </div>
-              ))}
+              </Link>
             </div>
           </div>
 
-          {/* Book Preview Container */}
-          {/* <div className="relative max-w-5xl mx-auto"> */}
-            {/* <div className="relative rounded-2xl shadow-xl border border-gray-100 p-4 md:p-8"> */}
-              {/* <div className="relative w-full aspect-[16/10] max-h-[700px]">
-                <div className="absolute inset-0 flex items-center justify-center scale-[0.85] md:scale-100"> */}
-                  <BookPreview 
-                    pages={HOME_BOOK.pages}
-                    bgPattern={HOME_BOOK.bgPattern}
-                    bgColor={HOME_BOOK.bgColor}
-                    pageBorder={HOME_BOOK.pageBorder}
-                    animId={HOME_BOOK.animId}
-                    bookStyle={HOME_BOOK.bookStyle}
-                    soundId="page-flip"
-                    defaultPage={1}
-                  />
-                {/* </div>
-              </div> */}
-            {/* </div> */}
-          {/* </div> */}
+  {/* Book Preview Container */}
+  {/* Book Preview Container */}
+          <div className="relative max-w-6xl mx-auto mt-8 perspective-1000 min-h-[500px] flex items-center justify-center">
+              
+              {/* Grid of Books - Always Visible */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full px-4">
+                {HOME_BOOK.slice(0, 3).map((book, index) => (
+                  <div key={index} className={`flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700 ${index === 2 ? 'hidden md:flex' : ''}`} style={{ animationDelay: `${index * 150}ms` }}>
+                    <div className="transform hover:scale-105 transition-transform duration-300">
+                      <BookCard 
+                        book={book} 
+                        onClick={() => setOpenedBookIndex(index)}
+                      />
+                    </div>
+                    <p className="mt-6 text-gray-500 font-medium text-sm">
+                      <span className="bg-gray-100 px-3 py-1 rounded-full">{['For You', 'Best Friends', 'Birthday'][index] || 'Scrapbook'}</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Modal Overlay for Open Book */}
+              {openedBookIndex !== null && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                        onClick={() => setOpenedBookIndex(null)}
+                    ></div>
+                    
+                    {/* Modal Content */}
+                    <div className="relative z-10 w-full max-w-6xl h-full max-h-[90vh] flex flex-col items-center justify-center">
+                        <button 
+                            onClick={() => setOpenedBookIndex(null)}
+                            className="absolute top-4 right-4 md:top-0 md:-right-12 text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full backdrop-blur-md"
+                        >
+                            <LogOut className="w-6 h-6" />
+                        </button>
+                        
+                        <div className="w-full h-full flex items-center justify-center scale-75 md:scale-90 lg:scale-100 transition-transform">
+                             <BookPreview 
+                                pages={HOME_BOOK[openedBookIndex].pages}
+                                bgPattern={HOME_BOOK[openedBookIndex].bgPattern}
+                                bgColor={HOME_BOOK[openedBookIndex].bgColor}
+                                pageBorder={HOME_BOOK[openedBookIndex].pageBorder}
+                                animId={HOME_BOOK[openedBookIndex].animId}
+                                bookStyle={HOME_BOOK[openedBookIndex].bookStyle}
+                                soundId="page-flip"
+                                defaultPage={0}
+                              />
+                        </div>
+                        
+                         <div className="mt-4 text-white/50 text-sm font-medium animate-pulse">
+                            Click outside to close
+                        </div>
+                    </div>
+                </div>
+              )}
+          </div>
         </div>
       </main>
 
       <MidSection />
 
       {/* CUSTOMIZATION - REFINED */}
-      <section className="py-20 md:py-32 px-4">
+      {/* CUSTOMIZATION - REFINED */}
+      <section className="py-24 px-4 bg-stone-50 overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
-              Handmade Feel, Digital Ease
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-6xl font-black mb-6 text-gray-900 tracking-tight">
+              Handmade Feel. <span className="text-gray-400 font-serif italic font-normal">Digital Ease.</span>
             </h2>
-            <p className="text-lg text-gray-500">Every detail is designed to feel personal.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Creator Controls */}
-            <div className="p-10 bg-gray-50 rounded-3xl border border-gray-100">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-black text-lime-400 rounded-xl flex items-center justify-center font-bold text-lg">
-                  YOU
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">What You Control</h3>
-              </div>
-              <ul className="space-y-6">
-                {[
-                  { icon: <Palette className="w-6 h-6" />, text: "Page templates & patterns" },
-                  { icon: <Scroll className="w-6 h-6" />, text: "Paper textures & feel" },
-                  { icon: <PenTool className="w-6 h-6" />, text: "Handwritten fonts & vibes" },
-                  { icon: <Paperclip className="w-6 h-6" />, text: "Washi tapes & stickers" }
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4 text-lg font-medium text-gray-700">
-                    <span className="p-2 rounded-lg shadow-sm text-black">{item.icon}</span>
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* User Experience */}
-            <div className="p-10 bg-pink-50 rounded-3xl border border-pink-100">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-pink-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">
-                  THEM
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">What They Feel</h3>
-              </div>
-              <ul className="space-y-6">
-                {[
-                  { icon: <Book className="w-6 h-6" />, text: "Real 3D page-flip animation" },
-                  { icon: <Volume2 className="w-6 h-6" />, text: "Real page flip sounds" },
-                  { icon: <Book className="w-6 h-6" />, text: "The feeling of a real book" },
-                  { icon: <Heart className="w-6 h-6" />, text: "Pure emotional impact" }
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4 text-lg font-medium text-gray-800">
-                    <span className="p-2 rounded-lg shadow-sm text-pink-500">{item.icon}</span>
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SHARE MOMENT - REFINED */}
-      <section className="py-24 md:py-32 px-4 bg-gray-900 text-white relative overflow-hidden">
-        {/* Subtle background detail */}
-        <div className="absolute inset-0 opacity-20" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-        }}></div>
-
-        <div className="max-w-4xl mx-auto relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-lime-200 to-lime-400 mb-8 tracking-tight">
-            They Don't Scroll It.
-            <br />
-            They Open It.
-          </h2>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-12 text-sm md:text-base font-medium text-white/80">
-            {[
-              "Opens Like Real Book",
-              "Click → Flip → Smile",
-              "No App Required"
-            ].map((text, i) => (
-              <div key={i} className="bg-white/10 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-lime-400"></div>
-                <span>{text}</span>
-              </div>
-            ))}
-          </div>
-
-          <blockquote className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-2xl backdrop-blur-md max-w-3xl mx-auto">
-            <p className="text-xl md:text-3xl font-serif leading-relaxed mb-6 italic text-gray-100">
-              "I didn't expect to feel this emotional from a website. It felt like holding a real gift."
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              We've combined the nostalgia of physical scrapbooking with the magic of modern web design. No glue required.
             </p>
-            <footer className="text-sm font-bold uppercase tracking-widest text-lime-400/80">
-              — Early User
-            </footer>
-          </blockquote>
-        </div>
-      </section>
-
-      {/* EXAMPLE BOOKS - REFINED */}
-      <section className="py-20 md:py-32 px-4 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
-              Real Books. Real People.
-            </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {[
-              { icon: <Ship className="w-12 h-12 text-gray-800" />, title: "My One Piece Journey", bg: "bg-gray-50 from-gray-50 to-gray-100" },
-              { icon: <MessageCircle className="w-12 h-12 text-pink-500" />, title: "Pages I Never Said Out Loud", bg: "bg-pink-50 from-pink-50 to-pink-100" },
-              { icon: <Plane className="w-12 h-12 text-blue-500" />, title: "Our First Trip Together", bg: "bg-blue-50 from-blue-50 to-blue-100" },
-              { icon: <PartyPopper className="w-12 h-12 text-yellow-500" />, title: "You're 22 Today", bg: "bg-yellow-50 from-yellow-50 to-yellow-100" }
-            ].map((book, i) => (
-              <div key={i} className={`rounded-xl p-8 bg-gradient-to-br ${book.bg} flex flex-col items-center justify-center text-center h-64 hover:scale-105 transition-transform cursor-pointer border border-transparent hover:border-black/5 shadow-sm`}>
-                <div className="mb-6 p-4 rounded-full shadow-sm">{book.icon}</div>
-                <h3 className="text-lg font-bold text-gray-900 leading-tight">{book.title}</h3>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-stretch">
+            {/* The Creator Side */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-white rounded-[2rem] shadow-xl rotate-1 group-hover:rotate-0 transition-transform duration-500"></div>
+              <div className="relative p-10 h-full bg-white rounded-[2rem] border-2 border-dashed border-gray-200 flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-lime-100 text-lime-600 rounded-2xl flex items-center justify-center mb-6 rotate-3">
+                    <PenTool className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">You Create</h3>
+                <p className="text-gray-500 mb-8 text-sm">The studio is yours. Everything is customizable.</p>
+                
+                <div className="grid grid-cols-2 gap-4 w-full text-left">
+                    {[
+                        { title: "Paper Textures", desc: "Grainy, soft, or crumpled", icon: <Scroll className="w-5 h-5" /> },
+                        { title: "Washi Tapes", desc: "Stick 'em on corners", icon: <Paperclip className="w-5 h-5" /> },
+                        { title: "Fun Fonts", desc: "Handwritten styles", icon: <Type className="w-5 h-5" /> },
+                        { title: "Stickers", desc: "Cute doodles & assets", icon: <Star className="w-5 h-5" /> }
+                    ].map((item, i) => (
+                        <div key={i} className="p-4 bg-gray-50 rounded-xl hover:bg-lime-50 transition-colors group/item">
+                            <div className="text-gray-400 group-hover/item:text-lime-500 mb-2">{item.icon}</div>
+                            <h4 className="font-bold text-sm text-gray-900">{item.title}</h4>
+                            <p className="text-xs text-gray-500">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="text-center">
-            <Link 
-              href="/scrapbook"
-              className="inline-flex items-center gap-2 bg-black text-white rounded-full px-8 py-4 text-lg font-bold hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-black/20"
-            >
-              <Heart className="w-5 h-5 fill-pink-500 text-pink-500" />
-              <span>Create Your Book</span>
-            </Link>
+            {/* The Receiver Side */}
+            <div className="relative group mt-8 md:mt-0">
+               <div className="absolute inset-0 bg-zinc-900 rounded-[2rem] shadow-xl -rotate-1 group-hover:rotate-0 transition-transform duration-500"></div>
+               <div className="relative p-10 h-full bg-zinc-900 rounded-[2rem] border border-zinc-800 flex flex-col items-center text-center text-white">
+                <div className="w-16 h-16 bg-pink-500 text-white rounded-2xl flex items-center justify-center mb-6 -rotate-3 shadow-lg shadow-pink-500/30">
+                    <Heart className="w-8 h-8 fill-current" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">They Feel</h3>
+                <p className="text-zinc-400 mb-8 text-sm">An immersive experience that feels real.</p>
+                
+                <div className="space-y-4 w-full">
+                    {[
+                        { text: "3D Page Flipping Animation", icon: <Book className="w-5 h-5" /> },
+                        { text: "ASMR Paper Sounds", icon: <Volume2 className="w-5 h-5" /> },
+                        { text: "Works on any Phone", icon: <Smartphone className="w-5 h-5" /> }
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
+                            <div className="text-pink-400">{item.icon}</div>
+                            <span className="font-medium text-zinc-200">{item.text}</span>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-auto pt-8 w-full">
+                    <div className="flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase text-zinc-500">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        Live Preview
+                    </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* COMPARISON - REFINED */}
-      <section className="py-20 md:py-32 px-4 ">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
+      <section className="py-24 px-4 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-5xl font-black mb-4 text-gray-900 tracking-tight">
               Why This Beats A Text Message
             </h2>
+            <p className="text-lg text-gray-500">Some memories are too heavy for a blue bubble.</p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden text-sm md:text-base">
-            <div className="grid grid-cols-2 font-bold tracking-wider text-center border-b border-gray-100">
-              <div className="p-4 bg-gray-50 text-gray-400 uppercase text-xs md:text-sm">WhatsApp / IG</div>
-              <div className="p-4 bg-lime-50 text-lime-600 uppercase text-xs md:text-sm">Your Scrapbook</div>
-            </div>
+          <div className="relative grid md:grid-cols-2 gap-8 items-center">
             
-            {[
-              { bad: "Lost in chat history", good: "A dedicated permanent book" },
-              { bad: "Skipped in seconds", good: "Slowly flipped & savored" },
-              { bad: "Temporary feeling", good: "Forever accessible" },
-              { bad: "Generic format", good: "Deeply personal layout" }
-            ].map((row, i) => (
-              <div key={i} className="grid grid-cols-2 border-b border-gray-100 last:border-b-0">
-                <div className="p-6 md:p-8 bg-gray-50/50 text-gray-400 flex items-center justify-center md:justify-start">
-                  <span className="md:mr-3 text-lg md:text-xl">✕</span>
-                  <span className="hidden md:inline">{row.bad}</span>
-                  <span className="md:hidden text-center text-xs">{row.bad}</span>
-                </div>
-                <div className="p-6 md:p-8 text-gray-900 font-medium flex items-center justify-center md:justify-start">
-                  <span className="md:mr-3 text-lg md:text-xl text-lime-500">✓</span>
-                  <span className="hidden md:inline">{row.good}</span>
-                  <span className="md:hidden text-center text-xs">{row.good}</span>
-                </div>
-              </div>
-            ))}
+            {/* VS Badge */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex w-16 h-16 bg-black text-white rounded-full items-center justify-center font-black text-xl border-4 border-white shadow-xl">
+              VS
+            </div>
+
+            {/* The Text Message Way */}
+            <div className="p-8 md:p-12 rounded-3xl bg-gray-50 border border-gray-100 text-center opacity-80 hover:opacity-100 transition-opacity">
+               <div className="w-16 h-16 mx-auto bg-gray-200 text-gray-500 rounded-full flex items-center justify-center mb-6">
+                 <MessageCircle className="w-8 h-8" />
+               </div>
+               <h3 className="text-xl font-bold text-gray-500 mb-8 uppercase tracking-widest">The Usual Way</h3>
+               
+               <ul className="space-y-6 text-left">
+                 {[
+                   { text: "Buried in the chat history forever", icon: "📉" },
+                   { text: "Consumed in 3 seconds", icon: "⚡" },
+                   { text: "Just another notification", icon: "🔔" },
+                 ].map((item, i) => (
+                   <li key={i} className="flex items-center gap-4 text-gray-500 font-medium">
+                     <span className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full text-sm grayscale">{item.icon}</span>
+                     <span>{item.text}</span>
+                   </li>
+                 ))}
+               </ul>
+            </div>
+
+            {/* The DigiGift Way */}
+            <div className="p-8 md:p-12 rounded-3xl bg-lime-50 border border-lime-100 text-center shadow-2xl scale-105 relative z-0">
+               <div className="absolute top-0 right-0 p-4">
+                  <span className="bg-lime-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Better</span>
+               </div>
+               <div className="w-16 h-16 mx-auto bg-black text-lime-400 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-lime-400/20">
+                 <Gift className="w-8 h-8" />
+               </div>
+               <h3 className="text-xl font-bold text-gray-900 mb-8 uppercase tracking-widest">The Scrapbook</h3>
+               
+               <ul className="space-y-6 text-left">
+                 {[
+                   { text: "Saved to both your dashboards", icon: "💎" },
+                   { text: "Interactive 3D unboxing", icon: "⏳" },
+                   { text: "Forever accessible library", icon: "🎁" },
+                 ].map((item, i) => (
+                   <li key={i} className="flex items-center gap-4 text-gray-900 font-bold">
+                     <span className="w-8 h-8 flex items-center justify-center bg-white shadow-sm rounded-full text-sm">{item.icon}</span>
+                     <span>{item.text}</span>
+                   </li>
+                 ))}
+               </ul>
+            </div>
+
           </div>
           
-          <div className="text-center mt-12">
-            <p className="text-lg md:text-xl font-medium text-gray-500 italic">
-              Some memories deserve more.
+          <div className="text-center mt-16">
+            <p className="text-xl md:text-2xl font-serif text-gray-400 italic">
+              "It’s not just a file. It’s a feeling."
             </p>
           </div>
         </div>

@@ -130,128 +130,117 @@ export default function ProfilePage() {
   const displayBooks = activeTab === 'my' ? myBooks : savedBooks;
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0]">
-      {/* Header */}
-      <header className="px-4 py-4 md:px-6 bg-white border-b-4 border-black flex justify-between items-center sticky top-0 z-20">
+    <div className="min-h-screen bg-white text-gray-900 font-sans">
+      {/* Navbar similar to Homepage */}
+      <nav className="px-4 py-4 md:px-8 flex justify-between items-center sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-70 transition-opacity">
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-bold tracking-tight">Back to Home</span>
+        </Link>
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 group">
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="bg-black text-white p-2 border-2 border-black">
-              <User className="w-5 h-5" />
-            </div>
-            <h1 className="text-xl font-black uppercase tracking-tighter">Profile</h1>
-          </div>
-        </div>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors border-2 border-transparent hover:border-black px-3 py-2"
-        >
-          <LogOut className="w-4 h-4" />
-          <span className="hidden sm:inline text-sm font-bold uppercase">Logout</span>
-        </button>
-      </header>
-
-      <main className="max-w-6xl mx-auto p-6">
-        {/* User Info Card */}
-        <div className="bg-white border-4 border-black p-6 mb-8 shadow-[8px_8px_0px_0px_black]">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-[#A3E635] rounded-full flex items-center justify-center text-2xl font-black border-2 border-black">
-              {user.name?.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <h2 className="text-2xl font-black">{user.name}</h2>
-              <p className="text-gray-500">{user.email}</p>
-            </div>
-          </div>
-          
-          <div className="flex gap-6 mt-6 pt-6 border-t-2 border-gray-100">
-            <div className="text-center">
-              <span className="text-3xl font-black">{myBooks.length}</span>
-              <p className="text-sm text-gray-500 font-bold uppercase">Created</p>
-            </div>
-            <div className="text-center">
-              <span className="text-3xl font-black">{savedBooks.length}</span>
-              <p className="text-sm text-gray-500 font-bold uppercase">Saved</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8">
-          <button
-            onClick={() => setActiveTab('my')}
-            className={`px-6 py-3 font-bold uppercase border-2 border-black transition-all ${
-              activeTab === 'my' 
-                ? 'bg-black text-white' 
-                : 'bg-white text-black hover:bg-gray-50'
-            }`}
-          >
-            <Book className="w-4 h-4 inline mr-2" />
-            My Books ({myBooks.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('saved')}
-            className={`px-6 py-3 font-bold uppercase border-2 border-black transition-all ${
-              activeTab === 'saved' 
-                ? 'bg-black text-white' 
-                : 'bg-white text-black hover:bg-gray-50'
-            }`}
-          >
-            <Bookmark className="w-4 h-4 inline mr-2" />
-            Saved ({savedBooks.length})
-          </button>
-        </div>
-
-        {/* Create New Button (only for My Books tab) */}
-        {activeTab === 'my' && (
-          <div className="mb-8">
-            <Link 
-              href="/scrapbook"
-              className="inline-flex items-center gap-2 bg-[#A3E635] text-black px-6 py-3 font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_black] hover:shadow-[2px_2px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            <button 
+              onClick={handleLogout}
+              className="text-sm font-medium text-gray-500 hover:text-red-500 transition-colors"
             >
-              <Plus className="w-5 h-5" />
-              Create New Scrapbook
-            </Link>
-          </div>
-        )}
+              Sign out
+            </button>
+        </div>
+      </nav>
 
-        {/* Books Grid */}
-        {displayBooks.length === 0 ? (
-          <div className="text-center py-20 bg-white border-4 border-dashed border-gray-300">
-            {activeTab === 'my' ? (
-              <>
-                <Book className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h2 className="text-xl font-bold text-gray-500 mb-2">No scrapbooks yet</h2>
-                <p className="text-gray-400 mb-6">Create your first scrapbook to get started!</p>
-                <Link 
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        {/* Profile Header - Clean & Minimal */}
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 mb-16 border-b border-gray-100 pb-8">
+            <div className="flex items-center gap-6">
+                <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
+                    {user.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2 text-gray-900">{user.name}</h1>
+                    <p className="text-gray-500 font-medium text-lg">{user.email}</p>
+                </div>
+            </div>
+            
+            <div className="flex gap-4">
+                 <Link 
                   href="/scrapbook"
-                  className="inline-flex items-center gap-2 bg-[#A3E635] text-black px-6 py-3 font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_black] hover:shadow-[2px_2px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                  className="bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all flex items-center gap-2 shadow-lg hover:translate-y-[-2px]"
                 >
                   <Plus className="w-5 h-5" />
-                  Create Scrapbook
+                  New Book
                 </Link>
-              </>
-            ) : (
-              <>
-                <Bookmark className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h2 className="text-xl font-bold text-gray-500 mb-2">No saved books</h2>
-                <p className="text-gray-400">When you save scrapbooks shared with you, they'll appear here.</p>
-              </>
-            )}
+            </div>
+        </div>
+
+        {/* Tabs - Underlined Style */}
+        <div className="mb-10">
+          <div className="flex gap-8 border-b border-gray-100">
+            <button
+              onClick={() => setActiveTab('my')}
+              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+                activeTab === 'my' 
+                  ? 'border-b-2 border-black text-black' 
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              My Creations <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">{myBooks.length}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('saved')}
+              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+                activeTab === 'saved' 
+                  ? 'border-b-2 border-black text-black' 
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              Saved Collection <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">{savedBooks.length}</span>
+            </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {displayBooks.map((book) => (
-              <BookCard 
-                key={book._id} 
-                book={book} 
-                isSaved={activeTab === 'saved'}
-              />
-            ))}
-          </div>
-        )}
+        </div>
+
+        {/* Content Section */}
+        <div className="min-h-[400px]">
+          {displayBooks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/50">
+              {activeTab === 'my' ? (
+                <>
+                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-6 text-gray-400">
+                      <Book className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">You haven't made any books yet.</h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-8">
+                    Your studio is empty! Start creating memories today, it only takes a few minutes.
+                  </p>
+                  <Link 
+                    href="/scrapbook"
+                    className="text-lime-600 font-bold hover:underline"
+                  >
+                    Start your first masterpiece →
+                  </Link>
+                </>
+              ) : (
+                <>
+                   <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-6 text-gray-400">
+                      <Bookmark className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No saved books found.</h3>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    When friends send you a digital gift, click "Save to Library" to keep it here forever.
+                  </p>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
+              {displayBooks.map((book) => (
+                <BookCard 
+                  key={book._id} 
+                  book={book} 
+                  isSaved={activeTab === 'saved'}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

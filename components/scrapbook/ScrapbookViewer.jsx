@@ -68,7 +68,7 @@ export default function ScrapbookViewer({ scrapbook }) {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center bg-[#222] overflow-hidden relative">
+    <div className="h-screen w-full flex flex-col items-center justify-center bg-zinc-900 overflow-hidden relative">
       {/* Book Preview */}
       <BookPreview 
         pages={scrapbook.pages} 
@@ -84,50 +84,50 @@ export default function ScrapbookViewer({ scrapbook }) {
       {!authLoading && !checkingIfSaved && !saved && (
         <button 
           onClick={() => setShowCTA(true)}
-          className="fixed bottom-6 right-6 z-50 bg-white text-black px-4 py-3 font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-2"
+          className="fixed bottom-8 right-8 z-50 bg-white text-black px-6 py-3 font-bold rounded-full shadow-lg shadow-black/20 hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 group"
         >
-          <Bookmark className="w-5 h-5" />
+          <Bookmark className="w-5 h-5 group-hover:fill-current" />
           <span className="hidden sm:inline">Save This Book</span>
         </button>
       )}
 
       {/* Saved Confirmation */}
       {saved && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#A3E635] text-black px-4 py-3 font-bold uppercase border-2 border-black flex items-center gap-2">
+        <div className="fixed bottom-8 right-8 z-50 bg-lime-400 text-lime-900 px-6 py-3 font-bold rounded-full shadow-lg shadow-lime-900/20 flex items-center gap-2 animate-in slide-in-from-bottom duration-500">
           <Check className="w-5 h-5" />
-          Saved to Library!
+          Saved to Library
         </div>
       )}
 
       {/* CTA Modal */}
       {showCTA && !saved && (
-        <div className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4">
-          <div className="bg-white p-6 md:p-8 rounded-lg max-w-md w-full border-4 border-black shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)] relative">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white p-6 md:p-8 rounded-2xl max-w-sm w-full shadow-2xl relative animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setShowCTA(false)}
-              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:bg-gray-50 hover:text-black rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center">
-              <div className="bg-[#A3E635] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-black">
+            <div className="text-center pt-2">
+              <div className="bg-lime-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 border border-lime-100 shadow-sm">
                 <Bookmark className="w-8 h-8 text-black" />
               </div>
               
-              <h2 className="text-2xl font-black uppercase mb-2">
+              <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">
                 {user ? 'Save to Your Library' : 'Want to Keep This?'}
               </h2>
               
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-500 mb-8 leading-relaxed">
                 {user 
-                  ? `Save "${scrapbook.title}" to your library so you can revisit it anytime.`
+                  ? `Save "${scrapbook.title || 'Untitled'}" to your library so you can revisit it anytime.`
                   : 'Create a free account to save this scrapbook to your personal library and access it anytime!'
                 }
               </p>
 
               {error && (
-                <div className="bg-red-50 border-2 border-red-500 text-red-600 p-3 mb-4 font-medium text-sm">
+                <div className="bg-red-50 border border-red-100 text-red-600 p-3 rounded-lg mb-6 text-sm font-medium">
                   {error}
                 </div>
               )}
@@ -136,7 +136,7 @@ export default function ScrapbookViewer({ scrapbook }) {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="w-full bg-[#A3E635] text-black py-3 font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_black] hover:shadow-[2px_2px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full bg-black text-white py-3.5 font-bold rounded-xl shadow-lg shadow-black/10 hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : 'Save to My Library'}
@@ -145,13 +145,13 @@ export default function ScrapbookViewer({ scrapbook }) {
                 <div className="space-y-3">
                   <Link
                     href={`/signup?redirect=${encodeURIComponent(`/scrapbook/${scrapbook.shareId}`)}`}
-                    className="w-full bg-[#A3E635] text-black py-3 font-bold uppercase border-2 border-black shadow-[4px_4px_0px_0px_black] hover:shadow-[2px_2px_0px_0px_black] hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-lime-400 text-lime-950 py-3.5 font-bold rounded-xl shadow-lg shadow-lime-400/20 hover:bg-lime-300 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                   >
                     Sign Up Free
                   </Link>
                   <Link
                     href={`/login?redirect=${encodeURIComponent(`/scrapbook/${scrapbook.shareId}`)}`}
-                    className="w-full bg-white text-black py-3 font-bold uppercase border-2 border-black hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-white text-gray-900 py-3.5 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
                   >
                     <LogIn className="w-4 h-4" />
                     I Have an Account

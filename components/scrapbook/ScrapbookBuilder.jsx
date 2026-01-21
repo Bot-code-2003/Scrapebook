@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Plus, Book } from 'lucide-react';
+import { Plus, Book, Sparkles } from 'lucide-react';
 import BookLayout from './BookLayout';
 import BookPreview from './BookPreview';
 import Link from 'next/link';
@@ -136,27 +136,30 @@ export default function ScrapbookBuilder() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative">
+    <div className="h-screen flex flex-col overflow-hidden relative bg-gray-50 selection:bg-lime-100 selection:text-lime-900">
       {/* Share Modal */}
       {shareUrl && (
-        <div className="absolute inset-0 bg-black/80 z-[100] flex items-center justify-center p-4">
-           <div className="bg-white p-8 rounded-lg max-w-md w-full border-4 border-black shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)]">
-              <h2 className="text-2xl font-black uppercase mb-4 text-center">Scrapbook Ready!</h2>
-              <p className="mb-6 text-gray-600 text-center">Your digital scrapbook has been saved. Share this link with your lucky recipient!</p>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+           <div className="bg-white p-8 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 transform transition-all scale-100">
+              <div className="w-16 h-16 bg-lime-100 text-lime-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-center text-gray-900">Scrapbook Ready!</h2>
+              <p className="mb-8 text-gray-500 text-center leading-relaxed">Your digital scrapbook has been saved. Share this link with your lucky recipient!</p>
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-6">
                  <input 
                     type="text" 
                     readOnly 
                     value={shareUrl} 
-                    className="flex-1 border-2 border-black p-2 font-mono text-sm bg-gray-50 rounded"
+                    className="flex-1 border border-gray-200 p-3 rounded-xl font-mono text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
                  />
                  <button 
                     onClick={() => {
                         navigator.clipboard.writeText(shareUrl);
                         alert('Link copied!');
                     }}
-                    className="bg-[#A3E635] text-black border-2 border-black px-4 font-bold uppercase hover:bg-green-400"
+                    className="bg-lime-400 text-black px-5 font-bold rounded-xl hover:bg-lime-500 transition-colors shadow-sm"
                  >
                     Copy
                  </button>
@@ -164,7 +167,7 @@ export default function ScrapbookBuilder() {
 
               <button 
                   onClick={() => setShareUrl(null)}
-                  className="mt-6 w-full py-3 bg-black text-white font-bold uppercase hover:bg-gray-800"
+                  className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg shadow-black/10"
               >
                   Close
               </button>
@@ -173,22 +176,20 @@ export default function ScrapbookBuilder() {
       )}
 
       {/* Header */}
-      <header className="px-3 py-3 md:px-6 md:py-4 bg-white border-b-4 border-black flex justify-between items-center z-20 sticky top-0">
+      <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-white/80 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
         <div className="flex items-center shrink-0">
-             <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-                <div className="bg-black text-white p-1.5 md:p-2 border-2 border-black group-hover:bg-[#A3E635] group-hover:text-black transition-colors">
-                     <Book className="w-5 h-5 md:w-6 md:h-6" />
+             <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
+                     <Book className="w-6 h-6" />
                 </div>
-                <h1 className="text-lg md:text-2xl font-black uppercase tracking-tighter group-hover:underline decoration-4 underline-offset-4">
-                    Scrapbook.
-                </h1>
+                <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">Scrapbook.</span>
              </Link>
         </div>
-        <div className="flex gap-2 md:gap-4 shrink-0">
+        <div className="flex gap-2 md:gap-3 shrink-0">
              {isPreview && (
                  <button 
                     onClick={() => setIsPreview(false)}
-                    className="flex items-center gap-2 bg-black text-white px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base font-bold uppercase hover:bg-gray-800 transition-colors"
+                    className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all"
                  >
                     <span className="hidden sm:inline">Back to </span>Edit
                  </button>
@@ -197,9 +198,9 @@ export default function ScrapbookBuilder() {
             {!isPreview && (
                  <button 
                     onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId }, () => {}, 'Page Theme')}
-                    className="flex items-center gap-2 border-2 border-black bg-white text-black px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base font-bold uppercase hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all hover:shadow-sm"
                  >
-                    <Palette className="w-4 h-4 md:w-5 md:h-5" />
+                    <Palette className="w-4 h-4" />
                     <span className="hidden sm:inline">Theme</span>
                  </button>
             )}
@@ -213,7 +214,11 @@ export default function ScrapbookBuilder() {
                     }
                 }}
                 disabled={isSaving}
-                className={`border-2 border-black px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-base font-bold uppercase shadow-[2px_2px_0px_0px_black] md:shadow-[4px_4px_0px_0px_black] hover:shadow-[1px_1px_0px_0px_black] hover:translate-x-[1px] hover:translate-y-[1px] md:hover:shadow-[2px_2px_0px_0px_black] md:hover:translate-x-[2px] md:hover:translate-y-[2px] transition-all disabled:opacity-50 ${isPreview ? 'bg-white text-black' : 'bg-[#A3E635] text-black'}`}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-lime-500/20 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 ${
+                  isPreview 
+                    ? 'bg-lime-400 text-black hover:bg-lime-500' 
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
             >
                 {isSaving ? 'Saving...' : (isPreview ? 'Share Link' : 'Preview')}
             </button>
@@ -224,18 +229,18 @@ export default function ScrapbookBuilder() {
 
 
       {/* Main Workspace */}
-      <main className={`flex-1 overflow-auto relative flex flex-col items-center py-10 transition-colors duration-500 ${isPreview ? 'bg-[#222]' : 'bg-[#f0f0f0]'}`}>
+      <main className={`flex-1 overflow-auto relative flex flex-col items-center py-12 transition-colors duration-500 ${isPreview ? 'bg-[#1a1a1a]' : 'bg-gray-50'}`}>
           
           
           {/* Title Input */}
           {!isPreview && (
-            <div className="mb-6 w-full max-w-sm flex flex-col items-center z-10 relative">
+            <div className="mb-8 w-full max-w-md flex flex-col items-center z-10 relative px-4">
                 <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="text-center text-xl md:text-2xl font-black uppercase tracking-tight bg-transparent border-b-2 border-transparent hover:border-black/20 focus:border-black focus:outline-none placeholder-gray-400 w-full pb-1"
-                    placeholder="UNTITLED SCRAPBOOK"
+                    className="text-center text-2xl md:text-3xl font-bold tracking-tight bg-transparent border-b border-transparent hover:border-gray-300 focus:border-gray-900 focus:outline-none placeholder-gray-300 w-full pb-2 text-gray-900 transition-all"
+                    placeholder="Untitled Scrapbook"
                 />
             </div>
           )}
@@ -327,12 +332,15 @@ export default function ScrapbookBuilder() {
 
           {/* Add Page Button */}
           {!isPreview && (
-              <div className="mt-12 pb-20">
+              <div className="mt-12 pb-24">
                 <button 
                     onClick={addPagePair}
-                    className="flex items-center gap-2 bg-black text-white px-6 py-3 font-bold uppercase border-4 border-white shadow-[0px_0px_0px_4px_black] hover:bg-[#A3E635] hover:text-black transition-colors"
+                    className="group flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all border border-gray-100"
                 >
-                    <Plus className="w-6 h-6" /> Add Page Pair
+                    <div className="w-6 h-6 rounded-full bg-lime-100 text-lime-600 flex items-center justify-center group-hover:bg-lime-200 transition-colors">
+                      <Plus className="w-4 h-4" />
+                    </div>
+                    <span>Add Pages</span>
                 </button>
               </div>
           )}
