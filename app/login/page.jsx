@@ -9,7 +9,7 @@ export default function LoginPage() {
   const { login, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/my-books';
+  const redirectTo = searchParams.get('redirect') || '/profile';
   
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');

@@ -3,6 +3,7 @@ import {
   Heart, Cake, Sparkles, Star, 
   FileText, Palette, Book, Send, ArrowRight, Plus
 } from 'lucide-react';
+import Link from 'next/link';
 
 const MidSection = () => {
   const targets = [
@@ -36,7 +37,7 @@ const MidSection = () => {
               </h2>
             </div>
             <p className="text-lg md:text-xl text-slate-500 font-light leading-relaxed max-w-sm">
-              Wrapper isn't just a tool; it's a digital home for the moments you don't want to lose to a scrolling feed.
+              MyScrapebook isn't just a tool; it's a digital home for the moments you don't want to lose to a scrolling feed.
             </p>
           </div>
 
@@ -59,7 +60,7 @@ const MidSection = () => {
       <section className="py-10 md:py-20 px-6 border-t border-slate-200">
         <div className="max-w-6xl mx-auto">
           {/* Header matching Section 1 style */}
-          <div className="grid lg:grid-cols-2 gap-16 items-start mb-24">
+          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
             <div>
               <span className="inline-block px-3 py-1 rounded-full border border-black text-black text-[10px] font-bold uppercase tracking-widest mb-6">
                 Process
@@ -73,9 +74,9 @@ const MidSection = () => {
                 <p className="text-lg md:text-xl text-slate-500 font-light leading-relaxed max-w-sm mb-8">
                     Four steps to turn a digital mess into a curated, interactive masterpiece.
                 </p>
-                <button className="group flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em]">
+                {/* <button className="group flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em]">
                     View the demo <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                </button>
+                </button> */}
             </div>
           </div>
 
@@ -108,16 +109,16 @@ const MidSection = () => {
     
     {/* Decorative background text */}
     <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[15vw] font-black opacity-5 select-none pointer-events-none">
-      WRAPPER
+      MYSCRAPEBOOK
     </span>
 
     <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-8 relative z-10">
       Ready to tell <br />your story?
     </h2>
 
-    <button className="relative z-10 bg-white text-black px-12 py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-slate-200 transition-all duration-300">
-      Start Wrapping Now
-    </button>
+    <Link href="/signup" className="relative z-10 bg-white text-black px-12 py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-slate-200 transition-all duration-300">
+      Start Creating Now
+    </Link>
 
   </div>
 </section>

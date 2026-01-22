@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Image, Type, X, Sticker, Sparkles } from 'lucide-react';
+import { Image, Type, X, Sticker, Sparkles, Gift } from 'lucide-react';
 
 export default function ComponentSelector({ onSelect, onClose }) {
   return (
@@ -45,6 +45,20 @@ export default function ComponentSelector({ onSelect, onClose }) {
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Text</h3>
                     <p className="text-xs font-medium text-gray-500 mt-1 group-hover:text-gray-600">Add stories & notes</p>
+                 </button>
+
+                 <button 
+                    onClick={() => onSelect('gift')}
+                    className="group relative overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-200 p-5 rounded-2xl text-left hover:bg-white hover:border-pink-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                         <Gift className="w-24 h-24" />
+                    </div>
+                    <div className="bg-gradient-to-br from-pink-400 to-purple-500 text-white w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                        <Gift className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900">Gift</h3>
+                    <p className="text-xs font-medium text-gray-500 mt-1 group-hover:text-gray-600">Hidden surprise to reveal</p>
                  </button>
 
                  {/* Coming Soon Options */}

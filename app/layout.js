@@ -110,12 +110,12 @@ const comfortaa = Comfortaa({
 });
 
 export const metadata = {
-  title: "WrapIt - Don't Send Boring Gifts.",
-  description: "Stop sending screenshots. Wrap your digital gifts in an interactive, mind-blowing experience.",
-  keywords: "digital gifts, gift cards, subscriptions, gaming, neo-brutalism",
+  title: "MyScrapbook - Digital Scrapbooks, Albums & Book Spaces for Gifts",
+  description: "Create beautiful digital scrapbooks, photo albums, and digital book spaces. The perfect personalized gift for any occasion. Join MyScrapbook today.",
+  keywords: "gifts, scrapebooks, digital album, digital book spaces, online scrapbook, virtual photo album, memory book, MyScrapbook, myscrapebook, personalized gifts, creative spaces, digital gifting",
   openGraph: {
-    title: "WrapIt - Make It Fun",
-    description: "The cure for boring digital gifts.",
+    title: "MyScrapbook - Digital Albums & Creative Book Spaces",
+    description: "Design and share interactive digital scrapbooks and albums. The ultimate platform for creative gifting and memory keeping.",
     type: "website",
   },
 };

@@ -1,6 +1,8 @@
 'use client';
-import React, { useState } from 'react';
-import { Plus, Book, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { Plus, Book, Sparkles, Eye, Share2 } from 'lucide-react';
 import BookLayout from './BookLayout';
 import BookPreview from './BookPreview';
 import Link from 'next/link';
@@ -11,7 +13,12 @@ import CoverStyleEditorDrawer from './CoverStyleEditorDrawer';
 import BackgroundEditorDrawer from './BackgroundEditorDrawer';
 import { Palette } from 'lucide-react';
 
+// ... (imports remain same)
+
 export default function ScrapbookBuilder() {
+  const { user } = useAuth();
+  const router = useRouter();
+
   // State for pages
   // Each page object: { id: string, type: 'empty' | 'image' | 'text', content: any }
   // We initialize with 2 empty pages.
@@ -29,6 +36,7 @@ export default function ScrapbookBuilder() {
   const [title, setTitle] = useState('My Scrapbook');
 
   const [animId, setAnimId] = useState('default'); // options: default, slide
+  const [appBackground, setAppBackground] = useState('none');
 
   const [isSaving, setIsSaving] = useState(false);
   const [shareUrl, setShareUrl] = useState(null);
@@ -36,6 +44,108 @@ export default function ScrapbookBuilder() {
   // GLOBAL DRAWER STATE
   // { type: 'NONE' | 'COMPONENT' | 'STYLE', data: any, onAction: func, title: string }
   const [activeDrawer, setActiveDrawer] = useState({ type: 'NONE', data: {}, onAction: () => {} });
+
+  // --- LOCAL STORAGE AUTO-SAVE LOGIC ---
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [showDraftModal, setShowDraftModal] = useState(false);
+  const [draftData, setDraftData] = useState(null);
+
+  // 1. Initial Check on Mount
+  useEffect(() => {
+    // Helper to check validity
+    const isValidDraft = (parsed) => parsed && parsed.pages && parsed.pages.length > 0;
+
+    // A. Check for Guest Draft (Priority: Migration from Anonymous -> Logged In)
+    const guestDraft = localStorage.getItem('scrapbook_draft_guest');
+    if (guestDraft) {
+        try {
+            const parsed = JSON.parse(guestDraft);
+            if (isValidDraft(parsed)) {
+                setDraftData({ ...parsed, source: 'guest' });
+                setShowDraftModal(true);
+                return; 
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    // B. Check for User Draft (if logged in)
+    if (user) {
+        const userId = user._id || user.id;
+        const userDraft = localStorage.getItem(`scrapbook_draft_${userId}`);
+        if (userDraft) {
+            try {
+                const parsed = JSON.parse(userDraft);
+                if (isValidDraft(parsed)) {
+                    setDraftData({ ...parsed, source: 'user' });
+                    setShowDraftModal(true);
+                } else {
+                    setIsInitialized(true);
+                }
+            } catch (e) { 
+                setIsInitialized(true); 
+            }
+        } else {
+            setIsInitialized(true);
+        }
+    } else {
+        // If no user and no guest draft found (or invalid)
+        if (!guestDraft) setIsInitialized(true);
+    }
+  }, [user]);
+
+  // 2. Auto-Save Effect
+  useEffect(() => {
+      // Only save if initialized and not currently previewing
+      if (!isInitialized) return;
+
+      const saveData = {
+          pages,
+          bgPattern,
+          bgColor,
+          pageBorder,
+          soundId,
+          title,
+          animId
+      };
+
+      const handler = setTimeout(() => {
+          const userId = user ? (user._id || user.id) : 'guest';
+          localStorage.setItem(`scrapbook_draft_${userId}`, JSON.stringify(saveData));
+      }, 1000); // Debounce 1s
+
+      return () => clearTimeout(handler);
+  }, [pages, bgPattern, bgColor, pageBorder, soundId, title, animId, isInitialized, user]);
+
+  const handleContinueDraft = () => {
+    if (draftData) {
+        setPages(draftData.pages || pages);
+        setBgPattern(draftData.bgPattern || bgPattern);
+        setBgColor(draftData.bgColor || bgColor);
+        setPageBorder(draftData.pageBorder || pageBorder);
+        setSoundId(draftData.soundId || soundId);
+        setTitle(draftData.title || title);
+        setAnimId(draftData.animId || animId);
+
+        // If we migrated a guest draft, clear it so it doesn't persist
+        if (draftData.source === 'guest') {
+            localStorage.removeItem('scrapbook_draft_guest');
+        }
+    }
+    setShowDraftModal(false);
+    setIsInitialized(true); 
+  };
+
+  const handleStartFresh = () => {
+    // Determine which key to clear
+    if (draftData && draftData.source === 'guest') {
+        localStorage.removeItem('scrapbook_draft_guest');
+    } else {
+        const userId = user ? (user._id || user.id) : 'guest';
+        localStorage.removeItem(`scrapbook_draft_${userId}`);
+    }
+    setShowDraftModal(false);
+    setIsInitialized(true); 
+  };
 
   const openDrawer = (type, data = {}, onAction = () => {}, title = '') => {
     setActiveDrawer({ type, data, onAction, title });
@@ -88,6 +198,7 @@ export default function ScrapbookBuilder() {
     { id: 'default', label: 'Classic Flip', icon: '📖' },
     { id: 'slide', label: 'Card Slide', icon: '🃏' },
     { id: 'binder', label: 'Ring Binder', icon: '📒' },
+    { id: 'realistic', label: 'Realistic Flip', icon: '📄' },
   ];
 
   const addPagePair = () => {
@@ -114,6 +225,16 @@ export default function ScrapbookBuilder() {
   };
 
   const handleShare = async () => {
+    if (!user) {
+        // Force save draft before redirecting to login
+        const currentData = {
+           pages, bgPattern, bgColor, pageBorder, soundId, title, animId
+        };
+        localStorage.setItem('scrapbook_draft', JSON.stringify(currentData));
+        router.push('/login?redirect=/scrapbook');
+        return;
+    }
+
     setIsSaving(true);
     try {
       const res = await fetch('/api/scrapbook/save', {
@@ -140,6 +261,7 @@ export default function ScrapbookBuilder() {
       {/* Share Modal */}
       {shareUrl && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+           {/* ... existing share modal content ... */}
            <div className="bg-white p-8 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 transform transition-all scale-100">
               <div className="w-16 h-16 bg-lime-100 text-lime-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-8 h-8" />
@@ -175,66 +297,124 @@ export default function ScrapbookBuilder() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-white/80 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
-        <div className="flex items-center shrink-0">
-             <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-80 transition-opacity">
-                <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
-                     <Book className="w-6 h-6" />
-                </div>
-                <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">Scrapbook.</span>
-             </Link>
-        </div>
-        <div className="flex gap-2 md:gap-3 shrink-0">
-             {isPreview && (
+      {/* Draft Detected Modal */}
+      {showDraftModal && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+           <div className="bg-white p-8 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 transform transition-all scale-100 animate-in zoom-in-95 duration-300">
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Book className="w-8 h-8" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-center text-gray-900">Unsaved Progress Found</h2>
+              <p className="mb-8 text-gray-500 text-center leading-relaxed">
+                  We found a previous scrapbook you were working on. Would you like to continue where you left off?
+              </p>
+              
+              <div className="flex flex-col gap-3">
                  <button 
-                    onClick={() => setIsPreview(false)}
-                    className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all"
+                    onClick={handleContinueDraft}
+                    className="w-full py-3 bg-lime-400 text-black font-bold rounded-xl hover:bg-lime-500 transition-all shadow-lg shadow-lime-500/20"
                  >
-                    <span className="hidden sm:inline">Back to </span>Edit
+                    Continue Editing
                  </button>
-             )}
-             
-            {!isPreview && (
                  <button 
-                    onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId }, () => {}, 'Page Theme')}
-                    className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all hover:shadow-sm"
+                    onClick={handleStartFresh}
+                    className="w-full py-3 bg-white text-gray-700 border border-gray-200 font-bold rounded-xl hover:bg-gray-50 transition-all"
                  >
+                    Start Fresh
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* Header */}
+      {/* Header - Hidden in Preview */}
+      {!isPreview && (
+        <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-white/80 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
+            <div className="flex items-center shrink-0">
+                <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-80 transition-opacity">
+                    <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
+                        <Book className="w-6 h-6" />
+                    </div>
+                    <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">MyScrapebook</span>
+                </Link>
+            </div>
+            <div className="flex gap-2 md:gap-3 shrink-0">
+                <button 
+                    onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId }, () => {}, 'Page Theme')}
+                    className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-3 sm:px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all hover:shadow-sm"
+                >
                     <Palette className="w-4 h-4" />
                     <span className="hidden sm:inline">Theme</span>
-                 </button>
-            )}
+                </button>
 
-            <button 
-                onClick={() => {
-                    if (isPreview) {
-                        handleShare();
-                    } else {
-                        setIsPreview(true);
-                    }
-                }}
-                disabled={isSaving}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-lime-500/20 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 ${
-                  isPreview 
-                    ? 'bg-lime-400 text-black hover:bg-lime-500' 
-                    : 'bg-black text-white hover:bg-gray-800'
-                }`}
-            >
-                {isSaving ? 'Saving...' : (isPreview ? 'Share Link' : 'Preview')}
-            </button>
-        </div>
-      </header>
+                <button 
+                    onClick={handleShare}
+                    disabled={isSaving}
+                    className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-105 bg-lime-400 text-black hover:bg-lime-500 disabled:opacity-50 disabled:hover:scale-100"
+                >
+                    {isSaving ? (
+                        <span className="text-xs">Saving...</span>
+                    ) : (
+                        <>
+                            <Share2 className="w-4 h-4" />
+                            <span className="hidden sm:inline">Share</span>
+                        </>
+                    )}
+                </button>
+
+                <button 
+                    onClick={() => setIsPreview(true)}
+                    className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-black/20 hover:shadow-xl hover:scale-105 bg-black text-white hover:bg-gray-800"
+                >
+                    <Eye className="w-4 h-4" />
+                    <span className="hidden sm:inline">Preview</span>
+                </button>
+            </div>
+        </header>
+      )}
+
+      {/* Floating Controls in Preview Mode */}
+      {isPreview && (
+          <div className="fixed top-6 right-6 z-50 flex gap-3 animate-in slide-in-from-top-4 duration-500">
+               <button 
+                    onClick={() => setIsPreview(false)}
+                    className="flex items-center gap-2 bg-white/90 backdrop-blur text-gray-900 border border-gray-200 px-6 py-3 rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg"
+               >
+                   Back to Edit
+               </button>
+               <button 
+                    onClick={handleShare}
+                    disabled={isSaving}
+                    className="flex items-center gap-2 bg-lime-400 text-black px-6 py-3 rounded-full font-bold shadow-lg shadow-lime-500/30 hover:shadow-xl hover:scale-105 hover:bg-lime-500 transition-all disabled:opacity-50 disabled:hover:scale-100"
+               >
+                   {isSaving ? 'Saving...' : 'Share Link'}
+               </button>
+          </div>
+      )}
     
       {/* Background Toolbar */}
 
 
       {/* Main Workspace */}
-      <main className={`flex-1 overflow-auto relative flex flex-col items-center py-12 transition-colors duration-500 ${isPreview ? 'bg-[#1a1a1a]' : 'bg-gray-50'}`}>
+      <main 
+        className={`flex-1 overflow-auto relative flex ${isPreview ? 'items-center justify-center' : 'flex-col items-center'} transition-colors duration-500 ${isPreview ? 'bg-[#1a1a1a]' : 'bg-gray-50'}`}
+        style={{
+            backgroundImage: isPreview && appBackground !== 'none' ? appBackground : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: isPreview && appBackground === 'none' ? '#1a1a1a' : undefined
+        }}
+      >
+          {/* Subtle Dark Overlay for better contrast on images */}
+          {isPreview && appBackground !== 'none' && (
+              <div className="fixed inset-0 bg-black/30 pointer-events-none z-0" />
+          )}
           
           
           {/* Title Input */}
           {!isPreview && (
-            <div className="mb-8 w-full max-w-md flex flex-col items-center z-10 relative px-4">
+            <div className="my-8 w-full max-w-md flex flex-col items-center z-10 relative px-4">
                 <input
                     type="text"
                     value={title}
@@ -245,7 +425,7 @@ export default function ScrapbookBuilder() {
             </div>
           )}
 
-          <div className={`${isPreview ? 'scale-90' : ''} transition-transform duration-500`}>
+          <div className={`${isPreview ? 'scale-[0.75] sm:scale-75 md:scale-90' : ''} transition-transform duration-500`}>
               {isPreview ? (
                 <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} pageBorder={pageBorder} soundId={soundId} animId={animId} />
               ) : (
@@ -295,6 +475,8 @@ export default function ScrapbookBuilder() {
                    setSoundId={setSoundId}
                    animId={animId}
                    setAnimId={setAnimId}
+                   appBackground={appBackground}
+                   setAppBackground={setAppBackground}
                    bgOptions={BG_OPTIONS}
                    colorOptions={COLOR_OPTIONS}
                    borderOptions={BORDER_OPTIONS}

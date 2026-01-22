@@ -43,6 +43,10 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
   const dataRef = useRef(data);
   const onUpdateRef = useRef(onUpdate);
 
+  // Refs for auto-resizing textareas
+  const headingRef = useRef(null);
+  const bodyRef = useRef(null);
+
   useEffect(() => {
     onUpdateRef.current = onUpdate;
   }, [onUpdate]);
@@ -65,6 +69,20 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
   useEffect(() => {
     dataRef.current = data;
   }, [data]);
+
+  // Auto-resize logic
+  const autoResize = (elem) => {
+    if (elem) {
+        elem.style.height = 'auto'; // Reset to auto to calculate shrink
+        elem.style.height = elem.scrollHeight + 'px';
+    }
+  };
+
+  // Trigger resize on data change
+  useEffect(() => {
+      autoResize(headingRef.current);
+      autoResize(bodyRef.current);
+  }, [data.heading, data.body]);
 
   const handleChange = (field, value) => {
     // Use ref to get the absolute latest data, ignoring closure staleness
@@ -119,10 +137,11 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
   
   // Get current font style
   const currentFontStyle = FONT_STYLES.find(f => f.id === (data.fontStyle || 'classic')) || FONT_STYLES[0];
+  const textSizeClass = currentFontStyle.id === 'handwritten' ? 'text-[1.4rem]' : 'text-lg';
 
   return (
     <div 
-      className={`w-full h-full flex flex-col justify-center items-center text-center relative ${isCover ? 'p-12' : 'p-8'}`}
+      className={`w-full h-full flex flex-col justify-center relative ${isCover ? 'items-center text-center p-12' : 'items-start text-left px-6 py-8'}`}
       style={isCover ? { backgroundColor: coverBgColor, color: computedTextColor } : { color: computedTextColor }}
     >
         {/* Edit Style Button - Opens Sidebar Drawer */}
@@ -140,19 +159,17 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
 
         {(!readOnly || data.heading) && (
           <textarea 
+              ref={headingRef}
               readOnly={readOnly}
               placeholder={!readOnly ? (isCover ? "TITLE HERE" : "HEADLINE GOES HERE") : ""}
               value={data.heading}
               onChange={(e) => handleChange('heading', e.target.value)}
-              className={`w-full text-center bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
-                  ${isCover ? 'text-3xl md:text-4xl' : 'text-3xl placeholder-gray-300'}
+              className={`w-full bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
+                  ${isCover ? 'text-center text-3xl md:text-4xl' : 'text-left text-3xl placeholder-gray-300'}
                   ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
               `}
               rows={1}
-              onInput={(e) => {
-                  e.target.style.height = 'auto';
-                  e.target.style.height = e.target.scrollHeight + 'px';
-              }}
+              onInput={(e) => autoResize(e.target)}
               style={{ 
                 color: computedTextColor,
                 fontFamily: currentFontStyle.headingFont,
@@ -163,8 +180,8 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
         
         {readOnly ? (
              <div 
-               className={`w-full whitespace-pre-wrap leading-relaxed p-4
-                  ${isCover ? 'text-lg opacity-80' : 'text-lg text-gray-700'}
+               className={`w-full whitespace-pre-wrap leading-relaxed p-0
+                  ${isCover ? `${textSizeClass} opacity-80` : `${textSizeClass} text-gray-800`}
                `}
                style={{ 
                  fontFamily: currentFontStyle.bodyFont,
@@ -175,13 +192,16 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
              </div>
         ) : (
             <textarea
+                ref={bodyRef}
                 placeholder={isCover ? "Description / Date..." : "Write your story here..."}
                 value={data.body}
                 onChange={(e) => handleChange('body', e.target.value)}
-                className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-4 rounded-md
-                    ${isCover ? 'text-lg opacity-80 h-48 placeholder-current/40' : 'flex-1 text-lg text-gray-700 placeholder-gray-300'}
+                className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-0 rounded-md overflow-hidden
+                    ${isCover ? `${textSizeClass} opacity-80 h-48 placeholder-current/40` : `${textSizeClass} text-gray-700 placeholder-gray-300`}
                     hover:border-dashed hover:border-current/20 focus:outline-none focus:border-[#A3E635]
                 `}
+                rows={1}
+                onInput={(e) => autoResize(e.target)}
                 style={{ 
                   color: computedTextColor,
                   fontFamily: currentFontStyle.bodyFont,

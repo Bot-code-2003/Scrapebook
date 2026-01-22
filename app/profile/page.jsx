@@ -1,12 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Book, Plus, Loader2, LogOut, ArrowLeft, Bookmark, User } from 'lucide-react';
+import { Book, Plus, Loader2, LogOut, ArrowLeft, Bookmark, User, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 // Book Card Component - looks like a physical book
-function BookCard({ book, isSaved }) {
+function BookCard({ book, isSaved, onDelete }) {
   const coverImage = book.pages?.[0]?.content?.url;
   const bgColor = book.bgColor || '#FFFDF5';
   
@@ -50,9 +50,31 @@ function BookCard({ book, isSaved }) {
             </div>
           )}
           
+          {/* Delete Button */}
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onDelete(book);
+            }}
+            className="absolute top-2 right-2 bg-white p-1.5 rounded-full border border-black hover:bg-red-50 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100"
+            title={isSaved ? "Remove from saved" : "Delete book"}
+          >
+            <Trash2 className="w-3 h-3" />
+          </button>
+
+          {/* Saved Badge - Only show if saved AND NOT hovered (to avoid overlap with delete) OR position differently if needed. 
+              Actually, let's put the delete button in top-right and saved badge in top-left? 
+              Or just let the delete button replace the saved badge on hover?
+              The saved badge is checking `isSaved`. 
+              Let's keep saved badge but maybe move it or just let them coexist. 
+              The current saved badge is top-right. 
+              Let's move saved badge to top-left if we want to avoid conflict, or just stack them.
+           */}
+           
           {/* Saved Badge */}
           {isSaved && (
-            <div className="absolute top-2 right-2 bg-[#FFD43B] p-1.5 rounded-full border border-black">
+            <div className="absolute top-2 left-2 bg-[#FFD43B] p-1.5 rounded-full border border-black z-10">
               <Bookmark className="w-3 h-3" />
             </div>
           )}
@@ -113,6 +135,38 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     await logout();
     router.push('/');
+  };
+
+  const handleDeleteBook = async (book) => {
+    const isMyBook = activeTab === 'my';
+    const message = isMyBook 
+      ? 'Are you sure you want to delete this book? This action cannot be undone.' 
+      : 'Are you sure you want to remove this book from your saved collection?';
+      
+    if (!confirm(message)) return;
+
+    try {
+      if (isMyBook) {
+         const res = await fetch(`/api/scrapbook/${book.shareId}`, { method: 'DELETE' });
+         const data = await res.json();
+         if (data.success) {
+            setMyBooks(prev => prev.filter(b => b._id !== book._id));
+         } else {
+             alert(data.message || 'Failed to delete book');
+         }
+      } else {
+         const res = await fetch(`/api/scrapbook/save-to-library?shareId=${book.shareId}`, { method: 'DELETE' });
+         const data = await res.json();
+         if (data.success) {
+            setSavedBooks(prev => prev.filter(b => b._id !== book._id));
+         } else {
+             alert(data.message || 'Failed to remove book');
+         }
+      }
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      alert('Failed to delete book');
+    }
   };
 
   if (authLoading || loading) {
@@ -236,6 +290,7 @@ export default function ProfilePage() {
                   key={book._id} 
                   book={book} 
                   isSaved={activeTab === 'saved'}
+                  onDelete={handleDeleteBook}
                 />
               ))}
             </div>

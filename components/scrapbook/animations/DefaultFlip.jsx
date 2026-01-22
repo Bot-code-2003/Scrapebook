@@ -12,8 +12,8 @@ export default function DefaultFlip({
 }) {
     
   // Dimensions 
-  const PAGE_WIDTH = 400;
-  const PAGE_HEIGHT = 550;
+  const PAGE_WIDTH = 500;
+  const PAGE_HEIGHT = 700;
   const SPREAD_WIDTH = PAGE_WIDTH * 2;
 
   // Extract border width for left/right edge handling

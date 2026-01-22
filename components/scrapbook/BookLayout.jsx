@@ -25,11 +25,11 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
   // EDIT MODE RENDER
   // ============================================
   return (
-    <div className="flex flex-col gap-12 items-center w-full max-w-6xl px-4">
+    <div className="flex flex-col gap-8 items-center w-full max-w-6xl px-4">
       {editSpreads.map((spread, index) => (
         <div key={index} className="flex flex-col items-center relative group/spread">
             {/* ... Spread Header ... */}
-            <div className="mb-3 w-full flex justify-between items-end px-4 max-w-[800px]">
+            <div className="mb-3 w-full flex justify-between items-end px-4 max-w-[1000px]">
                 <div className="font-bold text-gray-400 text-xs tracking-wide">
                     {index === 0 ? "Cover (Front & Back)" : `Spread ${index}`}
                 </div>
@@ -44,10 +44,10 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
             </div>
 
             {/* The Book Spread */}
-            <div className="flex flex-col md:flex-row shadow-2xl rounded-sm">
+            <div className="flex flex-col md:flex-row shadow-2xl rounded-sm transform md:scale-90 md:origin-top md:-mb-16">
                 {/* Left Page */}
                 <div 
-                    className={`w-[300px] h-[400px] md:w-[400px] md:h-[550px] relative z-10 overflow-hidden ${index === 0 ? 'rounded-l-sm' : ''}`}
+                    className={`w-[350px] h-[490px] md:w-[500px] md:h-[700px] relative z-10 overflow-hidden ${index === 0 ? 'rounded-l-sm' : ''}`}
                     style={{ backgroundColor: 'transparent' }} 
                 >
                     <div className="absolute inset-0 border border-gray-200 pointer-events-none z-30" style={{ borderRight: 'none' }}></div>
@@ -76,11 +76,11 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                 {/* Right Page */}
                 {spread[1] && (
                     <div 
-                        className={`w-[300px] h-[400px] md:w-[400px] md:h-[550px] relative z-10 overflow-hidden md:left-[-1px] ${index === 0 ? 'rounded-r-sm' : ''}`}
+                        className={`w-[350px] h-[490px] md:w-[500px] md:h-[700px] relative z-10 overflow-hidden md:left-[-1px] ${index === 0 ? 'rounded-r-sm' : ''}`}
                         style={{ backgroundColor: 'transparent' }}
                     >
                         <div className="absolute inset-0 border border-gray-200 pointer-events-none z-30" style={{ borderLeft: 'none' }}></div>
-                         <div 
+                        <div 
                             className="w-full h-full relative"
                             style={{ backgroundColor: bgColor || '#FFFDF5' }}
                         >

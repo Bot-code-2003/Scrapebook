@@ -78,6 +78,7 @@ export default function ScrapbookViewer({ scrapbook }) {
         soundId={scrapbook.soundId}
         animId={scrapbook.animId}
         bookStyle={scrapbook.bookStyle}
+        showControls={false}
       />
 
       {/* Save CTA Button (bottom right) */}

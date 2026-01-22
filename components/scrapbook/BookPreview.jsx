@@ -5,6 +5,7 @@ import Page from './Page';
 import DefaultFlip from './animations/DefaultFlip';
 import SlideFlip from './animations/SlideFlip';
 import BinderFlip from './animations/BinderFlip';
+import RealisticFlip from './animations/RealisticFlip';
 
 // Book style configurations
 const BOOK_STYLES = {
@@ -35,7 +36,7 @@ const BOOK_STYLES = {
   },
 };
 
-export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, soundId, animId, bookStyle = 'classic', defaultPage = 0 }) {
+export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, soundId, animId, bookStyle = 'classic', defaultPage = 0, showControls = true }) {
 
   
   const styleConfig = BOOK_STYLES[bookStyle] || BOOK_STYLES.classic;
@@ -153,69 +154,55 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full max-h-[350px] sm:min-h-[700px] relative overflow-hidden" style={{ perspective: '2000px' }}>
+    <div className="flex flex-col items-center justify-center w-full h-full sm:min-h-[700px] relative overflow-hidden " style={{ perspective: '2000px' }}>
       
-      {/* Book Component */}
-      {animId === 'slide' ? (
-        <SlideFlip
-           sheets={sheets}
-           currentSheetIndex={currentSheetIndex}
-           onFlipNext={flipNext}
-           onFlipPrev={flipPrev}
-           bgColor={bgColor}
-           renderPage={renderPageContent}
-           styleConfig={styleConfig}
-        />
-      ) : animId === 'binder' ? (
-        <BinderFlip
-           sheets={sheets}
-           currentSheetIndex={currentSheetIndex}
-           onFlipNext={flipNext}
-           onFlipPrev={flipPrev}
-           bgColor={bgColor}
-           renderPage={renderPageContent}
-           styleConfig={styleConfig}
-        />
-      ) : (
-        <DefaultFlip
-           sheets={sheets}
-           currentSheetIndex={currentSheetIndex}
-           onFlipNext={flipNext}
-           onFlipPrev={flipPrev}
-           bgColor={bgColor}
-           renderPage={renderPageContent}
-           styleConfig={styleConfig}
-        />
-      )}
-
-      
-      {/* Navigation Arrows */}
-      <div className="flex gap-4 mt-4 md:mt-8 relative z-10 transition-all duration-300">
-        <button 
-          onClick={flipPrev} 
-          disabled={currentSheetIndex === 0}
-          className="group p-3 rounded-full bg-white/30 backdrop-blur-sm border border-white/50 shadow-lg text-gray-800 hover:bg-white/50 hover:scale-110 transition-all disabled:opacity-0 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
-        </button>
-        <button 
-          onClick={flipNext} 
-          disabled={currentSheetIndex >= sheets.length}
-          className="group p-3 rounded-full bg-white/30 backdrop-blur-sm border border-white/50 shadow-lg text-gray-800 hover:bg-white/50 hover:scale-110 transition-all disabled:opacity-0 disabled:cursor-not-allowed"
-        >
-          <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
-        </button>
+      {/* Responsive Scale Wrapper for Mobile */}
+      <div className="scale-[0.90] sm:scale-100 origin-center">
+        {/* Book Component */}
+        {animId === 'slide' ? (
+          <SlideFlip
+             sheets={sheets}
+             currentSheetIndex={currentSheetIndex}
+             onFlipNext={flipNext}
+             onFlipPrev={flipPrev}
+             bgColor={bgColor}
+             renderPage={renderPageContent}
+             styleConfig={styleConfig}
+          />
+        ) : animId === 'binder' ? (
+          <BinderFlip
+             sheets={sheets}
+             currentSheetIndex={currentSheetIndex}
+             onFlipNext={flipNext}
+             onFlipPrev={flipPrev}
+             bgColor={bgColor}
+             renderPage={renderPageContent}
+             styleConfig={styleConfig}
+          />
+        ) : animId === 'realistic' ? (
+          <RealisticFlip
+             pages={pages} // Pass raw pages
+             currentSheetIndex={currentSheetIndex}
+             onIndexChange={setCurrentSheetIndex} // Sync state back
+             bgColor={bgColor}
+             renderPage={renderPageContent}
+             styleConfig={styleConfig}
+          />
+        ) : (
+          <DefaultFlip
+             sheets={sheets}
+             currentSheetIndex={currentSheetIndex}
+             onFlipNext={flipNext}
+             onFlipPrev={flipPrev}
+             bgColor={bgColor}
+             renderPage={renderPageContent}
+             styleConfig={styleConfig}
+          />
+        )}
       </div>
 
-      {/* Page indicator */}
-      <div className="mt-4 text-white font-mono font-bold tracking-widest text-sm opacity-50 uppercase pointer-events-none relative z-10">
-        {currentSheetIndex === 0 
-          ? "Front Cover" 
-          : currentSheetIndex >= sheets.length
-            ? "Back Cover" 
-            : `Spread ${currentSheetIndex}`
-        }
-      </div>
+      
+      {/* Navigation controls removed for cleaner preview */}
     </div>
   );
 }

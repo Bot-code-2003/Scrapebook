@@ -11,8 +11,8 @@ export default function BinderFlip({
 }) {
     
   // Dimensions 
-  const PAGE_WIDTH = 400;
-  const PAGE_HEIGHT = 550;
+  const PAGE_WIDTH = 500;
+  const PAGE_HEIGHT = 700;
   // Spread width includes the gap we create. 
   // Gap = 2 * RING_RADIUS. 
   // transformOrigin = -RING_RADIUS.

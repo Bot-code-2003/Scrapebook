@@ -2,6 +2,29 @@
 import React, { useState } from 'react';
 import { X, Check, ChevronDown } from 'lucide-react';
 
+
+// APP BACKGROUND OPTIONS
+const APP_BACKGROUNDS = [
+  { 
+      id: 'none', 
+      label: 'None', 
+      value: 'none', 
+      thumbnail: '' 
+  },
+  { 
+      id: 'kawai-camp', 
+      label: 'Kawai Camp', 
+      value: 'url("/backgrounds/kawai-camp.webp")', 
+      thumbnail: '/backgrounds/kawai-camp.webp' 
+  },
+  { 
+      id: 'kawai-aliens', 
+      label: 'Kawai Aliens', 
+      value: 'url("/backgrounds/kawai-aliens.webp")', 
+      thumbnail: '/backgrounds/kawai-aliens.webp' 
+  }
+];
+
 // Collapsible Section Component
 function AccordionSection({ title, icon, isOpen, onToggle, selectedLabel, children }) {
   return (
@@ -37,7 +60,7 @@ function AccordionSection({ title, icon, isOpen, onToggle, selectedLabel, childr
   );
 }
 
-export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColor, setBgColor, pageBorder, setPageBorder, soundId, setSoundId, animId, setAnimId, bookStyle, setBookStyle, bgOptions, colorOptions, borderOptions, soundOptions, animOptions, bookStyleOptions, onClose }) {
+export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColor, setBgColor, pageBorder, setPageBorder, soundId, setSoundId, animId, setAnimId, bookStyle, setBookStyle, appBackground, setAppBackground, bgOptions, colorOptions, borderOptions, soundOptions, animOptions, bookStyleOptions, onClose }) {
   // Track which section is open (only one at a time)
   const [openSection, setOpenSection] = useState(null);
 
@@ -69,6 +92,38 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
             </header>
 
             <div className="flex flex-col gap-3 pb-10">
+
+                {/* APP BACKGROUND SECTION */}
+                <AccordionSection
+                  title="App Background"
+                  icon="🖼️"
+                  isOpen={openSection === 'appBg'}
+                  onToggle={() => toggleSection('appBg')}
+                  selectedLabel={appBackground === 'none' ? 'None' : 'Custom'}
+                >
+                  <div className="grid grid-cols-2 gap-3">
+                    {APP_BACKGROUNDS.map((bg) => (
+                        <button
+                            key={bg.id}
+                            onClick={() => setAppBackground(bg.value)}
+                            className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-2 aspect-square transition-all ${
+                              (appBackground === bg.value || (bg.value !== 'none' && appBackground?.includes(bg.value.replace(/url\("|"\)/g, '').split('?')[0])))
+                                ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                                : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                        >
+                           {bg.id === 'none' ? (
+                               <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center border border-gray-300">
+                                   <X className="w-5 h-5 text-gray-400" />
+                               </div>
+                           ) : (
+                               <img src={bg.thumbnail} className="w-12 h-12 object-cover rounded-md" alt={bg.label} />
+                           )}
+                           <span className="font-bold text-xs">{bg.label}</span>
+                        </button>
+                    ))}
+                  </div>
+                </AccordionSection>
                 
                 {/* BOOK STYLE SECTION */}
                 {bookStyleOptions && (

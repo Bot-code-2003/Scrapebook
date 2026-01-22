@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Book, Plus, ArrowRight, Scissors, User, LogOut, Sparkles, Heart, Zap, Star, 
+  Book, Plus, ArrowRight, Scissors, User, X, Sparkles, Heart, Zap, Star, 
   Cake, Gift, Palette, FileText, Send, Scroll, PenTool, Paperclip, 
   Volume2, Ship, Plane, PartyPopper, MessageCircle, Type, Smartphone, Bookmark
 } from 'lucide-react';
@@ -88,7 +88,7 @@ export default function Home() {
           <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
             <Book className="w-6 h-6" />
           </div>
-          <span className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Scrapbook</span>
+          <span className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">MyScrapbook</span>
         </Link>
         <div className="flex items-center gap-3 md:gap-4">
             {!loading && (
@@ -139,7 +139,7 @@ export default function Home() {
           <div className="flex justify-center mb-8 relative z-10">
             <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md border border-gray-200/50 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span>The most meaningful way to send a message</span>
+              <span>The #1 Platform for Digital Scrapbooks & Gifting</span>
             </div>
           </div>
 
@@ -175,7 +175,7 @@ export default function Home() {
             {/* Subheadline */}
             <div className="max-w-2xl mx-auto mb-10">
               <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed font-medium">
-                Create a digital scrapbook — one page at a time — and gift it as a <span className="font-serif italic text-gray-500">flipping book.</span>
+                Create a personalized <span className="font-bold text-gray-800">digital scrapbook</span> — one page at a time — and gift it as a stunning <span className="font-serif italic text-gray-500">digital album.</span>
               </p>
             </div>
 
@@ -208,7 +208,7 @@ export default function Home() {
                       />
                     </div>
                     <p className="mt-6 text-gray-500 font-medium text-sm">
-                      <span className="bg-gray-100 px-3 py-1 rounded-full">{['For You', 'Best Friends', 'Birthday'][index] || 'Scrapbook'}</span>
+                      <span className="bg-gray-100 px-3 py-1 rounded-full">{['Travel', 'Music', 'Holiday'][index] || 'Scrapbook'}</span>
                     </p>
                   </div>
                 ))}
@@ -229,7 +229,7 @@ export default function Home() {
                             onClick={() => setOpenedBookIndex(null)}
                             className="absolute top-4 right-4 md:top-0 md:-right-12 text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full backdrop-blur-md"
                         >
-                            <LogOut className="w-6 h-6" />
+                            <X className="w-6 h-6" />
                         </button>
                         
                         <div className="w-full h-full flex items-center justify-center scale-75 md:scale-90 lg:scale-100 transition-transform">
@@ -242,11 +242,8 @@ export default function Home() {
                                 bookStyle={HOME_BOOK[openedBookIndex].bookStyle}
                                 soundId="page-flip"
                                 defaultPage={0}
+                                showControls={false}
                               />
-                        </div>
-                        
-                         <div className="mt-4 text-white/50 text-sm font-medium animate-pulse">
-                            Click outside to close
                         </div>
                     </div>
                 </div>
@@ -266,7 +263,7 @@ export default function Home() {
               Handmade Feel. <span className="text-gray-400 font-serif italic font-normal">Digital Ease.</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              We've combined the nostalgia of physical scrapbooking with the magic of modern web design. No glue required.
+              MyScrapbook combines the nostalgia of physical scrapbooking with the magic of modern web design. No glue required.
             </p>
           </div>
 
@@ -321,12 +318,7 @@ export default function Home() {
                     ))}
                 </div>
 
-                <div className="mt-auto pt-8 w-full">
-                    <div className="flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase text-zinc-500">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        Live Preview
-                    </div>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -371,7 +363,7 @@ export default function Home() {
                </ul>
             </div>
 
-            {/* The DigiGift Way */}
+            {/* The MyScrapebook Way */}
             <div className="p-8 md:p-12 rounded-3xl bg-lime-50 border border-lime-100 text-center shadow-2xl scale-105 relative z-0">
                <div className="absolute top-0 right-0 p-4">
                   <span className="bg-lime-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Better</span>
@@ -379,7 +371,7 @@ export default function Home() {
                <div className="w-16 h-16 mx-auto bg-black text-lime-400 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-lime-400/20">
                  <Gift className="w-8 h-8" />
                </div>
-               <h3 className="text-xl font-bold text-gray-900 mb-8 uppercase tracking-widest">The Scrapbook</h3>
+               <h3 className="text-xl font-bold text-gray-900 mb-8 uppercase tracking-widest">MyScrapbook</h3>
                
                <ul className="space-y-6 text-left">
                  {[
@@ -427,7 +419,7 @@ export default function Home() {
             
             <div className="flex items-center gap-2 font-medium text-sm text-gray-500">
               <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
-              2,400+ books created this week
+              2,400+ digital albums created this week
             </div>
           </div>
         </div>
@@ -442,10 +434,10 @@ export default function Home() {
                 <div className="w-8 h-8 bg-lime-100 text-lime-600 flex items-center justify-center rounded-lg">
                   <Book className="w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold tracking-tight text-gray-900">Scrapbook</span>
+                <span className="text-xl font-bold tracking-tight text-gray-900">MyScrapbook</span>
               </div>
               <p className="text-lg text-gray-500 max-w-sm leading-relaxed">
-                Turning digital gifts into physical emotions. The world's first digital wrapping service for the things that matter.
+                Create beautiful digital scrapbooks and memory books. Transform your photos and memories into interactive gifts that last forever.
               </p>
             </div>
             
@@ -465,14 +457,14 @@ export default function Home() {
                 <li><a href="#" className="hover:text-black transition-colors">TikTok</a></li>
                 <li><a href="#" className="hover:text-black transition-colors">Instagram</a></li>
                 <li><a href="#" className="hover:text-black transition-colors">Twitter</a></li>
-                <li><a href="mailto:hello@wrapper.com" className="hover:text-black transition-colors">Contact Us</a></li>
+                <li><a href="mailto:hello@myscrapebook.com" className="hover:text-black transition-colors">Contact Us</a></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-xs font-medium">
-              © {new Date().getFullYear()} WRAPPER CO. NO RIGHTS RESERVED.
+              © {new Date().getFullYear()} MYSCRAPEBOOK. ALL RIGHTS RESERVED.
             </p>
             <div className="flex gap-6 text-gray-400 text-xs font-medium">
               <Link href="/privacy" className="hover:text-gray-900 transition-colors">Privacy</Link>

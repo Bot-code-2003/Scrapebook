@@ -11,8 +11,8 @@ export default function SlideFlip({
 }) {
     
   // Dimensions 
-  const PAGE_WIDTH = 400;
-  const PAGE_HEIGHT = 550;
+  const PAGE_WIDTH = 500;
+  const PAGE_HEIGHT = 700;
   const SPREAD_WIDTH = PAGE_WIDTH * 2;
 
   // For SlideFlip, we render spreads as horizontal slides sort of like cards.

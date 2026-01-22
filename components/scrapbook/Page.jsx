@@ -5,6 +5,7 @@ import ComponentSelector from './ComponentSelector';
 import ImageElement from './ImageElement';
 import TextElement from './TextElement';
 import CoverElement from './CoverElement';
+import GiftElement from './GiftElement';
 
 export default function Page({ data, onUpdate, side, isCover, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   // data: { id, type, content }
@@ -72,7 +73,7 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
         {/* Page Border Overlay */}
         {!isCover && pageBorder && pageBorder !== 'none' && (
              <div 
-                className={`absolute inset-3 md:inset-4 pointer-events-none z-20 ${getBorderClass(pageBorder)}`} 
+                className={`absolute inset-1.5 md:inset-2 pointer-events-none z-20 ${getBorderClass(pageBorder)}`} 
                 style={getBorderStyle(pageBorder)}
              ></div>
         )}
@@ -111,6 +112,11 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
             {/* Cover type (image + text overlay) - new option */}
             {data.type === 'cover' && (
                 <CoverElement content={data.content} onUpdate={handleContentUpdate} side={side} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
+            )}
+
+            {/* Gift type (hidden surprise) */}
+            {data.type === 'gift' && (
+                <GiftElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} />
             )}
         </div>
 

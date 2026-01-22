@@ -1,5 +1,5 @@
 {
-  "name": "digigift",
+  "name": "myscrapebook",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,6 +19,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-pageflip": "^2.0.3",
     "rn-scratch-card": "^1.2.4",
     "tailwind-merge": "^3.4.0"
   },

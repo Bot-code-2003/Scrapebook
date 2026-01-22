@@ -1,10 +1,10 @@
 export const HOME_BOOK = [{
     shareId: 'demo-book',
-    title: 'Example 1',
+    title: 'Somewhere Between...',
     bgPattern: 'graphy',
     bgColor: '#FFFDF5',
     // pageBorder: 'doodle',
-    animId: 'default',
+    animId: 'realistic',
     bookStyle: 'classic',
     pages: [
     {
@@ -172,7 +172,7 @@ export const HOME_BOOK = [{
 },
 {
   shareId: 'demo-book',
-    title: 'For You',
+    title: 'Songs I’d Play...',
     bgPattern: 'lines',
     bgColor: '#F0FDF4',
     // pageBorder: 'doodle',
@@ -344,7 +344,7 @@ export const HOME_BOOK = [{
 },
 {
     shareId: 'demo-book-3',
-    title: 'Birthday Vibes',
+    title: 'A Week in December',
     bgPattern: 'graphy',
     bgColor: '#FFFDF5',
     animId: 'default',
@@ -354,11 +354,11 @@ export const HOME_BOOK = [{
       "id": "p1",
       "type": "image",
       "content": {
-        "url": "https://i.pinimg.com/736x/2b/23/34/2b23340f10cbb2818a77a94dd74900a0.jpg",
+        "url": "https://i.pinimg.com/1200x/e7/cf/0b/e7cf0b26daa94a34869bf91e6eef3d00.jpg",
         "style": "original",
         "text": {
-          "title": "Happy Birthday!",
-          "subtitle": "Here's to another year of amazing memories."
+          "title": "",
+          "subtitle": ""
         }
       }
     },
@@ -366,25 +366,175 @@ export const HOME_BOOK = [{
       "id": "p2",
       "type": "text",
       "content": {
-        "heading": "Make a Wish",
-        "body": "Blow out the candles and make a wish.\nMay this year bring you as much joy\nas you bring to everyone around you.",
-        "bgColor": "#FFD700",
-        "fontStyle": "classic",
+        "heading": "",
+        "body": "Nothing extraordinary happened.\nBut this week felt worth remembering.",
+        "bgColor": "#4d554a",
+        "fontStyle": "handwritten",
         "textColor": null
       }
     },
     {
-        "id": "p3",
-        "type": "image",
-        "content": {
-          "url": "https://i.pinimg.com/736x/f4/38/54/f438541a052445851d923831872df68b.jpg",
-          "style": "polaroid-hanging",
-          "text": {
-            "title": "",
-            "subtitle": ""
-          }
+      "id": "p3",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/1200x/b8/b1/e1/b8b1e1aad9ae63231879987e1cd05f6c.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
         }
       }
-    ]
+    },
+    {
+      "id": "p4",
+      "type": "text",
+      "content": {
+        "heading": "December 19",
+        "body": "Hmm.\nToday was mostly normal.\nWoke up, went to work, came back.\nNothing special really.\nBut all day I kept thinking about Christmas week coming up.\nThat thought alone made the evening feel lighter somehow.\nI stood by the window for a bit,\nwatching the lights outside.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p5",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/736x/9d/62/7a/9d627abc0610bc17fd617c1f9b2e8e3d.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p6",
+      "type": "text",
+      "content": {
+        "heading": "December 20",
+        "body": "It was colder today, especially in the morning.\nWork felt long, and I was tired by the time I got back.\nI made myself a hot drink and sat with it without rushing.\nNo phone for a bit.\nJust sitting there, warming my hands.\nIt wasn’t a big moment, but it helped me slow down.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p7",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/736x/2f/2c/3f/2f2c3f4030f7cc88f5cd59164d87e691.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p8",
+      "type": "text",
+      "content": {
+        "heading": "December 21",
+        "body": "I went for a walk in the city today after getting home.\nDidn’t plan it, just felt like stepping outside.\nThe streets were busy, but not overwhelming.\nLights everywhere, people walking past, everyone in their own world.\nI walked longer than I expected to.\nCame back feeling clearer than I did when I left.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p9",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/1200x/77/8d/cf/778dcfeb2519ab8e500537323818c592.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p10",
+      "type": "text",
+      "content": {
+        "heading": "December 22",
+        "body": "Wrapped gifts tonight.\nI tried to make them look nice, but it didn’t really work out that way.\nThe paper kept tearing and the tape showed.\n\nStill, while wrapping, I kept thinking about who they were for\nand how they might react.\nThat made the effort feel worth it.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p11",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/736x/bd/e5/12/bde5123b32122d235c5fc8c3fb367417.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p12",
+      "type": "text",
+      "content": {
+        "heading": "December 23",
+        "body": "I baked something today without much planning.\nThe kitchen smelled good for hours afterward.\nEven after cleaning everything up, that smell stayed in the house.\n\nIt made the whole evening feel warmer and familiar.\nMoments like that make December feel different from other months.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p13",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/736x/eb/d0/54/ebd054980485fb12cffe8a4f80dcac07.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p14",
+      "type": "text",
+      "content": {
+        "heading": "December 24",
+        "body": "Christmas is tomorrow.\nTonight feels calm in a way that’s hard to explain.\nNot empty, just quiet and full at the same time.\nI stayed up longer than usual, not really doing much.\nI didn’t want the day to end too quickly\nbecause this feeling only comes once a year.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    },
+    {
+      "id": "p15",
+      "type": "image",
+      "content": {
+        "url": "https://i.pinimg.com/736x/3a/07/43/3a074350e62870605ecd11044ff0cb87.jpg",
+        "style": "original",
+        "text": {
+          "title": "",
+          "subtitle": ""
+        }
+      }
+    },
+    {
+      "id": "p16",
+      "type": "text",
+      "content": {
+        "heading": "December 25",
+        "body": "Today was busy from the start.\nPeople talking, food everywhere, things happening all at once.\nIt was tiring, but in a good way.\n\nBy the end of the day, the house finally got quiet again.\nI sat there for a moment and thought about the week.\nIt felt full.\nThat’s the best way I can describe it.",
+        "bgColor": "#000000",
+        "fontStyle": "handwritten",
+        "textColor": "#000000"
+      }
+    }
+  ],
+    
 }
 ]

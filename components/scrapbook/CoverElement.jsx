@@ -116,6 +116,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
   };
 
   const currentFontStyle = FONT_STYLES.find(f => f.id === (data.fontStyle || 'classic')) || FONT_STYLES[0];
+  const textSizeClass = currentFontStyle.id === 'handwritten' ? 'text-xl' : 'text-lg';
 
   // If no image uploaded yet, show upload UI
   if (!data.imageUrl) {
@@ -241,7 +242,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
         {/* Description Input */}
         {readOnly ? (
           <div 
-            className="w-full text-lg whitespace-pre-wrap"
+            className={`w-full ${textSizeClass} whitespace-pre-wrap`}
             style={{ 
               fontFamily: currentFontStyle.bodyFont,
               fontWeight: currentFontStyle.bodyWeight,
@@ -257,9 +258,9 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
             placeholder="Description / Date..."
             value={data.description}
             onChange={(e) => updateData({ description: e.target.value })}
-            className="w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-4 rounded-md text-lg h-24
+            className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-0 rounded-md ${textSizeClass} h-24
               hover:border-dashed hover:border-white/20 focus:outline-none focus:border-[#A3E635]
-            "
+            `}
             style={{ 
               fontFamily: currentFontStyle.bodyFont,
               fontWeight: currentFontStyle.bodyWeight,

@@ -760,7 +760,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-8">
         {!readOnly && (
-            <div className="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg bg-white/50 flex flex-col items-center justify-center p-4 relative">
+            <div className="w-full h-full border-2 border-dashed border-gray-300 hover:border-gray-400 transition-colors rounded-lg bg-white/50 flex flex-col items-center justify-center p-4 relative">
                 
                 {/* Toggle Type */}
                 <div className="absolute top-2 right-2 flex gap-2">
