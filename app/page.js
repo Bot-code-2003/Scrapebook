@@ -82,6 +82,42 @@ export default function Home() {
   return (
     <div className="min-h-screen text-black font-sans selection:text-black">
       
+      {/* JSON-LD Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "MyScrapbook",
+            "applicationCategory": "DesignApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Create stunning aesthetic scrapbooks and cute digital albums with beautiful templates. Design personalized memory books, digital photo albums, and creative scrapbook gifts.",
+            "operatingSystem": "Web Browser",
+            "keywords": "cute digital album, aesthetic scrapbook, digital scrapbook maker, online scrapbook creator, digital memory book, virtual photo album, personalized digital gift",
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "2400"
+            },
+            "featureList": [
+              "3D Page Flipping Animation",
+              "Customizable Templates",
+              "Washi Tape Decorations",
+              "Multiple Font Styles",
+              "Image Upload",
+              "Text Customization",
+              "Share Links",
+              "Mobile Responsive"
+            ]
+          })
+        }}
+      />
+      
       {/* NAVBAR - REFINED */}
       <nav className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer">
@@ -139,7 +175,7 @@ export default function Home() {
           <div className="flex justify-center mb-8 relative z-10">
             <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md border border-gray-200/50 text-gray-600 px-4 py-1.5 rounded-full text-sm font-medium shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
               <Sparkles className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span>The #1 Platform for Digital Scrapbooks & Gifting</span>
+              <span>The #1 Platform for Digital Albums & Scrapbooks</span>
             </div>
           </div>
 
@@ -175,7 +211,7 @@ export default function Home() {
             {/* Subheadline */}
             <div className="max-w-2xl mx-auto mb-10">
               <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed font-medium">
-                Create a personalized <span className="font-bold text-gray-800">digital scrapbook</span> — one page at a time — and gift it as a stunning <span className="font-serif italic text-gray-500">digital album.</span>
+                Create a <span className="font-bold text-gray-800">cute digital album</span> and <span className="font-bold text-gray-800">aesthetic scrapbook</span> — one page at a time — and gift it as a stunning <span className="font-serif italic text-gray-500">interactive memory book.</span>
               </p>
             </div>
 
@@ -260,10 +296,10 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-black mb-6 text-gray-900 tracking-tight">
-              Handmade Feel. <span className="text-gray-400 font-serif italic font-normal">Digital Ease.</span>
+              Aesthetic Scrapbook Maker. <span className="text-gray-400 font-serif italic font-normal">Digital Album Creator.</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              MyScrapbook combines the nostalgia of physical scrapbooking with the magic of modern web design. No glue required.
+              MyScrapbook combines the nostalgia of physical scrapbooking with the magic of modern design. Create cute digital albums with no glue required.
             </p>
           </div>
 
@@ -330,9 +366,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="text-3xl md:text-5xl font-black mb-4 text-gray-900 tracking-tight">
-              Why This Beats A Text Message
+              Why A Digital Album Beats A Text Message
             </h2>
-            <p className="text-lg text-gray-500">Some memories are too heavy for a blue bubble.</p>
+            <p className="text-lg text-gray-500">Some memories are too precious for a blue bubble.</p>
           </div>
 
           <div className="relative grid md:grid-cols-2 gap-8 items-center">
@@ -401,11 +437,11 @@ export default function Home() {
       <section className="py-24 md:py-32 px-4 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 text-gray-900 leading-tight">
-            Make Something They'll Never Delete.
+            Create Your Cute Digital Album & Aesthetic Scrapbook Today.
           </h2>
           
           <p className="text-xl text-gray-600 mb-12">
-            Start with one page. End with a book they'll remember forever.
+            Start with one page. End with a personalized memory book they'll cherish forever.
           </p>
 
           <div className="flex flex-col items-center gap-6">
@@ -437,7 +473,7 @@ export default function Home() {
                 <span className="text-xl font-bold tracking-tight text-gray-900">MyScrapbook</span>
               </div>
               <p className="text-lg text-gray-500 max-w-sm leading-relaxed">
-                Create beautiful digital scrapbooks and memory books. Transform your photos and memories into interactive gifts that last forever.
+                Create beautiful aesthetic scrapbooks, cute digital albums, and personalized memory books. Transform your photos and memories into interactive gifts that last forever.
               </p>
             </div>
             

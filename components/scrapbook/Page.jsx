@@ -116,7 +116,7 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
 
             {/* Gift type (hidden surprise) */}
             {data.type === 'gift' && (
-                <GiftElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} />
+                <GiftElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
             )}
         </div>
 

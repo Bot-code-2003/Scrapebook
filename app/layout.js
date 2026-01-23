@@ -110,13 +110,42 @@ const comfortaa = Comfortaa({
 });
 
 export const metadata = {
-  title: "MyScrapbook - Digital Scrapbooks, Albums & Book Spaces for Gifts",
-  description: "Create beautiful digital scrapbooks, photo albums, and digital book spaces. The perfect personalized gift for any occasion. Join MyScrapbook today.",
-  keywords: "gifts, scrapebooks, digital album, digital book spaces, online scrapbook, virtual photo album, memory book, MyScrapbook, myscrapebook, personalized gifts, creative spaces, digital gifting",
+  title: "MyScrapbook - Create Cute Digital Albums & Aesthetic Scrapbooks Online",
+  description: "Create stunning aesthetic scrapbooks and cute digital albums with beautiful templates. Design personalized memory books, digital photo albums, and creative scrapbook gifts. Perfect for birthdays, anniversaries, and special moments.",
+  keywords: "cute digital album, aesthetic scrapbook, digital scrapbook maker, online scrapbook creator, digital memory book, virtual photo album, personalized digital gift, scrapbook online, digital album maker, aesthetic photo album, cute memory book, digital scrapbooking, creative photo book, online memory book, digital gift book, scrapbook templates, photo collage book, digital keepsake, interactive photo album, custom scrapbook, digital photo book, aesthetic album, cute scrapbook ideas, online photo album, digital scrapbook templates, memory keeper, photo memory book, personalized album, digital scrapbook gift, creative memory book, MyScrapbook, myscrapebook",
+  authors: [{ name: "MyScrapbook" }],
+  creator: "MyScrapbook",
+  publisher: "MyScrapbook",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: "MyScrapbook - Digital Albums & Creative Book Spaces",
-    description: "Design and share interactive digital scrapbooks and albums. The ultimate platform for creative gifting and memory keeping.",
+    title: "MyScrapbook - Create Cute Digital Albums & Aesthetic Scrapbooks",
+    description: "Design beautiful aesthetic scrapbooks and cute digital albums online. Create personalized memory books with stunning templates. Perfect for gifting special moments.",
     type: "website",
+    siteName: "MyScrapbook",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MyScrapbook - Create Cute Digital Albums & Aesthetic Scrapbooks",
+    description: "Design beautiful aesthetic scrapbooks and cute digital albums online. Create personalized memory books with stunning templates.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: "https://myscrapebook.com",
   },
 };
 
