@@ -606,7 +606,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
   };
 
   // EDIT MODE - INITIAL STATE (No Content)
-  if (!giftContent.type && !isEditingContent) {
+  if (!giftContent.type) {
     if (readOnly) return null; // Should not happen in readOnly if empty
     return (
        <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-gray-100">

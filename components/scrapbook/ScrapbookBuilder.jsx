@@ -274,6 +274,28 @@ export default function ScrapbookBuilder() {
                   }
                } catch (e) { console.error("Failed to upload cover", e); }
           }
+
+          // Handle Gift Images (Hidden inside envelopes/scratch cards)
+          if (page.type === 'gift' && page.content?.type === 'image' && page.content?.data?.startsWith('data:')) {
+               try {
+                  const res = await fetch(page.content.data);
+                  const blob = await res.blob();
+                  const file = new File([blob], "gift.png", { type: "image/png" });
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                  const uploadData = await uploadRes.json();
+                  if (uploadData.success) {
+                       processedPages[i] = { 
+                           ...page, 
+                           content: { 
+                               ...page.content, 
+                               data: uploadData.url 
+                           } 
+                       };
+                  }
+               } catch (e) { console.error("Failed to upload gift image", e); }
+          }
       }
       
       // Fake delay for "Binding" visual if upload was too fast

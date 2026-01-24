@@ -69,6 +69,12 @@ export async function DELETE(request, { params }) {
                  const filename = parts[parts.length - 1];
                  if (filename) imageToDelete.push(filename);
             }
+            // Check gift type (HIDDEN IMAGES)
+            if (page.type === 'gift' && page.content?.type === 'image' && page.content?.data && page.content.data.includes(r2Domain)) {
+                 const parts = page.content.data.split('/');
+                 const filename = parts[parts.length - 1];
+                 if (filename) imageToDelete.push(filename);
+            }
         });
     }
 
