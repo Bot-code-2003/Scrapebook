@@ -11,6 +11,10 @@ export function AuthProvider({ children }) {
   const checkAuth = useCallback(async () => {
     try {
       const res = await fetch('/api/auth/me');
+      if (!res.ok) {
+        setUser(null);
+        return;
+      }
       const data = await res.json();
       if (data.success && data.user) {
         setUser(data.user);

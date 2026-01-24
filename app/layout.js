@@ -176,7 +176,7 @@ export default function RootLayout({ children }) {
         ${comfortaa.variable}
         font-sans antialiased
       `}>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "272467631091-l5msn1iovv10vmqjnjumtvbpem29s31i.apps.googleusercontent.com"}>
           <AuthProvider>
             {children}
           </AuthProvider>
