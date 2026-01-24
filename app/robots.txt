@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://myscrapbook.thestorybits.com/sitemap.xml

@@ -145,7 +145,7 @@ export const metadata = {
     },
   },
   alternates: {
-    canonical: "https://myscrapebook.com",
+    canonical: "https://myscrapbook.thestorybits.com",
   },
 };
 
