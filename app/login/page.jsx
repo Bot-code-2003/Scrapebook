@@ -1,11 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Book, Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-export default function LoginPage() {
+function LoginForm() {
   const { login, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,5 +114,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
