@@ -205,9 +205,13 @@ export default function ProfilePage() {
         {/* Profile Header - Clean & Minimal */}
         <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 mb-16 border-b border-gray-100 pb-8">
             <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
-                    {user.name?.charAt(0).toUpperCase()}
-                </div>
+                {user.image ? (
+                    <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full border border-gray-200 object-cover" />
+                ) : (
+                    <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
+                        {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                )}
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2 text-gray-900">{user.name}</h1>
                     <p className="text-gray-500 font-medium text-lg">{user.email}</p>

@@ -55,13 +55,26 @@ export function AuthProvider({ children }) {
     return data;
   };
 
+  const googleLogin = async (accessToken) => {
+    const res = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accessToken }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setUser(data.user);
+    }
+    return data;
+  };
+
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, googleLogin, logout, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

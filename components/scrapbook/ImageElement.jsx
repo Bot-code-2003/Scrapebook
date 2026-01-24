@@ -221,11 +221,13 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
       }
   };
 
+  // No isUploading state needed for local preview
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2000000) { // Optional: 2MB limit check
-          alert("Image is too large (max 2MB)");
+      if (file.size > 5 * 1024 * 1024) { 
+          alert("Image is too large (max 5MB)");
           return;
       }
       const reader = new FileReader();
@@ -264,6 +266,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
         <div 
           className={`transition-all duration-300 relative ${isCover ? 'w-full h-full' : activeStyleConfig.containerClass}`}
         >
+
 
 
 

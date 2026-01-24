@@ -154,9 +154,11 @@ export default function ScrapbookViewer({ scrapbook }) {
         href="/" 
         className="fixed top-6 left-6 z-40 flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 pr-5 pl-2 py-2 rounded-full hover:bg-white/10 transition-all group"
       >
-        <div className="w-8 h-8 bg-lime-400 text-black rounded-full flex items-center justify-center shadow-lg shadow-lime-400/20 group-hover:scale-110 transition-transform">
-            <Book className="w-4 h-4" />
-        </div>
+        <img 
+            src="/heart-favicon.ico" 
+            alt="Logo" 
+            className="w-8 h-8 shadow-lg shadow-lime-400/20 group-hover:scale-110 transition-transform"
+        />
         <div className="flex flex-col">
             <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest leading-none mb-0.5">Made With</span>
             <span className="text-sm font-bold text-white group-hover:text-lime-400 transition-colors leading-none">MyScrapebook</span>

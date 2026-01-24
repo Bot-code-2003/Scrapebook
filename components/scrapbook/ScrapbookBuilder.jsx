@@ -227,13 +227,62 @@ export default function ScrapbookBuilder() {
     setSavingStage(1); // Start binding
 
     try {
-      // Fake delay for "Binding" visual
-      await new Promise(r => setTimeout(r, 1500));
+      // 1. Process Images (Upload Base64 to R2)
+      // Use sequential for-of loop to avoid race conditions or overwhelming the network
+      const processedPages = [...pages]; // Clone array
+      
+      for (let i = 0; i < processedPages.length; i++) {
+          const page = processedPages[i];
+          
+          if (page.type === 'image' && page.content?.url?.startsWith('data:')) {
+              try {
+                  // Convert base64 to blob/file
+                  const res = await fetch(page.content.url);
+                  const blob = await res.blob();
+                  const file = new File([blob], "image.png", { type: "image/png" });
+
+                  const formData = new FormData();
+                  formData.append('file', file);
+
+                  const uploadRes = await fetch('/api/upload', {
+                      method: 'POST',
+                      body: formData
+                  });
+                  const uploadData = await uploadRes.json();
+                  
+                  if (uploadData.success) {
+                       processedPages[i] = { ...page, content: { ...page.content, url: uploadData.url } };
+                  }
+              } catch (e) {
+                  console.error("Failed to upload image for page", page.id, e);
+                  // Keep as base64 on failure so data isn't lost? or error out?
+              }
+          }
+          
+           // Handle Cover Images
+          if (page.type === 'cover' && page.content?.url?.startsWith('data:')) {
+               try {
+                  const res = await fetch(page.content.url);
+                  const blob = await res.blob();
+                  const file = new File([blob], "cover.png", { type: "image/png" });
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                  const uploadData = await uploadRes.json();
+                  if (uploadData.success) {
+                       processedPages[i] = { ...page, content: { ...page.content, url: uploadData.url } };
+                  }
+               } catch (e) { console.error("Failed to upload cover", e); }
+          }
+      }
+      
+      // Fake delay for "Binding" visual if upload was too fast
+      await new Promise(r => setTimeout(r, 1000));
       
       const res = await fetch('/api/scrapbook/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pages, bgPattern, bgColor, pageBorder, title, soundId }),
+        body: JSON.stringify({ pages: processedPages, bgPattern, bgColor, pageBorder, title, soundId }),
       });
       const data = await res.json();
       
@@ -291,10 +340,10 @@ export default function ScrapbookBuilder() {
               </div>
 
               <button 
-                  onClick={() => setShareUrl(null)}
+                  onClick={() => router.push('/profile')}
                   className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg shadow-black/10"
               >
-                  Close
+                  Go to Profile
               </button>
            </div>
         </div>
@@ -384,9 +433,11 @@ export default function ScrapbookBuilder() {
         <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-white/80 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
             <div className="flex items-center shrink-0">
                 <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-80 transition-opacity">
-                    <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
-                        <Book className="w-6 h-6" />
-                    </div>
+                    <img 
+                        src="/heart-favicon.ico" 
+                        alt="Logo" 
+                        className="w-10 h-10 transform group-hover:rotate-6 transition-transform"
+                    />
                     <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">MyScrapebook</span>
                 </Link>
             </div>

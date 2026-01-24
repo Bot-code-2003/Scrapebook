@@ -2,124 +2,143 @@
 import React, { useState, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Book, Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, Heart } from 'lucide-react';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
 
 function LoginForm() {
-  const { login, user } = useAuth();
+  const { googleLogin, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/profile';
-  
-  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  // If already logged in, redirect
+  const [isLoading, setIsLoading] = useState(false);
+  
   React.useEffect(() => {
-    if (user) {
-      router.push(redirectTo);
-    }
+    if (user) router.push(redirectTo);
   }, [user, router, redirectTo]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const result = await login(formData.email, formData.password);
-      if (result.success) {
-        router.push(redirectTo);
-      } else {
-        setError(result.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loginWithGoogle = useGoogleLogin({
+      onSuccess: async (tokenResponse) => {
+          setIsLoading(true);
+          try {
+              const result = await googleLogin(tokenResponse.access_token);
+              if (result.success) {
+                  router.push(redirectTo);
+              } else {
+                  setError(result.message || 'Google Login failed');
+              }
+          } catch (err) {
+              setError('Something went wrong with Google Login');
+          } finally {
+              setIsLoading(false);
+          }
+      },
+      onError: () => {
+          setError('Google Login Failed');
+          setIsLoading(false);
+      },
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white p-8 md:p-10 rounded-2xl shadow-2xl max-w-md w-full border border-gray-100 animate-in fade-in zoom-in duration-300">
+    <div className="min-h-screen w-full bg-[#f8eadd] font-sans relative overflow-hidden flex flex-col items-center justify-center p-4 selection:bg-[#8b5e3c] selection:text-white">
         
-        <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-black mb-8 transition-colors group">
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm font-medium">Back to Home</span>
-        </Link>
-
-        <div className="flex flex-col items-center text-center mb-8">
-          <div className="bg-lime-50 text-lime-600 p-3 rounded-xl border border-lime-100 mb-4 shadow-sm">
-            <Book className="w-8 h-8" />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome back</h1>
-          <p className="text-gray-500 mt-2">Enter your details to access your scrapbooks.</p>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 border border-red-100 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent focus:bg-white transition-all text-gray-900 placeholder-gray-400"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
-          <div>
-            <div className="flex justify-between items-center mb-1.5 ml-1">
-                <label className="block text-sm font-bold text-gray-700">Password</label>
-                <a href="#" className="text-xs font-medium text-gray-400 hover:text-black transition-colors">Forgot password?</a>
-            </div>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent focus:bg-white transition-all text-gray-900 placeholder-gray-400"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black text-white py-3.5 font-bold rounded-xl hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-black/5 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
-          >
-            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {loading ? 'Logging in...' : 'Log In'}
-          </button>
-        </form>
-
-        <div className="mt-8 text-center pt-6 border-t border-gray-100">
-          <p className="text-gray-500 text-sm">
-            Don't have an account?{' '}
-            <Link 
-              href={`/signup${redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}
-              className="text-black font-bold hover:underline decoration-lime-400 decoration-2 underline-offset-2 transition-all"
-            >
-              Sign up for free
+        {/* Branding (Top Left) */}
+        <div className="absolute top-6 left-6 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
+            <Link href="/" className="group flex items-center gap-2">
+                <img src="/heart-favicon.ico" alt="Logo" className="w-10 h-10 group-hover:scale-110 transition-transform drop-shadow-sm" />
+                <span className="font-black text-xl text-[#6d4c41] tracking-tight group-hover:text-[#5d4037]">MyScrapbook</span>
             </Link>
-          </p>
         </div>
-      </div>
+        
+        {/* Main Content Group */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 animate-in fade-in zoom-in duration-500">
+            
+            {/* Left Side: Cute Bear Illustration */}
+            <div className="flex flex-col items-center text-center">
+                    <div className="relative mb-6">
+                        {/* Image from User */}
+                        <div className="w-64 h-64 flex items-center justify-center relative hover:scale-105 transition-transform duration-500">
+                             <img 
+                                src="/login-page.webp" 
+                                alt="Cute Login Illustration" 
+                                className="w-full h-full object-contain"
+                             />
+                        </div>
+                    </div>
+                    
+                    <h2 className="text-2xl font-bold text-[#6d4c41] mb-2 tracking-tight">Welcome, friend!</h2>
+                    <p className="text-[#8d6e63] font-medium">Let's make something cute.</p>
+            </div>
+
+            {/* Right Side: Login Card */}
+            <div className="relative">
+                {/* Avatar Peek */}
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-20">
+                     <div className="w-20 h-20 bg-[#6d4c41] rounded-full flex items-center justify-center border-4 border-[#fffdf5] shadow-sm">
+                          <Heart className="w-10 h-10 text-[#e6cbb3] fill-[#e6cbb3]" />
+                     </div>
+                </div>
+
+                {/* Card Container */}
+                <div className="w-80 bg-[#e6cbb3] rounded-[2rem] border-[3px] border-[#6d4c41] shadow-[6px_6px_0px_0px_rgba(109,76,65,1)] p-8 pt-14 flex flex-col gap-6">
+                     
+                     <div className="text-center mt-2">
+                         <h3 className="text-[#3e2723] font-bold text-xl tracking-tight">Get Started</h3>
+                     </div>
+
+                     {error && (
+                        <div className="bg-red-100/80 text-[#3e2723] text-xs p-2 rounded-lg border border-[#3e2723]/20 text-center font-bold">
+                            {error}
+                        </div>
+                     )}
+
+                     <button
+                        onClick={() => {
+                            setIsLoading(true);
+                            loginWithGoogle();
+                        }}
+                        disabled={isLoading}
+                        className="w-full bg-[#5d4037] text-[#fffdf5] font-bold py-4 rounded-full hover:bg-[#4e342e] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 border-2 border-transparent shadow-lg"
+                     >
+                        {isLoading ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <>
+                                <img src="/google-logo.svg" alt="" className="w-5 h-5 bg-white rounded-full p-0.5" />
+                                <span>Start with Google</span>
+                            </>
+                        )}
+                     </button>
+
+
+
+                     {/* Legal Terms */}
+                     <div className="mt-2 text-center">
+                        <p className="text-[10px] text-[#8d6e63] font-bold leading-tight">
+                            By continuing, you agree to our <br/>
+                            <Link href="/terms" className="underline hover:text-[#5d4037] decoration-[#6d4c41]">Terms</Link>
+                            {' '}&{' '}
+                            <Link href="/privacy" className="underline hover:text-[#5d4037] decoration-[#6d4c41]">Privacy Policy</Link>
+                        </p>
+                     </div>
+                </div>
+            </div>
+
+        </div>
+
+        {/* Footer Text */}
+        <div className="absolute bottom-6 text-[#8d6e63]/60 text-xs font-bold tracking-widest uppercase">
+            Designed for Memories
+        </div>
+
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#f8eadd]"><Loader2 className="w-8 h-8 animate-spin text-[#6d4c41]" /></div>}>
       <LoginForm />
     </Suspense>
   );

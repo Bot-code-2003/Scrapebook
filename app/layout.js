@@ -17,6 +17,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 
 const spaceGrotesk = Space_Grotesk({
@@ -147,6 +148,11 @@ export const metadata = {
   alternates: {
     canonical: "https://myscrapbook.thestorybits.com",
   },
+  icons: {
+    icon: '/heart-favicon.ico',
+    shortcut: '/heart-favicon.ico',
+    apple: '/heart-favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -170,9 +176,11 @@ export default function RootLayout({ children }) {
         ${comfortaa.variable}
         font-sans antialiased
       `}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

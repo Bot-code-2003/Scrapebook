@@ -121,9 +121,11 @@ export default function Home() {
       {/* NAVBAR - REFINED */}
       <nav className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer">
-          <div className="w-10 h-10 bg-lime-100 text-lime-600 rounded-lg flex items-center justify-center transform group-hover:rotate-6 transition-transform">
-            <Book className="w-6 h-6" />
-          </div>
+          <img 
+            src="/heart-favicon.ico" 
+            alt="Logo" 
+            className="w-10 h-10 transform group-hover:rotate-6 transition-transform"
+          />
           <span className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">MyScrapbook</span>
         </Link>
         <div className="flex items-center gap-3 md:gap-4">
@@ -133,9 +135,13 @@ export default function Home() {
                   href="/profile"
                   className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200"
                 >
-                  <div className="w-8 h-8 bg-lime-100 text-lime-700 rounded-full flex items-center justify-center text-sm font-bold">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </div>
+                  {user.image ? (
+                    <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-8 h-8 bg-lime-100 text-lime-700 rounded-full flex items-center justify-center text-sm font-bold">
+                        {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                   <span className="hidden sm:inline text-sm font-medium text-gray-700">{user.name?.split(' ')[0]}</span>
                 </Link>
               ) : (
@@ -151,11 +157,10 @@ export default function Home() {
             
             <Link 
                 href="/scrapbook"
-                className="bg-black text-white px-5 py-2.5 md:px-6 md:py-2.5 rounded-full font-bold hover:bg-gray-800 transition-all text-sm md:text-base whitespace-nowrap flex items-center gap-2 shadow-lg shadow-black/20 hover:shadow-xl hover:scale-105"
+                className="bg-black text-white px-4 py-2.5 md:px-6 md:py-2.5 rounded-full font-bold hover:bg-gray-800 transition-all text-sm md:text-base whitespace-nowrap flex items-center gap-2 shadow-lg shadow-black/20 hover:shadow-xl hover:scale-105"
             >
                 <Plus className="w-5 h-5" />
                 <span className="hidden sm:inline">Create</span>
-                <span className="sm:hidden">New</span>
             </Link>
         </div>
       </nav>
