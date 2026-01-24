@@ -5,7 +5,6 @@ import Page from './Page';
 import DefaultFlip from './animations/DefaultFlip';
 import SlideFlip from './animations/SlideFlip';
 import BinderFlip from './animations/BinderFlip';
-import RealisticFlip from './animations/RealisticFlip';
 
 // Book style configurations
 const BOOK_STYLES = {
@@ -153,11 +152,45 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
     );
   };
 
+  // ============================================
+  // MOBILE VIEW LOGIC
+  // ============================================
+  const [mobilePageIndex, setMobilePageIndex] = useState(0);
+  
+  // Flatten pages for mobile reading order: 0 (Front), 2, 3, 4... (Inner), 1 (Back)
+  const mobilePages = useMemo(() => {
+      if (pages.length < 2) return [];
+      const ordered = [];
+      // 1. Front Cover
+      ordered.push({ ...pages[0], pageType: 'cover-front' });
+      // 2. Inner Pages (In numerical order of ID usually, but here index 2 onwards)
+      for(let k=2; k<pages.length; k++) {
+          ordered.push({ ...pages[k], pageType: 'inner' });
+      }
+      // 3. Back Cover
+      ordered.push({ ...pages[1], pageType: 'cover-back' });
+      return ordered;
+  }, [pages]);
+
+  const handleMobileNext = () => {
+      if (mobilePageIndex < mobilePages.length - 1) {
+          playFlipSound();
+          setMobilePageIndex(prev => prev + 1);
+      }
+  };
+
+  const handleMobilePrev = () => {
+      if (mobilePageIndex > 0) {
+          playFlipSound();
+          setMobilePageIndex(prev => prev - 1);
+      }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-full sm:min-h-[700px] relative overflow-hidden " style={{ perspective: '2000px' }}>
       
-      {/* Responsive Scale Wrapper for Mobile */}
-      <div className="scale-[0.90] sm:scale-100 origin-center">
+      {/* --- DESKTOP VIEW (SPREADS) --- */}
+      <div className="hidden md:flex scale-[0.90] sm:scale-100 origin-center">
         {/* Book Component */}
         {animId === 'slide' ? (
           <SlideFlip
@@ -179,15 +212,6 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
              renderPage={renderPageContent}
              styleConfig={styleConfig}
           />
-        ) : animId === 'realistic' ? (
-          <RealisticFlip
-             pages={pages} // Pass raw pages
-             currentSheetIndex={currentSheetIndex}
-             onIndexChange={setCurrentSheetIndex} // Sync state back
-             bgColor={bgColor}
-             renderPage={renderPageContent}
-             styleConfig={styleConfig}
-          />
         ) : (
           <DefaultFlip
              sheets={sheets}
@@ -199,6 +223,44 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
              styleConfig={styleConfig}
           />
         )}
+      </div>
+
+      {/* --- MOBILE VIEW (SINGLE PAGE) --- */}
+      <div className="md:hidden flex flex-col items-center justify-center w-full h-full p-4 overflow-y-auto">
+          
+          {/* Page Container: Responsive Width, Aspect Ratio Preserved */}
+          <div className="relative w-[90vw] md:max-w-[600px] aspect-[5/7] shadow-2xl flex-shrink-0 bg-white">
+              {/* Render Current Mobile Page */}
+              <div className={` h-full overflow-hidden ${styleConfig.rounded} ${styleConfig.border} relative`}>
+                  {renderPageContent(mobilePages[mobilePageIndex], 'right')}
+              </div>
+
+             
+          </div>
+
+          {/* Mobile Toolbar (Bottom) */}
+          <div className="mt-8 flex items-center gap-6 z-50 flex-shrink-0">
+              <button 
+                onClick={handleMobilePrev}
+                disabled={mobilePageIndex === 0}
+                className="bg-white/10 text-white p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90"
+              >
+                  <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <div className="font-bold text-white/90 text-sm tracking-[0.2em] uppercase bg-black/40 px-6 py-2 rounded-full backdrop-blur-md border border-white/10 shadow-lg">
+                  {mobilePageIndex + 1} / {mobilePages.length}
+              </div>
+
+              <button 
+                onClick={handleMobileNext}
+                disabled={mobilePageIndex === mobilePages.length - 1}
+                className="bg-white/10 text-white p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90"
+              >
+                  <ChevronRight className="w-6 h-6" />
+              </button>
+          </div>
+
       </div>
 
       

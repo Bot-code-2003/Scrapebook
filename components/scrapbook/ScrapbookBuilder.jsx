@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Plus, Book, Sparkles, Eye, Share2 } from 'lucide-react';
+import { Plus, Book, Sparkles, Eye, Share2, Check } from 'lucide-react';
 import BookLayout from './BookLayout';
 import BookPreview from './BookPreview';
 import Link from 'next/link';
@@ -39,6 +39,7 @@ export default function ScrapbookBuilder() {
   const [appBackground, setAppBackground] = useState('none');
 
   const [isSaving, setIsSaving] = useState(false);
+  const [savingStage, setSavingStage] = useState(0); // 0: Idle, 1: Binding, 2: Stitching, 3: Delivering, 4: Done
   const [shareUrl, setShareUrl] = useState(null);
   
   // GLOBAL DRAWER STATE
@@ -160,33 +161,22 @@ export default function ScrapbookBuilder() {
     { id: 'dots', label: 'Dots', value: 'radial-gradient(#000 1px, transparent 1px)' },
     { id: 'lines', label: 'Lined', value: 'linear-gradient(#000 1px, transparent 1px)' },
     { id: 'plain', label: 'Plain', value: 'none' },
-    { id: 'floral', label: 'Floral', value: 'url("/svg/flower1.svg")' },
-    { id: 'forest', label: 'Forest', value: 'url("/svg/tree1.svg")' },
-    { id: 'snowman', label: 'Snowman', value: 'url("/svg/snowman1.svg")' },
     { id: 'giraffe', label: 'Giraffe', value: 'url("/svg/giraffe1.svg")' },
   ];
 
   const COLOR_OPTIONS = [
       { id: 'white', value: '#FFFDF5', label: 'Cream' },
       { id: 'pink', value: '#FDF2F8', label: 'Pink' },
-      { id: 'lavender', value: '#F3E8FF', label: 'Lavender' },
       { id: 'blue', value: '#EFF6FF', label: 'Blue' },
-      { id: 'ice', value: '#E0F2FE', label: 'Ice' },
       { id: 'yellow', value: '#FEFCE8', label: 'Yellow' },
-      { id: 'peach', value: '#FFEDD5', label: 'Peach' },
       { id: 'green', value: '#F0FDF4', label: 'Green' },
-      { id: 'mint', value: '#D1FAE5', label: 'Mint' },
   ];
 
   const BORDER_OPTIONS = [
       { id: 'none', label: 'None', preview: 'border-0' },
       { id: 'solid', label: 'Single', preview: 'border-2 border-black' },
-      { id: 'double', label: 'Double', preview: 'border-4 border-double border-black' },
       { id: 'dashed', label: 'Dashed', preview: 'border-2 border-dashed border-black' },
-      { id: 'dotted', label: 'Dotted', preview: 'border-2 border-dotted border-black' },
-      { id: 'doodle', label: 'Doodle', preview: 'border-2 border-black rounded-[255px_15px_225px_15px/15px_225px_15px_255px]' },
       { id: 'cute-flower', label: 'Flowers', preview: 'border-[6px] border-pink-300 border-dashed' },
-      { id: 'cute-rainbow', label: 'Rainbow', preview: 'border-[4px] border-transparent bg-clip-border' },
   ];
 
   const SOUND_OPTIONS = [
@@ -197,8 +187,6 @@ export default function ScrapbookBuilder() {
   const ANIM_OPTIONS = [
     { id: 'default', label: 'Classic Flip', icon: '📖' },
     { id: 'slide', label: 'Card Slide', icon: '🃏' },
-    { id: 'binder', label: 'Ring Binder', icon: '📒' },
-    { id: 'realistic', label: 'Realistic Flip', icon: '📄' },
   ];
 
   const addPagePair = () => {
@@ -236,21 +224,36 @@ export default function ScrapbookBuilder() {
     }
 
     setIsSaving(true);
+    setSavingStage(1); // Start binding
+
     try {
+      // Fake delay for "Binding" visual
+      await new Promise(r => setTimeout(r, 1500));
+      
       const res = await fetch('/api/scrapbook/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pages, bgPattern, bgColor, pageBorder, title, soundId }),
       });
       const data = await res.json();
+      
       if (data.success) {
+        setSavingStage(2); // Stitching
+        await new Promise(r => setTimeout(r, 1500));
+        
+        setSavingStage(3); // Delivering
+        await new Promise(r => setTimeout(r, 1500));
+
         setShareUrl(`${window.location.origin}/scrapbook/${data.shareId}`);
+        setSavingStage(0); // Reset
       } else {
         alert('Failed to save scrapbook. Please try again.');
+        setSavingStage(0);
       }
     } catch (error) {
       console.error(error);
       alert('An error occurred. Please try again.');
+      setSavingStage(0);
     } finally {
       setIsSaving(false);
     }
@@ -295,6 +298,54 @@ export default function ScrapbookBuilder() {
               </button>
            </div>
         </div>
+      )}
+
+      {/* Progress / Making Modal */}
+      {isSaving && savingStage > 0 && (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-in fade-in duration-500">
+              <div className="flex flex-col items-center gap-8 max-w-sm w-full">
+                  
+                  {/* Icon Animation */}
+                  <div className="relative">
+                      <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center animate-pulse">
+                          {savingStage === 1 && <Book className="w-10 h-10 text-lime-400 animate-bounce" />}
+                          {savingStage === 2 && <Palette className="w-10 h-10 text-pink-400 animate-spin-slow" />}
+                          {savingStage === 3 && <Share2 className="w-10 h-10 text-blue-400 animate-ping" />}
+                      </div>
+                  </div>
+
+                  {/* Steps List */}
+                  <div className="w-full space-y-4">
+                      {/* Step 1 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 ${savingStage >= 1 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 1 ? 'bg-lime-400 border-lime-400 text-black' : (savingStage === 1 ? 'border-lime-400 text-lime-400' : 'border-white/30')}`}>
+                              {savingStage > 1 ? <Check className="w-3 h-3" /> : '1'}
+                          </div>
+                          <span className={`font-bold ${savingStage === 1 ? 'text-white' : 'text-white/60'}`}>Binding the book...</span>
+                          {savingStage === 1 && <div className="ml-auto w-4 h-4 border-2 border-lime-400 border-t-transparent rounded-full animate-spin"></div>}
+                      </div>
+
+                      {/* Step 2 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 delay-100 ${savingStage >= 2 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 2 ? 'bg-pink-400 border-pink-400 text-black' : (savingStage === 2 ? 'border-pink-400 text-pink-400' : 'border-white/30')}`}>
+                              {savingStage > 2 ? <Check className="w-3 h-3" /> : '2'}
+                          </div>
+                          <span className={`font-bold ${savingStage === 2 ? 'text-white' : 'text-white/60'}`}>Stitching pages...</span>
+                          {savingStage === 2 && <div className="ml-auto w-4 h-4 border-2 border-pink-400 border-t-transparent rounded-full animate-spin"></div>}
+                      </div>
+
+                      {/* Step 3 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 delay-200 ${savingStage >= 3 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 3 ? 'bg-blue-400 border-blue-400 text-black' : (savingStage === 3 ? 'border-blue-400 text-blue-400' : 'border-white/30')}`}>
+                              {savingStage > 3 ? <Check className="w-3 h-3" /> : '3'}
+                          </div>
+                          <span className={`font-bold ${savingStage === 3 ? 'text-white' : 'text-white/60'}`}>Delivering gift...</span>
+                          {savingStage === 3 && <div className="ml-auto w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>}
+                      </div>
+                  </div>
+
+              </div>
+          </div>
       )}
 
       {/* Draft Detected Modal */}
@@ -425,7 +476,7 @@ export default function ScrapbookBuilder() {
             </div>
           )}
 
-          <div className={`${isPreview ? 'scale-[0.75] sm:scale-75 md:scale-90' : ''} transition-transform duration-500`}>
+          <div className={`${isPreview ? 'scale-[0.90] sm:scale-75 md:scale-90' : ''} transition-transform duration-500`}>
               {isPreview ? (
                 <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} pageBorder={pageBorder} soundId={soundId} animId={animId} />
               ) : (

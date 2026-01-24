@@ -226,25 +226,64 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                   onToggle={() => toggleSection('color')}
                   selectedLabel={getSelectedColorLabel()}
                 >
-                  <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                    {colorOptions.map(opt => (
-                      <button 
-                        key={opt.id}
-                        onClick={() => setBgColor(opt.value)}
-                        className={`flex items-center gap-4 p-3 border rounded-xl transition-all ${
-                          bgColor === opt.value
-                            ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm'
-                            : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
-                      >   
-                        <div 
-                          className="w-8 h-8 rounded-full border border-black/10 shadow-sm flex-shrink-0"
-                          style={{ backgroundColor: opt.value }}
-                        ></div>
-                        <span className="font-bold text-xs">{opt.label}</span>
-                        {bgColor === opt.value && <Check className="ml-auto w-4 h-4" />}
-                      </button>
-                    ))}
+                  <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto">
+                    {/* Custom Color Picker */}
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                      <input
+                        type="color"
+                        value={bgColor.startsWith('#') ? bgColor : '#FFFDF5'}
+                        onChange={(e) => setBgColor(e.target.value)}
+                        className="w-14 h-14 cursor-pointer rounded-lg border-0 bg-transparent p-0 overflow-hidden shadow-sm"
+                        title="Pick a custom color"
+                      />
+                      <div className="flex-1">
+                        <label className="text-xs font-bold text-gray-500 mb-1 block uppercase tracking-wide">Custom Hex</label>
+                        <input
+                          type="text"
+                          value={bgColor.startsWith('#') ? bgColor.toUpperCase() : bgColor}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            // Allow typing hex
+                            if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
+                              setBgColor(val);
+                            }
+                          }}
+                          onBlur={(e) => {
+                             // Validate on blur
+                             if(!/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                                 // fallback to white if invalid
+                                 // setBgColor('#FFFDF5'); 
+                                 // Actually better to just leave it or reset to last valid? 
+                                 // For now let's just ensure it starts with #
+                             }
+                          }}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                          placeholder="#000000"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wide px-1">Presets</div>
+                    <div className="flex flex-col gap-2">
+                      {colorOptions.map(opt => (
+                        <button 
+                          key={opt.id}
+                          onClick={() => setBgColor(opt.value)}
+                          className={`flex items-center gap-4 p-3 border rounded-xl transition-all ${
+                            bgColor === opt.value
+                              ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm'
+                              : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >   
+                          <div 
+                            className="w-8 h-8 rounded-full border border-black/10 shadow-sm flex-shrink-0"
+                            style={{ backgroundColor: opt.value }}
+                          ></div>
+                          <span className="font-bold text-xs">{opt.label}</span>
+                          {bgColor === opt.value && <Check className="ml-auto w-4 h-4" />}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </AccordionSection>
 

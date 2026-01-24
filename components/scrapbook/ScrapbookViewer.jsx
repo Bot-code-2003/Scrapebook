@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import BookPreview from './BookPreview';
-import { Bookmark, X, Loader2, Check, LogIn } from 'lucide-react';
+import { Bookmark, X, Loader2, Check, LogIn, Book, Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ScrapbookViewer({ scrapbook }) {
@@ -10,8 +10,29 @@ export default function ScrapbookViewer({ scrapbook }) {
   const [showCTA, setShowCTA] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
   const [checkingIfSaved, setCheckingIfSaved] = useState(true);
   const [error, setError] = useState('');
+  
+  // Loading Stage Logic
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingStage, setLoadingStage] = useState(1);
+
+  useEffect(() => {
+      const sequence = async () => {
+          setLoadingStage(1); // "Finding your story..."
+          await new Promise(r => setTimeout(r, 800));
+          
+          setLoadingStage(2); // "Unwrapping bindings..."
+          await new Promise(r => setTimeout(r, 800));
+          
+          setLoadingStage(3); // "Adding magic dust..."
+          await new Promise(r => setTimeout(r, 800));
+          
+          setIsLoading(false);
+      };
+      sequence();
+  }, []);
 
   // Check if user has already saved this book
   useEffect(() => {
@@ -70,16 +91,77 @@ export default function ScrapbookViewer({ scrapbook }) {
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center bg-zinc-900 overflow-hidden relative">
       {/* Book Preview */}
-      <BookPreview 
-        pages={scrapbook.pages} 
-        bgPattern={scrapbook.bgPattern} 
-        bgColor={scrapbook.bgColor}
-        pageBorder={scrapbook.pageBorder}
-        soundId={scrapbook.soundId}
-        animId={scrapbook.animId}
-        bookStyle={scrapbook.bookStyle}
-        showControls={false}
-      />
+      {/* Loading Animation Overlay */}
+      {isLoading && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900">
+              <div className="flex flex-col items-center gap-8 max-w-sm w-full animate-in fade-in zoom-in duration-500">
+                  
+                  {/* Animated Icon */}
+                  <div className="relative">
+                      <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
+                          {loadingStage === 1 && <Search className="w-10 h-10 text-lime-400 animate-bounce" />}
+                          {loadingStage === 2 && <Book className="w-10 h-10 text-pink-400 animate-pulse" />}
+                          {loadingStage === 3 && <Sparkles className="w-10 h-10 text-blue-400 animate-spin-slow" />}
+                      </div>
+                  </div>
+
+                  {/* Steps List */}
+                  <div className="w-full space-y-4">
+                      {/* Step 1 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/5 transition-all duration-500 ${loadingStage >= 1 ? 'bg-white/5 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 1 ? 'bg-lime-400 border-lime-400 text-black' : (loadingStage === 1 ? 'border-lime-400 text-lime-400' : 'border-white/10 text-white/10')}`}>
+                              {loadingStage > 1 ? <Check className="w-3 h-3" /> : '1'}
+                          </div>
+                          <span className={`font-bold ${loadingStage === 1 ? 'text-white' : 'text-white/50'}`}>Finding your story...</span>
+                      </div>
+
+                      {/* Step 2 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/5 transition-all duration-500 delay-100 ${loadingStage >= 2 ? 'bg-white/5 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 2 ? 'bg-pink-400 border-pink-400 text-black' : (loadingStage === 2 ? 'border-pink-400 text-pink-400' : 'border-white/10 text-white/10')}`}>
+                              {loadingStage > 2 ? <Check className="w-3 h-3" /> : '2'}
+                          </div>
+                          <span className={`font-bold ${loadingStage === 2 ? 'text-white' : 'text-white/50'}`}>Unwrapping bindings...</span>
+                      </div>
+
+                      {/* Step 3 */}
+                      <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/5 transition-all duration-500 delay-200 ${loadingStage >= 3 ? 'bg-white/5 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 3 ? 'bg-blue-400 border-blue-400 text-black' : (loadingStage === 3 ? 'border-blue-400 text-blue-400' : 'border-white/10 text-white/10')}`}>
+                              {loadingStage > 3 ? <Check className="w-3 h-3" /> : '3'}
+                          </div>
+                          <span className={`font-bold ${loadingStage === 3 ? 'text-white' : 'text-white/50'}`}>Adding magic dust...</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Book Preview (Hidden during loading) */}
+      <div className={`transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'} w-full h-full`}>
+        <BookPreview 
+            pages={scrapbook.pages} 
+            bgPattern={scrapbook.bgPattern} 
+            bgColor={scrapbook.bgColor}
+            pageBorder={scrapbook.pageBorder}
+            soundId={scrapbook.soundId}
+            animId={scrapbook.animId}
+            bookStyle={scrapbook.bookStyle}
+            showControls={false}
+        />
+      </div>
+
+      {/* Branding Link */}
+      <Link 
+        href="/" 
+        className="fixed top-6 left-6 z-40 flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 pr-5 pl-2 py-2 rounded-full hover:bg-white/10 transition-all group"
+      >
+        <div className="w-8 h-8 bg-lime-400 text-black rounded-full flex items-center justify-center shadow-lg shadow-lime-400/20 group-hover:scale-110 transition-transform">
+            <Book className="w-4 h-4" />
+        </div>
+        <div className="flex flex-col">
+            <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest leading-none mb-0.5">Made With</span>
+            <span className="text-sm font-bold text-white group-hover:text-lime-400 transition-colors leading-none">MyScrapebook</span>
+        </div>
+      </Link>
 
       {/* Save CTA Button (bottom right) */}
       {!authLoading && !checkingIfSaved && !saved && (

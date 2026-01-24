@@ -27,9 +27,7 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
           case 'dots': return { backgroundImage: 'radial-gradient(#ccc 1px, transparent 1px)', backgroundSize: '20px 20px' };
           case 'lines': return { backgroundImage: 'repeating-linear-gradient(transparent, transparent 29px, #ccc 29px, #ccc 30px)', backgroundSize: '100% 100%' };
           case 'graphy': return { backgroundImage: 'linear-gradient(#e5e5e5 1px, transparent 1px), linear-gradient(90deg, #e5e5e5 1px, transparent 1px)', backgroundSize: '20px 20px' };
-          case 'floral': return { backgroundImage: 'url("/svg/flower1.svg")', backgroundSize: '120px 120px' };
-          case 'forest': return { backgroundImage: 'url("/svg/tree1.svg")', backgroundSize: '120px 120px' };
-          case 'snowman': return { backgroundImage: 'url("/svg/snowman1.svg")', backgroundSize: '120px 120px' };
+          case 'graphy': return { backgroundImage: 'linear-gradient(#e5e5e5 1px, transparent 1px), linear-gradient(90deg, #e5e5e5 1px, transparent 1px)', backgroundSize: '20px 20px' };
           case 'rabbit': return { backgroundImage: 'url("/svg/rabbit1.svg")', backgroundSize: '120px 120px' };
           case 'giraffe': return { backgroundImage: 'url("/svg/giraffe1.svg")', backgroundSize: '120px 120px' };
           case 'plain': return {};
@@ -40,25 +38,13 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
   const getBorderClass = (border) => {
       switch(border) {
           case 'solid': return 'border-2 border-black';
-          case 'double': return 'border-4 border-double border-black';
           case 'dashed': return 'border-2 border-dashed border-black';
-          case 'dotted': return 'border-2 border-dotted border-black';
-          case 'doodle': return 'border-2 border-black rounded-[255px_15px_225px_15px/15px_225px_15px_255px]';
           case 'cute-flower': return 'border-[8px] border-pink-300 border-dashed';
-          case 'cute-rainbow': return 'border-[6px] border-transparent';
           default: return '';
       }
   };
 
-  const getBorderStyle = (border) => {
-      if (border === 'cute-rainbow') {
-          return {
-              borderImageSource: 'linear-gradient(to right, #ff9999, #ffff99, #99ff99, #99ffff, #9999ff, #ff99ff)',
-              borderImageSlice: 1
-          };
-      }
-      return {};
-  };
+
 
   return (
     <div 
@@ -72,9 +58,8 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
 
         {/* Page Border Overlay */}
         {!isCover && pageBorder && pageBorder !== 'none' && (
-             <div 
+            <div 
                 className={`absolute inset-1.5 md:inset-2 pointer-events-none z-20 ${getBorderClass(pageBorder)}`} 
-                style={getBorderStyle(pageBorder)}
              ></div>
         )}
 

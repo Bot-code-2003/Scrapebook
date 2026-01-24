@@ -1,23 +1,28 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Type, Gift, X, PenTool, RefreshCw, Sparkles } from 'lucide-react';
+import { Upload, Type, Gift, X, PenTool, RefreshCw, Sparkles, Link, Check, Heart, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const GIFT_STYLES = [
   {
     id: 'classic',
-    label: 'Classic',
+    label: 'Envelopes',
     options: [
-        { id: 'envelope', label: 'Vintage Envelope' }
+        { id: 'envelope', label: 'Lavender Letter' },
+        { id: 'envelope-olive', label: 'Olive Letter' },
+        { id: 'envelope-beige', label: 'Beige Love Letter' },
+        { id: 'envelope-red', label: 'Stardust Red' }
     ]
   },
   {
     id: 'scratch_section',
     label: 'Scratch Cards',
     options: [
-        { id: 'scratch-kawaii', label: 'Kitty Stamp' },
-        { id: 'scratch-gold', label: 'Luxury Gold' },
-        { id: 'scratch-blue', label: 'Winter Frost' }
+        { id: 'scratch-winter-1', label: 'Winter Blue' },
+        { id: 'scratch-winter-2', label: 'Winter Red' },
+        { id: 'scratch-shinchan', label: 'Shinchan' },
+        { id: 'scratch-doraemon', label: 'Doraemon' },
+        { id: 'scratch-cat-earth', label: 'Cat Earth' }
     ]
   },
   {
@@ -34,13 +39,26 @@ const GIFT_STYLES = [
 export default function GiftElement({ content, onUpdate, isCover, readOnly, onOpenDrawer }) {
   const [isOpen, setIsOpen] = useState(false); // For Envelope/Bottle/Balloon open state
   const [uploadType, setUploadType] = useState(null); // For edit mode selection
-  const [isEditingContent, setIsEditingContent] = useState(false); // New explicit edit mode
+  const [imageInputMode, setImageInputMode] = useState('url');
+  const [urlInput, setUrlInput] = useState('');
+
+  const handleUrlSubmit = (e) => {
+      e.preventDefault();
+      if(urlInput) {
+           onUpdate({ ...giftContent, type: 'image', data: urlInput });
+          setUploadType(null);
+          setUrlInput('');
+          // Reset mode for next time
+          setImageInputMode('url'); 
+      }
+  };
 
   const giftContent = content || { type: null, data: null, style: 'envelope' };
   let currentStyle = giftContent.style || 'envelope';
   
   // Backward compatibility mappings
-  if (currentStyle === 'scratch') currentStyle = 'scratch-kawaii';
+  if (currentStyle === 'scratch') currentStyle = 'scratch-winter-1';
+  if (currentStyle === 'scratch-blue') currentStyle = 'scratch-winter-1';
   if (currentStyle === 'balloon') currentStyle = 'balloon-kawaii';
 
   // --- HANDLERS ---
@@ -52,7 +70,6 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
       reader.onload = (event) => {
         onUpdate({ ...giftContent, type: 'image', data: event.target.result });
         setUploadType(null);
-        setIsEditingContent(false);
       };
       reader.readAsDataURL(file);
     }
@@ -62,7 +79,6 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     if (text.trim()) {
       onUpdate({ ...giftContent, type: 'text', data: text });
       setUploadType(null);
-      setIsEditingContent(false);
     }
   };
 
@@ -72,8 +88,47 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
 
   // --- RENDERERS ---
 
-  // 1. Envelope Renderer (Restored Original Logic)
-  const renderEnvelope = () => (
+  // 1. Envelope Renderer (Dynamic Colors)
+  const renderEnvelope = () => {
+    // Envelope Color Themes
+    const themes = {
+      'envelope': { // Lavender
+        body: '#8b7ab8',
+        flap: '#6b5b95',
+        back: '#6b5b95',
+        left: '#7d6fa8',
+        accent: '#9b8bc4',
+        decoration: null 
+      },
+      'envelope-olive': {
+        body: '#959572',
+        flap: '#747458',
+        back: '#747458',
+        left: '#858565',
+        accent: '#B0B092',
+        decoration: 'heart-white' 
+      },
+      'envelope-beige': {
+        body: '#EFE6DD',
+        flap: '#DBC8B6',
+        back: '#DBC8B6',
+        left: '#CDBCAD',
+        accent: '#F5EFEB',
+        decoration: 'heart-pink' 
+      },
+      'envelope-red': {
+        body: '#EF5350',
+        flap: '#D32F2F',
+        back: '#C62828',
+        left: '#B71C1C',
+        accent: '#FFCDD2',
+        decoration: 'stars' 
+      }
+    };
+
+    const theme = themes[currentStyle] || themes['envelope'];
+
+    return (
     <div 
         className="relative cursor-pointer"
         onClick={(e) => {
@@ -111,7 +166,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
               height: 0,
               borderStyle: 'solid',
               borderWidth: '0 0 150px 300px',
-              borderColor: 'transparent transparent #8b7ab8 transparent',
+              borderColor: `transparent transparent ${theme.body} transparent`,
               zIndex: 2,
             }}
           />
@@ -128,18 +183,42 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
               borderWidth: '75px 150px 0 150px',
               transformOrigin: '50% 0%',
               transform: isOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
-              borderColor: '#6b5b95 transparent transparent transparent',
-              zIndex: isOpen ? 0 : 2,
+              borderColor: `${theme.flap} transparent transparent transparent`,
+              zIndex: isOpen ? 0 : 3,
               transitionDelay: isOpen ? '0s' : '0.4s',
             }}
-          />
+          >
+             {/* Decorations (Heart/Stars) */}
+             {!isOpen && (
+                 <>
+                    {theme.decoration === 'heart-white' && (
+                        <div className="absolute -top-[45px] -left-[16px] drop-shadow-md scale-110">
+                            <Heart className="w-8 h-8 text-white fill-white" strokeWidth={1.5} />
+                        </div>
+                    )}
+                    {theme.decoration === 'heart-pink' && (
+                        <div className="absolute -top-[45px] -left-[16px] drop-shadow-md scale-110">
+                            <Heart className="w-8 h-8 text-rose-500 fill-rose-400" strokeWidth={1.5} />
+                        </div>
+                    )}
+                    {theme.decoration === 'stars' && (
+                        <div className="absolute -top-[60px] -left-[30px] flex">
+                            <Star className="w-6 h-6 text-yellow-300 fill-yellow-300 absolute top-4 left-8 animate-pulse" />
+                            <Star className="w-4 h-4 text-yellow-200 fill-yellow-100 absolute top-0 left-2" />
+                            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400 absolute top-8 left-0" />
+                        </div>
+                    )}
+                 </>
+             )}
+          </div>
 
           {/* Back Fold */}
           <div 
-            className="absolute bottom-0 left-0 bg-[#6b5b95]"
+            className="absolute bottom-0 left-0"
             style={{
               width: '300px',
               height: '150px',
+              background: theme.back,
               zIndex: 0,
             }}
           />
@@ -152,7 +231,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
               height: 0,
               borderStyle: 'solid',
               borderWidth: '75px 0 75px 150px',
-              borderColor: 'transparent transparent transparent #7d6fa8',
+              borderColor: `transparent transparent transparent ${theme.left}`,
               zIndex: 2,
             }}
           />
@@ -174,7 +253,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
               className="w-full"
               style={{
                 height: '15px',
-                background: 'repeating-linear-gradient(-45deg, #9b8bc4, #9b8bc4 12px, transparent 12px, transparent 27px)',
+                background: `repeating-linear-gradient(-45deg, ${theme.accent}, ${theme.accent} 12px, transparent 12px, transparent 27px)`,
               }}
             />
 
@@ -200,9 +279,9 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
             {/* Letter placeholder lines (when closed) */}
             {!isOpen && (
               <>
-                <div className="mt-4 ml-3 h-3 w-2/5 bg-[#9b8bc4] opacity-30" />
-                <div className="mt-4 ml-3 h-3 w-1/5 bg-[#9b8bc4] opacity-30" />
-                <div className="mt-12 ml-36 rounded-full h-11 w-11 bg-[#9b8bc4] opacity-20" />
+                <div className="mt-4 ml-3 h-3 w-2/5 opacity-30" style={{ backgroundColor: theme.accent }} />
+                <div className="mt-4 ml-3 h-3 w-1/5 opacity-30" style={{ backgroundColor: theme.accent }} />
+                <div className="mt-12 ml-36 rounded-full h-11 w-11 opacity-20" style={{ backgroundColor: theme.accent }}  />
               </>
             )}
           </div>
@@ -238,7 +317,8 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
           </button>
         )}
       </div>
-  );
+    );
+  };
 
   // 2. Scratch Card Renderer
   const RenderScratchCard = ({ variant }) => {
@@ -246,6 +326,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     const containerRef = useRef(null);
     const [isRevealed, setIsRevealed] = useState(false);
     const scratchAudioRef = useRef(null);
+    const isDragging = useRef(false);
 
     // Load Audio
     useEffect(() => {
@@ -255,67 +336,21 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     // --- THEMES CONFIGURATION ---
     const getThemeLogic = () => {
         switch(variant) {
-            case 'scratch-gold':
+            case 'scratch-winter-1':
+                return { id: 'winter-1', imageSrc: '/scratchcards/winter-scratch-card-1.webp', brushSize: 40 };
+            case 'scratch-winter-2':
+                return { id: 'winter-2', imageSrc: '/scratchcards/winter-scratch-card-2.webp', brushSize: 40 };
+            case 'scratch-shinchan':
+                return { id: 'shinchan', imageSrc: '/scratchcards/shinchan.webp', brushSize: 40 };
+            case 'scratch-doraemon':
+                return { id: 'doraemon', imageSrc: '/scratchcards/doraemon.webp', brushSize: 40 };
+            case 'scratch-cat-earth':
+                return { id: 'cat-earth', imageSrc: '/scratchcards/cat-earth.webp', brushSize: 40 };
+            default: 
                 return {
-                    id: 'gold',
-                    scratchColor: '#D6C08D', // Muted Crystal Ball Gold
-                    patternColor: '#EADBC0',
-                    brushSize: 30,
-                    text: { font: 'bold 16px "Courier New", monospace', color: '#5A4A32', label: '?' },
-                    renderPattern: (ctx, width, height) => {
-                         // Crystal Ball Shine
-                         ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                         ctx.beginPath();
-                         ctx.ellipse(width*0.3, height*0.3, width*0.1, height*0.05, -Math.PI/4, 0, Math.PI*2);
-                         ctx.fill();
-                         ctx.beginPath();
-                         ctx.arc(width*0.2, height*0.25, 5, 0, Math.PI*2);
-                         ctx.fill();
-                    }
-                };
-            case 'scratch-blue':
-                return {
-                    id: 'blue',
-                    scratchColor: '#E0F2FE', // Ice
-                    patternColor: '#FFF',
-                    brushSize: 20,
-                    text: { font: 'bold 16px sans-serif', color: '#0EA5E9', label: '❄ SCRATCH ❄' },
-                    renderPattern: (ctx, width, height) => {
-                         // Snowflakes
-                         ctx.fillStyle = '#FFF';
-                         for(let i=0; i<20; i++) {
-                             const x = Math.random() * width;
-                             const y = Math.random() * height;
-                             const r = Math.random() * 3 + 1;
-                             ctx.beginPath();
-                             ctx.arc(x, y, r, 0, Math.PI * 2);
-                             ctx.fill();
-                         }
-                    }
-                };
-            default: // Kawaii
-                return {
-                    id: 'kawaii',
-                    scratchColor: '#F3F0D4',
-                    patternColor: 'rgba(230,225,190,0.5)',
-                    brushSize: 25,
-                    text: { font: 'bold 14px sans-serif', color: '#A3B6DA', label: 'SCRATCH HERE' },
-                    renderPattern: (ctx, width, height) => {
-                         // Paw Prints
-                         ctx.fillStyle = 'rgba(230,225,190,0.5)';
-                         for(let i=0; i<8; i++) {
-                             const x = Math.random() * width;
-                             const y = Math.random() * height;
-                             ctx.beginPath();
-                             ctx.arc(x, y, 15, 0, Math.PI * 2); 
-                             ctx.fill();
-                             ctx.beginPath();
-                             ctx.arc(x-12, y-12, 6, 0, Math.PI * 2);
-                             ctx.arc(x, y-18, 6, 0, Math.PI * 2);
-                             ctx.arc(x+12, y-12, 6, 0, Math.PI * 2);
-                             ctx.fill();
-                         }
-                    }
+                        id: 'winter-1',
+                        imageSrc: '/scratchcards/winter-scratch-card-1.webp', 
+                        brushSize: 40,
                 };
         }
     };
@@ -329,26 +364,30 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
         const ctx = canvas.getContext('2d');
         const { width, height } = canvas;
 
-        // 1. Fill
+        // Special handling for Image-based scratch cards
+        if (theme.imageSrc) {
+            const img = new Image();
+            img.src = theme.imageSrc;
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, width, height);
+            };
+            return;
+        }
+
+        // Standard Fill & Pattern
         ctx.fillStyle = theme.scratchColor;
         ctx.fillRect(0, 0, width, height);
 
-        // 2. Pattern
         theme.renderPattern(ctx, width, height);
 
-        // 3. Label
         ctx.fillStyle = theme.text.color;
         ctx.font = theme.text.font;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         if (theme.id === 'gold') {
-             // Minimal center text for crystal ball
-             ctx.fillText(theme.text.label, width/2, height/2);
-        } else if (theme.id === 'blue') {
              ctx.fillText(theme.text.label, width/2, height/2);
         } else {
-             // Stamp style
              ctx.save();
              ctx.translate(width - 50, 50);
              ctx.rotate(Math.PI / 8);
@@ -366,6 +405,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
 
     const handleScratch = (e) => {
         if (!readOnly) return;
+        isDragging.current = true;
         const canvas = canvasRef.current;
         const rect = canvas.getBoundingClientRect();
         
@@ -396,247 +436,50 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
 
     // 1. MYSTICAL CRYSTAL BALL (Formerly Luxury Gold)
     // Updated: The entire black card is scratchable!
-    if (variant === 'scratch-gold') {
-        const CARD_WIDTH = 340;
-        const CARD_HEIGHT = 440;
-
-        // Custom Render for the "Cover" of the scratch card (The Mystic Scene)
-        useEffect(() => {
-            if (variant !== 'scratch-gold' || !canvasRef.current) return;
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext('2d');
-            
-            // 1. Background (Dark Panel)
-            ctx.fillStyle = '#232020';
-            ctx.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
-            
-            // 2. Decor Border
-            ctx.strokeStyle = '#D6C08D';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.roundRect(16, 16, CARD_WIDTH-32, CARD_HEIGHT-32, 24);
-            ctx.stroke();
-
-            // 3. Texts
-            ctx.fillStyle = '#D6C08D';
-            ctx.textAlign = 'center';
-            
-            // "YOUR FUTURE"
-            ctx.font = '14px serif';
-            ctx.fillText('Y O U R   F U T U R E', CARD_WIDTH/2, 50);
-
-            // "LOOKS BRIGHT"
-            ctx.fillText('L O O K S', CARD_WIDTH/2, CARD_HEIGHT - 60);
-            ctx.font = 'bold 14px serif';
-            ctx.fillText('B R I G H T', CARD_WIDTH/2, CARD_HEIGHT - 40);
-
-            // 4. The Crystal Ball Graphic (Center)
-            const ballX = CARD_WIDTH/2;
-            const ballY = CARD_HEIGHT/2 - 10;
-            const ballR = 80;
-
-            // Ball Fill
-            ctx.fillStyle = '#D6C08D';
-            ctx.beginPath();
-            ctx.arc(ballX, ballY, ballR, 0, Math.PI*2);
-            ctx.fill();
-
-            // Shine
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(ballX - 25, ballY - 25, 20, 10, -Math.PI/4, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(ballX - 40, ballY - 20, 4, 0, Math.PI*2);
-            ctx.fill();
-
-            // Question Mark
-            ctx.fillStyle = '#5A4A32';
-            ctx.font = 'bold 30px serif';
-            ctx.fillText('?', ballX, ballY + 10);
-
-            // Stand
-            ctx.fillStyle = '#8C7A54';
-            ctx.beginPath();
-            ctx.roundRect(ballX - 40, ballY + ballR - 5, 80, 20, 10);
-            ctx.fill();
-
-            // 5. Stars & Moons
-            ctx.fillStyle = '#D6C08D';
-            ctx.font = '20px serif';
-            ctx.fillText('✦', 40, 60);
-            ctx.fillText('✨', CARD_WIDTH-40, 80);
-            ctx.fillText('☽', CARD_WIDTH-40, CARD_HEIGHT-80);
-            ctx.font = '12px serif';
-            ctx.fillText('✶', 40, CARD_HEIGHT-80);
-
-        }, []); // Run once on mount
-
+    // Generic render for image-based scratch cards
+    if (variant.startsWith('scratch')) {
         return (
-            <div className="relative group cursor-pointer select-none" ref={containerRef} onClick={(e) => e.stopPropagation()}>
-                {/* White Paper Card Base */}
-                <div className="w-[400px] h-[600px] bg-[#FDFBF7] shadow-xl flex flex-col items-center relative p-8 rounded-sm">
-                    
-                    {/* Top Text */}
-                    <div className="text-[#8B7D6B] text-[10px] tracking-[0.3em] font-medium mb-4 font-mono uppercase">
-                        Scratch Card
-                    </div>
-
-                    {/* The Scratchable Area Container */}
-                    <div className="flex-1 w-full bg-white rounded-[2rem] relative flex items-center justify-center overflow-hidden border border-gray-200">
-                        
-                        {/* 1. HIDDEN CONTENT (Behind Canvas) */}
-                        <div className="absolute inset-0 flex items-center justify-center p-6 bg-white">
-                             {giftContent.type === 'image' ? (
-                                <img src={giftContent.data} className="w-full h-full object-contain" />
-                            ) : (
-                                <div className="text-center">
-                                    <p className="text-gray-400 text-xs uppercase tracking-widest mb-4">Your Fortune</p>
-                                    <p className="text-gray-900 font-serif font-bold text-2xl leading-relaxed">
-                                        {giftContent.data}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* 2. THE SCRATCH CANVAS (The Cover Image) */}
-                        <canvas 
-                            ref={canvasRef}
-                            width={340} height={440}
-                            className={`absolute inset-0 w-full h-full cursor-pointer touch-none z-20 ${!readOnly ? 'opacity-80' : ''}`}
-                            onMouseMove={e => e.buttons === 1 && handleScratch(e)}
-                            onTouchMove={handleScratch}
-                        />
-
-                    </div>
-
-                    {/* Bottom Card Text */}
-                    <div className="text-[#8B7D6B] text-[9px] tracking-[0.2em] font-medium mt-4 font-mono uppercase opacity-70">
-                        What the future holds
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // 2. WINTER FROST LAYOUT (Holiday Card)
-    if (variant === 'scratch-blue') {
-        return (
-            <div className="relative group cursor-pointer select-none" ref={containerRef} onClick={(e) => e.stopPropagation()}>
-                <div className="w-[380px] h-[480px] bg-gradient-to-b from-sky-100 to-blue-200 rounded-[32px] shadow-lg border-[4px] border-white flex flex-col items-center relative overflow-hidden p-2">
-                    {/* Snow Decor */}
-                    <div className="absolute top-2 right-4 text-white opacity-80 animate-pulse text-xl">❄</div>
-                    <div className="absolute bottom-12 left-2 text-white opacity-60 text-lg">❅</div>
-                    
-                    {/* Frosted Container */}
-                    <div className="w-full h-full bg-white/40 backdrop-blur-sm rounded-[24px] p-2 flex flex-col">
-                        
-                        <div className="h-10 flex items-center justify-center">
-                            <span className="text-sky-600 font-bold tracking-wider text-sm bg-white/80 px-4 py-1 rounded-full shadow-sm">WINTER WISH</span>
-                        </div>
-
-                        {/* Gift Area */}
-                        <div className="flex-1 relative m-1 rounded-2xl overflow-hidden bg-white/80 shadow-inner flex items-center justify-center">
-                             {/* The Prize */}
-                             <div className="p-4 text-center w-full h-full flex items-center justify-center">
-                                 {giftContent.type === 'image' ? (
-                                    <img src={giftContent.data} className="max-w-full max-h-full rounded-md" />
-                                ) : (
-                                    <p className="text-sky-500 font-bold text-lg">{giftContent.data}</p>
-                                )}
-                             </div>
-
-                             {/* Canvas */}
-                             <canvas 
-                                ref={canvasRef}
-                                width={330} height={330}
-                                className={`absolute inset-0 w-full h-full touch-none z-10 ${!readOnly ? 'opacity-60' : ''}`}
-                                onMouseMove={e => e.buttons === 1 && handleScratch(e)}
-                                onTouchMove={handleScratch}
-                             />
-                        </div>
-                        
-                        <div className="h-6 w-full flex justify-center items-center gap-2 mt-1">
-                             <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce"></div>
-                             <div className="w-2 h-2 bg-white rounded-full animate-bounce delay-100"></div>
-                             <div className="w-2 h-2 bg-sky-400 rounded-full animate-bounce delay-200"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // 3. KAWAII STAMP LAYOUT (Default)
-    return (
-        <div 
-            className="relative group cursor-pointer select-none" 
-            ref={containerRef}
-            onClick={(e) => e.stopPropagation()}
-        >
-            {/* Outer Frame (Blue Stamp Look) */}
-            <div className="w-[380px] h-[500px] bg-[#9FB6D8] p-4 rounded-xl shadow-xl relative overflow-hidden flex flex-col items-center transition-colors duration-500">
+            <div className="relative group cursor-pointer select-none w-full h-full flex flex-col items-center justify-center p-4 gap-4" ref={containerRef}>
                 
-                {/* Decorative Dashed Border inside Blue Frame */}
-                <div className="absolute inset-1.5 border-2 border-dashed border-white/40 rounded-lg pointer-events-none"></div>
+                {/* Scratch Hint (Complete Outside Text) */}
+                {!isRevealed && readOnly && (
+                    <div className="pointer-events-none z-30 whitespace-nowrap animate-bounce">
+                        <div className="bg-white/90 backdrop-blur-md text-gray-900 border-2 border-gray-100 px-4 py-2 rounded-full font-bold shadow-sm text-sm tracking-wide uppercase">
+                            🖌️ Scratch the Card below
+                        </div>
+                    </div>
+                )}
 
-                {/* --- INNER CONTENT --- */}
-                <div className="w-full h-full bg-white rounded-lg overflow-hidden flex flex-col relative z-10 shadow-sm">
+                {/*  Simple Container for the Image Scratch Card */}
+                <div className="w-full h-auto max-w-[400px] aspect-[400/540] relative rounded-xl shadow-xl overflow-hidden bg-white">
+                    {/* Hidden Content */}
+                    <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
+                            {giftContent.type === 'image' ? (
+                            <img src={giftContent.data} className="w-full h-full object-contain" />
+                        ) : (
+                            <p className="font-handwriting text-2xl text-gray-800 font-bold">
+                                {giftContent.data}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Scratch Canvas (The Image) */}
+                    <canvas 
+                        ref={canvasRef}
+                        width={400} height={540}
+                        className={`absolute inset-0 w-full h-full touch-none z-20 ${!readOnly ? 'opacity-80' : ''}`}
+                        onMouseMove={e => e.buttons === 1 && handleScratch(e)}
+                        onTouchMove={handleScratch}
+                        onMouseDown={(e) => { isDragging.current = false; e.stopPropagation(); }}
+                        onTouchStart={(e) => { isDragging.current = false; e.stopPropagation(); }}
+                        onClick={(e) => { if(isDragging.current) e.stopPropagation(); }}
+                    />
                     
-                    {/* Hidden Content Area */}
-                    <div className="relative w-full h-[320px] bg-white flex items-center justify-center overflow-hidden">
-                        <div className="w-full h-full flex items-center justify-center p-4">
-                             {giftContent.type === 'image' ? (
-                                <img src={giftContent.data} className="max-w-full max-h-full object-contain drop-shadow-sm" />
-                            ) : (
-                                <p className="text-[#E85D48] text-center font-bold text-xl font-mono leading-relaxed break-words px-2">
-                                    {giftContent.data}
-                                </p>
-                            )}
-                        </div>
 
-                        {/* Peeking Beige Cat (Bottom Left of Area) */}
-                        <div className="absolute bottom-[-4px] left-4 w-12 h-10 bg-[#F3F0D4] rounded-t-xl z-10 flex justify-center items-center">
-                             {/* Ears */}
-                             <div className="absolute -top-3 left-0 w-4 h-4 bg-[#F3F0D4] clip-triangle" style={{ clipPath: 'polygon(0% 100%, 50% 0%, 100% 100%)' }}></div>
-                             <div className="absolute -top-3 right-0 w-4 h-4 bg-[#F3F0D4] clip-triangle" style={{ clipPath: 'polygon(0% 100%, 50% 0%, 100% 100%)' }}></div>
-                             {/* Face */}
-                             <div className="flex gap-2 mt-1">
-                                 <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
-                                 <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
-                             </div>
-                        </div>
-
-                        <canvas 
-                            ref={canvasRef}
-                            width={348} 
-                            height={320}
-                            className={`absolute top-0 left-0 w-full h-full touch-none z-20 ${!readOnly ? 'opacity-50' : ''}`}
-                            onMouseMove={e => e.buttons === 1 && handleScratch(e)}
-                            onTouchMove={handleScratch}
-                        />
-                    </div>
-
-                    {/* Bottom Area */}
-                    <div className="flex-1 bg-white flex flex-col items-center justify-center relative pb-2 border-t border-dashed border-gray-100">
-                         <h2 className="text-3xl font-black text-[#E85D48] tracking-widest uppercase mb-2" style={{ fontFamily: 'Arial Black, sans-serif' }}>
-                            SURPRISE
-                         </h2>
-                         <div className="bg-[#9FB6D8] text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider border-2 border-white/50 shadow-sm">
-                             Scratch Card
-                         </div>
-                    </div>
-                </div>
-
-                {/* Stamp Icon Overlay */}
-                <div className="absolute top-6 right-6 w-16 h-16 opacity-80 pointer-events-none z-30">
-                    <div className="w-full h-full border-2 border-[#8CA5C8]/50 rounded-full flex items-center justify-center rotate-12">
-                        <Sparkles className="w-8 h-8 text-[#8CA5C8]/50" />
-                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
   };
 
   // 3. Balloon Pop (With Variants)
@@ -800,15 +643,35 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
                 </button>
               </div>
             ) : uploadType === 'image' ? (
-              <div className="w-full">
-                <label className="block w-full cursor-pointer">
-                  <div className="border-2 border-dashed border-gray-300 bg-white rounded-xl p-8 text-center hover:border-gray-900 hover:bg-gray-50 transition-all">
-                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                    <p className="font-bold text-gray-900">Click to upload</p>
-                  </div>
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                </label>
-                <button onClick={() => setUploadType(null)} className="mt-3 w-full py-2 text-sm text-gray-500 hover:text-gray-900">Cancel</button>
+              <div className="w-full relative">
+                 {/* Tabs */}
+                 <div className="absolute top-0 right-0 flex gap-2 mb-2 z-10">
+                     <button onClick={() => setImageInputMode('url')} className={`px-3 py-1 text-xs font-bold uppercase rounded-full ${imageInputMode === 'url' ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'}`}>URL</button>
+                     <button onClick={() => setImageInputMode('file')} className={`px-3 py-1 text-xs font-bold uppercase rounded-full ${imageInputMode === 'file' ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'}`}>Upload</button>
+                 </div>
+
+                 {imageInputMode === 'url' ? (
+                     <form onSubmit={handleUrlSubmit} className="mt-8 flex flex-col gap-3">
+                        <input 
+                            type="url" 
+                            value={urlInput}
+                            onChange={(e) => setUrlInput(e.target.value)}
+                            placeholder="https://example.com/image.png"
+                            className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 focus:border-black focus:outline-none bg-white font-mono text-sm"
+                            autoFocus
+                        />
+                        <button type="submit" className="w-full py-3 bg-black text-white rounded-xl font-bold uppercase hover:scale-105 transition-transform">Use Image</button>
+                     </form>
+                 ) : (
+                    <label className="block w-full cursor-pointer mt-8">
+                      <div className="border-2 border-dashed border-gray-300 bg-white rounded-xl p-8 text-center hover:border-gray-900 hover:bg-gray-50 transition-all">
+                        <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                        <p className="font-bold text-gray-900">Click to upload</p>
+                      </div>
+                      <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    </label>
+                 )}
+                 <button onClick={() => setUploadType(null)} className="mt-3 w-full py-2 text-sm text-gray-500 hover:text-gray-900">Cancel</button>
               </div>
             ) : (
               <div className="w-full">
@@ -826,40 +689,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     );
   }
 
-  // RE-EDIT MODE (When user wants to change content)
-  if (!readOnly && isEditingContent) {
-      return (
-        <div className="w-full h-full flex items-center justify-center relative bg-gray-50/90 backdrop-blur z-50">
-             <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full border border-gray-200 animate-in zoom-in duration-200">
-                 <div className="flex justify-between items-center mb-4">
-                     <h3 className="font-bold text-lg">Change Content</h3>
-                     <button onClick={() => setIsEditingContent(false)}><X className="w-5 h-5" /></button>
-                 </div>
-                 <div className="flex flex-col gap-2">
-                     <button onClick={() => setUploadType('image')} className="p-3 border rounded-lg hover:bg-gray-50 text-left font-medium flex items-center gap-2"><Upload className="w-4 h-4"/> New Image</button>
-                     <button onClick={() => setUploadType('text')} className="p-3 border rounded-lg hover:bg-gray-50 text-left font-medium flex items-center gap-2"><Type className="w-4 h-4"/> New Text</button>
-                 </div>
-                 
-                 {/* Inline Editor if selected */}
-                 {uploadType === 'text' && (
-                     <textarea 
-                        className="w-full border p-2 mt-4 rounded-lg" 
-                        placeholder="New text..." 
-                        onBlur={(e) => handleTextSubmit(e.target.value)}
-                        autoFocus
-                     />
-                 )}
-                 {uploadType === 'image' && (
-                     <input 
-                        type="file" 
-                        className="w-full border p-2 mt-4 rounded-lg" 
-                        onChange={handleImageUpload}
-                     />
-                 )}
-             </div>
-        </div>
-      );
-  }
+
 
   // VIEW MODE (Builder & Preview)
   return (
@@ -878,13 +708,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
                >
                    <PenTool className="w-4 h-4" />
                </button>
-               <button 
-                  onClick={() => setIsEditingContent(true)}
-                  className="bg-white text-black p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_black] hover:scale-105 transition-transform"
-                  title="Edit Content"
-               >
-                   <RefreshCw className="w-4 h-4" />
-               </button>
+
            </div>
        )}
     </div>

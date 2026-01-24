@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Image as ImageIcon, Upload, PenTool, X, Check, Play, SkipBack, SkipForward, Heart, Music, ArrowLeft, ArrowRight, Search, Sparkles, Palette, Type } from 'lucide-react';
+import { Image as ImageIcon, Upload, PenTool, X, Check, Play, SkipBack, SkipForward, Heart, Music, ArrowLeft, ArrowRight, Search, Sparkles, Palette, Type, Link } from 'lucide-react';
 import StyleEditorDrawer from './StyleEditorDrawer';
 
 // Redefine Styles as Categories - Super Cute Edition
@@ -210,7 +210,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
   const [textData, setTextData] = useState(initialText);
   const [isEditingText, setIsEditingText] = useState(false);
   
-  const [inputType, setInputType] = useState('file'); // 'file' or 'url'
+  const [inputType, setInputType] = useState('url'); // 'file' or 'url'
   const [urlInput, setUrlInput] = useState('');
 
   const handleUrlSubmit = (e) => {
@@ -760,46 +760,61 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-8">
         {!readOnly && (
-            <div className="w-full h-full border-2 border-dashed border-gray-300 hover:border-gray-400 transition-colors rounded-lg bg-white/50 flex flex-col items-center justify-center p-4 relative">
+            <div className="w-full h-full border-2 border-dashed border-gray-300 hover:border-black transition-colors rounded-2xl bg-white/50 flex flex-col items-center justify-center p-6 relative group gap-4">
                 
-                {/* Toggle Type */}
-                <div className="absolute top-2 right-2 flex gap-2">
-                    <button 
-                        onClick={() => setInputType('file')}
-                        className={`text-xs font-bold uppercase px-2 py-1 rounded ${inputType === 'file' ? 'bg-black text-white' : 'bg-gray-200 text-gray-500'}`}
-                    >
-                        Upload
-                    </button>
-                    <button 
+                {/* Tabs */}
+                <div className="flex bg-gray-100 p-1 rounded-full absolute top-6 right-6 shadow-sm z-10">
+                     <button 
                         onClick={() => setInputType('url')}
-                        className={`text-xs font-bold uppercase px-2 py-1 rounded ${inputType === 'url' ? 'bg-black text-white' : 'bg-gray-200 text-gray-500'}`}
+                        className={`text-xs font-bold uppercase px-3 py-1.5 rounded-full transition-all ${inputType === 'url' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
                     >
                         URL
                     </button>
+                    <button 
+                        onClick={() => setInputType('file')}
+                        className={`text-xs font-bold uppercase px-3 py-1.5 rounded-full transition-all ${inputType === 'file' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                        Upload
+                    </button>
                 </div>
 
-                {inputType === 'file' ? (
-                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full hover:bg-gray-50 transition-colors">
-                        <ImageIcon className="w-12 h-12 text-gray-400 mb-2" />
-                        <span className="text-sm font-bold text-gray-500 uppercase">Upload Image</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                    </label>
-                ) : (
-                    <form onSubmit={handleUrlSubmit} className="flex flex-col items-center gap-2 w-full px-4">
-                         <div className="bg-black text-white p-2 rounded-full mb-1">
-                            <Upload className="w-6 h-6" />
+                {inputType === 'url' ? (
+                    <form onSubmit={handleUrlSubmit} className="flex flex-col items-center gap-4 w-full max-w-xs animate-in fade-in zoom-in duration-300 z-0">
+                         <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center shadow-sm mb-2">
+                            <Link className="w-8 h-8" />
                         </div>
-                        <input 
-                            type="url" 
-                            placeholder="Paste image URL..." 
-                            value={urlInput}
-                            onChange={(e) => setUrlInput(e.target.value)}
-                            className="w-full border-b-2 border-gray-300 focus:border-black outline-none p-1 text-center bg-transparent placeholder-gray-400"
-                        />
-                         <button type="submit" className="mt-2 text-xs font-black uppercase bg-[#A3E635] px-3 py-1 border-2 border-black shadow-[2px_2px_0px_0px_black] hover:-translate-y-0.5 transition-transform">
+                        <div className="text-center mb-2">
+                            <h3 className="font-bold text-gray-900">Paste Image Link</h3>
+                            <p className="text-xs text-gray-500">Works with any direct image URL</p>
+                        </div>
+                        <div className="w-full relative">
+                             <input 
+                                type="url" 
+                                placeholder="https://example.com/image.png" 
+                                value={urlInput}
+                                onChange={(e) => setUrlInput(e.target.value)}
+                                className="w-full border-2 border-gray-200 focus:border-black rounded-xl px-4 py-2 font-mono text-sm outline-none transition-all placeholder:text-gray-300 bg-white"
+                                autoFocus
+                            />
+                        </div>
+                         <button type="submit" className="w-full bg-black text-white font-bold uppercase py-3 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-black/20">
                             Add Image
                         </button>
                     </form>
+                ) : (
+                    <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full animate-in fade-in zoom-in duration-300 gap-4 z-0">
+                        <div className="w-16 h-16 bg-gray-100 text-gray-600 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <Upload className="w-8 h-8" />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="font-bold text-gray-900">Upload File</h3>
+                            <p className="text-xs text-gray-500">Click to browse your device</p>
+                        </div>
+                        <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                        <div className="bg-white border-2 border-gray-200 px-6 py-2 rounded-xl text-sm font-bold text-gray-700 group-hover:border-black group-hover:text-black transition-colors">
+                            Choose File
+                        </div>
+                    </label>
                 )}
             </div>
         )}
