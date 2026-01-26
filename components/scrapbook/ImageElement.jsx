@@ -474,15 +474,16 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                  <PolaroidFrame variant={activeStyleConfig.frameType} position={polaroidPosition} />
              )}
 
-             {/* ----------------- UNIFIED TAPE RENDERING ----------------- */}
-             {activeStyleConfig.tapeType && (
-                 <WashiTape variant={activeStyleConfig.tapeType} position={tapePosition} />
-             )}
              <img 
                 src={preview} 
                 alt="Scrapbook item" 
                 className={`max-w-full max-h-full transition-all duration-300 relative z-10 ${isCover ? 'w-full h-full object-cover' : activeStyleConfig.class}`}
             />
+
+             {/* ----------------- UNIFIED TAPE RENDERING ----------------- */}
+             {activeStyleConfig.tapeType && (
+                 <WashiTape variant={activeStyleConfig.tapeType} position={tapePosition} />
+             )}
 
             {/* ----------------- COVER TEXT OVERLAY ----------------- */}
             {isCover && (hasText || isEditingText) && (

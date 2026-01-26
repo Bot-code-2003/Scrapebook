@@ -27,7 +27,7 @@ export default function PolaroidFrame({ variant, position = 'default' }) {
              <img 
                 src={imageSrc} 
                 alt="polaroid frame" 
-                className=" h-full object-cover drop-shadow-2xl" 
+                className="w-full h-full object-cover drop-shadow-2xl" 
                 onError={(e) => console.error('Polaroid frame image failed to load:', imageSrc)}
             />
         </div>
