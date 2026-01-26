@@ -84,8 +84,8 @@ export default function PrivacyPage() {
           <div className="mt-12 pt-8 border-t border-gray-100 text-center">
              <p className="text-gray-500 text-sm">
                 Questions? Hugs? Concerns? <br />
-                <a href="mailto:madisettydharmadeep@gmail.com" className="text-black font-bold hover:underline decoration-lime-400 decoration-2">
-                    madisettydharmadeep@gmail.com
+                <a href="mailto:futurepiratekingxx@gmail.com" className="text-black font-bold hover:underline decoration-lime-400 decoration-2">
+                    futurepiratekingxx@gmail.com
                 </a>
              </p>
           </div>
