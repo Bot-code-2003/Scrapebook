@@ -152,7 +152,7 @@ const MidSection = () => {
     
     {/* Decorative background text */}
     <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[15vw] font-black opacity-5 select-none pointer-events-none">
-      MYSCRAPEBOOK
+      myscrapbook
     </span>
 
     <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-8 relative z-10">

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Plus, Book, Sparkles, Eye, Share2, Check } from 'lucide-react';
+import { Plus, Book, Sparkles, Eye, Share2, Check, Pencil } from 'lucide-react';
 import BookLayout from './BookLayout';
 import BookPreview from './BookPreview';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import TextStyleEditorDrawer from './TextStyleEditorDrawer';
 import CoverStyleEditorDrawer from './CoverStyleEditorDrawer';
 import BackgroundEditorDrawer from './BackgroundEditorDrawer';
 import { Palette } from 'lucide-react';
+import SupportButton from '@/components/SupportButton';
 
 // ... (imports remain same)
 
@@ -148,8 +149,8 @@ export default function ScrapbookBuilder() {
     setIsInitialized(true); 
   };
 
-  const openDrawer = (type, data = {}, onAction = () => {}, title = '') => {
-    setActiveDrawer({ type, data, onAction, title });
+  const openDrawer = (type, data = {}, onAction = () => {}, title = '', additionalAction = null) => {
+    setActiveDrawer({ type, data, onAction, title, additionalAction });
   };
   
   const closeDrawer = () => {
@@ -182,6 +183,8 @@ export default function ScrapbookBuilder() {
   const SOUND_OPTIONS = [
       { id: 'none', label: 'Silent', src: null },
       { id: 'page-flip', label: 'Paper Snap', src: '/sounds/page-flip.m4a' },
+      { id: 'cute-click', label: 'Cute Click', src: '/sounds/Cute-click.mp3' },
+      { id: 'heavy-flip', label: 'Heavy Flip', src: '/sounds/heavy-flip.mp3' },
   ];
 
   const ANIM_OPTIONS = [
@@ -304,7 +307,7 @@ export default function ScrapbookBuilder() {
       const res = await fetch('/api/scrapbook/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pages: processedPages, bgPattern, bgColor, pageBorder, title, soundId }),
+        body: JSON.stringify({ pages: processedPages, bgPattern, bgColor, pageBorder, title, soundId, animId, appBackground }),
       });
       const data = await res.json();
       
@@ -460,7 +463,7 @@ export default function ScrapbookBuilder() {
                         alt="Logo" 
                         className="w-10 h-10 transform group-hover:rotate-6 transition-transform"
                     />
-                    <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">MyScrapebook</span>
+                    <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">myscrapbook</span>
                 </Link>
             </div>
             <div className="flex gap-2 md:gap-3 shrink-0">
@@ -500,21 +503,26 @@ export default function ScrapbookBuilder() {
 
       {/* Floating Controls in Preview Mode */}
       {isPreview && (
-          <div className="fixed top-6 right-6 z-50 flex gap-3 animate-in slide-in-from-top-4 duration-500">
-               <button 
-                    onClick={() => setIsPreview(false)}
-                    className="flex items-center gap-2 bg-white/90 backdrop-blur text-gray-900 border border-gray-200 px-6 py-3 rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg"
-               >
-                   Back to Edit
-               </button>
-               <button 
-                    onClick={handleShare}
-                    disabled={isSaving}
-                    className="flex items-center gap-2 bg-lime-400 text-black px-6 py-3 rounded-full font-bold shadow-lg shadow-lime-500/30 hover:shadow-xl hover:scale-105 hover:bg-lime-500 transition-all disabled:opacity-50 disabled:hover:scale-100"
-               >
-                   {isSaving ? 'Saving...' : 'Share Link'}
-               </button>
-          </div>
+           <div className="fixed top-6 right-6 z-50 flex gap-2 sm:gap-3 animate-in slide-in-from-top-4 duration-500 items-center">
+                <SupportButton iconOnly={true} />
+                <button 
+                     onClick={() => setIsPreview(false)}
+                     className="flex items-center gap-2 bg-white/90 backdrop-blur text-gray-900 border border-gray-200 px-3 py-2 sm:px-6 sm:py-3 rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg"
+                     title="Back to Edit"
+                >
+                    <Pencil className="w-4 h-4" />
+                    <span className="hidden sm:inline">Back</span>
+                </button>
+                <button 
+                     onClick={handleShare}
+                     disabled={isSaving}
+                     className="flex items-center gap-2 bg-lime-400 text-black px-3 py-2 sm:px-6 sm:py-3 rounded-full font-bold shadow-lg shadow-lime-500/30 hover:shadow-xl hover:scale-105 hover:bg-lime-500 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                     title="Share"
+                >
+                    <Share2 className="w-4 h-4" />
+                   <span className="hidden sm:inline">{isSaving ? 'Saving...' : 'Share'}</span>
+                </button>
+           </div>
       )}
     
       {/* Background Toolbar */}
@@ -582,7 +590,11 @@ export default function ScrapbookBuilder() {
                   title={activeDrawer.title}
                   categories={activeDrawer.data.categories}
                   currentStyle={activeDrawer.data.currentStyle}
+                  tapePosition={activeDrawer.data.tapePosition}
+                  polaroidPosition={activeDrawer.data.polaroidPosition}
                   onSelect={(styleId) => activeDrawer.onAction(styleId)}
+                  onTapePosChange={activeDrawer.additionalAction?.onTapePosChange}
+                  onPolaroidPosChange={activeDrawer.additionalAction?.onPolaroidPosChange}
                   onClose={closeDrawer}
               />
           )}

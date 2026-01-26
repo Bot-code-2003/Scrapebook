@@ -15,6 +15,7 @@ import {
   Sacramento,
   Comfortaa
 } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -111,27 +112,27 @@ const comfortaa = Comfortaa({
 });
 
 export const metadata = {
-  title: "MyScrapebook | Interactive Digital Scrapbooks, Scratch Cards & Virtual Albums",
+  title: "myscrapbook | Interactive Digital Scrapbooks, Scratch Cards & Virtual Albums",
   description: "Create professional yet cute digital scrapbooks with interactive features. Build aesthetic memory books with scratch cards, secret envelopes, and polaroid galleries. The perfect virtual gift for birthdays, anniversaries, and visual storytelling.",
-  keywords: "digital scrapbook, scratch cards online, interactive photo album, virtual polaroid book, digital memory book, cute scrapbook ideas, online gift maker, aesthetic digital album, MyScrapebook, digital envelopes, secret message cards, virtual scraping, love letter online, interactive scrapbook maker, digital gifts",
-  authors: [{ name: "MyScrapebook" }],
-  creator: "MyScrapebook",
-  publisher: "MyScrapebook",
+  keywords: "digital scrapbook, scratch cards online, interactive photo album, virtual polaroid book, digital memory book, cute scrapbook ideas, online gift maker, aesthetic digital album, myscrapbook, digital envelopes, secret message cards, virtual scraping, love letter online, interactive scrapbook maker, digital gifts",
+  authors: [{ name: "myscrapbook" }],
+  creator: "myscrapbook",
+  publisher: "myscrapbook",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "MyScrapebook | Interactive Digital Scrapbooks & Scratch Cards",
+    title: "myscrapbook | Interactive Digital Scrapbooks & Scratch Cards",
     description: "Design stunning digital scrapbooks with interactive scratch cards, envelopes, and polaroids. The cutest way to share memories online.",
     type: "website",
-    siteName: "MyScrapebook",
+    siteName: "myscrapbook",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyScrapebook | Interactive Digital Scrapbooks & Scratch Cards",
+    title: "myscrapbook | Interactive Digital Scrapbooks & Scratch Cards",
     description: "Create aesthetic, interactive scrapbooks with virtual scratch cards and polaroids. Start your story today.",
   },
   robots: {
@@ -181,6 +182,19 @@ export default function RootLayout({ children }) {
             {children}
           </AuthProvider>
         </GoogleOAuthProvider>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-DHDS1YH1TZ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-DHDS1YH1TZ');
+          `}
+        </Script>
       </body>
     </html>
   );

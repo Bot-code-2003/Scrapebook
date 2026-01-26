@@ -22,6 +22,12 @@ const APP_BACKGROUNDS = [
       label: 'Kawai Aliens', 
       value: 'url("/backgrounds/kawai-aliens.webp")', 
       thumbnail: '/backgrounds/kawai-aliens.webp' 
+  },
+  { 
+      id: 'kawai-pink', 
+      label: 'Kawai Pink', 
+      value: 'url("/backgrounds/kawai-pink-bg.webp")', 
+      thumbnail: '/backgrounds/kawai-pink-bg.webp' 
   }
 ];
 

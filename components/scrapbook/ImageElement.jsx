@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Image as ImageIcon, Upload, PenTool, X, Check, Play, SkipBack, SkipForward, Heart, Music, ArrowLeft, ArrowRight, Search, Sparkles, Palette, Type, Link } from 'lucide-react';
 import StyleEditorDrawer from './StyleEditorDrawer';
+import WashiTape from './WashiTape';
+import PolaroidFrame from './PolaroidFrame';
 
 // Redefine Styles as Categories - Super Cute Edition
 const STYLE_CATEGORIES = [
@@ -18,53 +20,41 @@ const STYLE_CATEGORIES = [
         id: 'polaroid',
         label: 'Polaroid',
         options: [
-            { id: 'polaroid', label: 'Classic White', class: 'w-full h-full object-cover', containerClass: 'bg-white p-3 pb-12 shadow-xl w-[80%] h-[80%] flex items-center justify-center' },
-            { id: 'polaroid-tilted', label: 'Tilted Left', class: 'w-full h-full object-cover', containerClass: 'bg-white p-3 pb-12 shadow-xl rotate-[-3deg] w-[80%] h-[80%] flex items-center justify-center' },
-            { id: 'polaroid-right', label: 'Tilted Right', class: 'w-full h-full object-cover', containerClass: 'bg-white p-3 pb-12 shadow-xl rotate-[3deg] w-[80%] h-[80%] flex items-center justify-center' },
-            { id: 'polaroid-hanging', label: 'Hanging Wire', class: 'w-full h-full object-cover', containerClass: 'bg-white p-3 pb-12 shadow-xl w-full h-full flex items-center justify-center rotate-[-2deg]', patternType: 'hanging' },
             { 
-                id: 'polaroid-doodle', 
-                label: 'Doodle Stripe', 
-                class: 'w-[90%] h-[100%] object-cover bg-white border-2 border-slate-700/50 rounded-sm rotate-1', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-4 pb-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] rotate-2',
-                patternType: 'doodle-stripe' 
+                id: 'polaroid-blue-hearts', 
+                label: 'Blue Hearts', 
+                class: 'w-full h-full object-cover shadow-sm bg-white', 
+                containerClass: 'relative w-[80%] h-[85%] flex items-center justify-center p-5 pb-20 shadow-xl',
+                frameType: 'polaroid-blue-hearts'
             },
             { 
-                id: 'polaroid-doodle-pink', 
-                label: 'Doodle Pink', 
-                class: 'w-[90%] h-[100%] object-cover bg-white border-2 border-slate-700/50 rounded-sm rotate-[-1deg]', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-4 pb-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] rotate-[-2deg]',
-                patternType: 'doodle-pink' 
+                id: 'polaroid-indigo-hearts', 
+                label: 'Indigo Hearts', 
+                class: 'w-full h-full object-cover shadow-sm bg-white', 
+                containerClass: 'relative w-[80%] h-[85%] flex items-center justify-center p-5 pb-20 shadow-xl',
+                frameType: 'polaroid-indigo-hearts'
             },
             { 
-                id: 'polaroid-kawaii-bow', 
-                label: 'Kawaii Bow', 
-                class: 'w-[95%] h-[100%] object-cover rounded-2xl border-4 border-white shadow-sm', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-5 pb-16 shadow-xl bg-[#F3E8FF] rounded-3xl rotate-[-2deg]',
-                patternType: 'kawaii-bow' 
+                id: 'polaroid-pink-hearts', 
+                label: 'Pink Hearts', 
+                class: 'w-full h-full object-cover shadow-sm bg-white', 
+                containerClass: 'relative w-[80%] h-[85%] flex items-center justify-center p-5 pb-20 shadow-xl',
+                frameType: 'polaroid-pink-hearts'
             },
             { 
-                id: 'polaroid-floral-yellow', 
-                label: 'Floral Yellow', 
-                class: 'w-[85%] h-[100%] object-cover border-2 border-amber-800/20 bg-white rotate-1', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-5 pb-16 shadow-lg rotate-1',
-                patternType: 'floral-yellow' 
+                id: 'polaroid-doodles', 
+                label: 'Doodles', 
+                class: 'w-full h-full object-cover shadow-sm bg-white', 
+                containerClass: 'relative w-[80%] h-[85%] flex items-center justify-center p-5 pb-20 shadow-xl',
+                frameType: 'polaroid-doodles'
             },
             { 
-                id: 'polaroid-floral-pink', 
-                label: 'Floral Pink', 
-                class: 'w-[85%] h-[100%] object-cover border-2 border-rose-800/20 bg-white rotate-[-1deg]', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-5 pb-16 shadow-lg rotate-[-1deg]',
-                patternType: 'floral-pink' 
+                id: 'polaroid-oranges', 
+                label: 'Oranges', 
+                class: 'w-full h-full object-cover shadow-sm bg-white', 
+                containerClass: 'relative w-[80%] h-[85%] flex items-center justify-center p-5 pb-20 shadow-xl',
+                frameType: 'polaroid-oranges'
             },
-            { 
-                id: 'polaroid-minimal-heart', 
-                label: 'Love Lavender', 
-                class: 'w-[85%] h-[100%] object-cover border-4 border-white bg-white', 
-                containerClass: 'relative w-full h-full flex items-center justify-center p-4 pb-16 shadow-xl bg-[#E9D5FF] rotate-[2deg]',
-                patternType: 'minimal-heart' 
-            },
-
         ]
     },
     {
@@ -79,51 +69,42 @@ const STYLE_CATEGORIES = [
         id: 'tape',
         label: 'Washi Tape',
         options: [
-
             { 
-                id: 'tape', 
-                label: 'Coral Tape', 
+                id: 'tape-abstract-pink',   
+                label: 'Abstract Pink', 
                 class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-2',
-                tapeType: 'coral'
+                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-4',
+                tapeType: 'tape-abstract-pink'
             },
             { 
-                id: 'tape-corners', 
-                label: 'Lime Corners', 
+                id: 'tape-blue-hearts', 
+                label: 'Blue Hearts', 
                 class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-2',
-                tapeType: 'lime-corners'
+                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-4',
+                tapeType: 'tape-blue-hearts'
             },
             { 
-                id: 'tape-sakura', 
-                label: 'Sakura Pink', 
+                id: 'tape-indigo-hearts', 
+                label: 'Indigo Hearts', 
                 class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-2',
-                tapeType: 'sakura'
+                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-4',
+                tapeType: 'tape-indigo-hearts'
             },
             { 
-                id: 'tape-matcha', 
-                label: 'Matcha Green', 
+                id: 'tape-pink-hearts', 
+                label: 'Pink Hearts', 
                 class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-2',
-                tapeType: 'matcha'
+                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-4',
+                tapeType: 'tape-pink-hearts'
             },
             { 
-                id: 'tape-pastel', 
-                label: 'Pastel Dream', 
+                id: 'tape-oranges', 
+                label: 'Oranges', 
                 class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-2',
-                tapeType: 'pastel'
-            },
-            { 
-                id: 'tape-strawberry-4', 
-                label: 'Strawberry 4 Corners', 
-                class: 'rounded-sm relative z-0', 
-                containerClass: 'relative w-[85%] h-auto shadow-lg bg-white p-4',
-                hasFourCorners: true
+                containerClass: 'relative w-[90%] h-auto shadow-md bg-white p-4',
+                tapeType: 'tape-oranges'
             },
         ]
-
     },
     {
         id: 'music',
@@ -204,9 +185,17 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
   const initialUrl = typeof content === 'string' ? content : content?.url;
   const initialStyleId = typeof content === 'object' ? content?.style : 'original';
   const initialText = (typeof content === 'object' && content?.text) ? content.text : { title: '', subtitle: '' };
+  // New: Tape Position State (default to 4 corners)
+  // We need to persist this if we want it to save, so we should probably store it in content too?
+  // Current content structure: { url, style, text }
+  // Let's add 'tapePosition' and 'polaroidPosition' to content.
+  const initialTapePos = (typeof content === 'object' && content?.tapePosition) ? content.tapePosition : 'corners-4';
+  const initialPolaroidPos = (typeof content === 'object' && content?.polaroidPosition) ? content.polaroidPosition : 'default';
 
   const [preview, setPreview] = useState(initialUrl || null);
   const [currentStyle, setCurrentStyle] = useState(initialStyleId || 'original');
+  const [tapePosition, setTapePosition] = useState(initialTapePos);
+  const [polaroidPosition, setPolaroidPosition] = useState(initialPolaroidPos);
   const [textData, setTextData] = useState(initialText);
   const [isEditingText, setIsEditingText] = useState(false);
   
@@ -240,13 +229,23 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
     }
   };
 
-  const updateParent = (url, style, text) => {
-    onUpdate({ url, style, text });
+  const updateParent = (url, style, text, tPos, pPos) => {
+    onUpdate({ url, style, text, tapePosition: tPos, polaroidPosition: pPos });
   };
 
   const handleStyleSelect = (styleId) => {
       setCurrentStyle(styleId);
-      updateParent(preview, styleId, textData);
+      updateParent(preview, styleId, textData, tapePosition, polaroidPosition);
+  };
+
+  const handleTapePosChange = (pos) => {
+      setTapePosition(pos);
+      updateParent(preview, currentStyle, textData, pos, polaroidPosition);
+  };
+
+  const handlePolaroidPosChange = (pos) => {
+      setPolaroidPosition(pos);
+      updateParent(preview, currentStyle, textData, tapePosition, pos);
   };
 
   const handleTextUpdate = (field, value) => {
@@ -258,13 +257,25 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
   const activeStyleConfig = getStyleConfig(currentStyle);
   const hasText = textData.title || textData.subtitle;
 
+  // Compute rotation for Polaroid Frames
+  const getRotationClass = () => {
+      // console.log('Rotation Calc:', activeStyleConfig.frameType, polaroidPosition);
+      if (!activeStyleConfig.frameType) return '';
+      if (polaroidPosition === 'left') return 'rotate-[-3deg]';
+      if (polaroidPosition === 'right') return 'rotate-[3deg]';
+      return '';
+  };
+  const rotationClass = getRotationClass();
+  
+  // console.log('Rendering ImageElement:', { style: currentStyle, frameType: activeStyleConfig.frameType });
+
   if (preview) {
     return (
       <div className={`w-full h-full flex items-center justify-center group relative ${isCover ? 'p-0' : 'p-10'}`}>
         
         {/* Render Image with Style Container */}
         <div 
-          className={`transition-all duration-300 relative ${isCover ? 'w-full h-full' : activeStyleConfig.containerClass}`}
+          className={`transition-all duration-300 relative ${isCover ? 'w-full h-full' : activeStyleConfig.containerClass} ${rotationClass}`}
         >
 
 
@@ -458,46 +469,14 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
 
              {/* ----------------- UNIFIED TAPE RENDERING ----------------- */}
 
+             {/* ----------------- POLAROID FRAMES ----------------- */}
+             {activeStyleConfig.frameType && (
+                 <PolaroidFrame variant={activeStyleConfig.frameType} position={polaroidPosition} />
+             )}
+
              {/* ----------------- UNIFIED TAPE RENDERING ----------------- */}
-
-             {/* ----------------- UNIFIED TAPE RENDERING ----------------- */}
-             
-             {/* 1. Coral Tape (Top Center) */}
-             {activeStyleConfig.tapeType === 'coral' && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#FF6B6B]/80 rotate-[-2deg] shadow-sm z-20" />
-             )}
-
-             {/* 2. Lime Corners (Diagonal) */}
-             {(activeStyleConfig.tapeType === 'lime-corners') && (
-               <>
-                 <div className="absolute -top-2 -right-2 w-16 h-6 bg-[#A3E635]/80 rotate-[45deg] shadow-sm z-20" />
-                 <div className="absolute -bottom-2 -left-2 w-16 h-6 bg-[#A3E635]/80 rotate-[45deg] shadow-sm z-20" />
-               </>
-             )}
-
-             {/* 3. Sakura Pink (Gradient Top) */}
-             {activeStyleConfig.tapeType === 'sakura' && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 opacity-90 rotate-[-1deg] shadow-sm border-y border-pink-400/30 z-20" />
-             )}
-
-             {/* 4. Matcha Green (Gradient Top) */}
-             {activeStyleConfig.tapeType === 'matcha' && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-gradient-to-r from-green-200 via-emerald-100 to-green-200 opacity-90 rotate-[1deg] shadow-sm border-y border-green-400/30 z-20" />
-             )}
-
-             {/* 5. Pastel Dream (Gradient Top) */}
-             {activeStyleConfig.tapeType === 'pastel' && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-gradient-to-r from-purple-200 via-pink-100 to-blue-200 opacity-90 rotate-[-1deg] shadow-sm border-y border-purple-300/30 z-20" />
-             )}
-
-             {/* 6. Strawberry 4 Corners (Transparent Red) - kept distinct flag or could convert to tapeType='strawberry-4' */}
-             {activeStyleConfig.hasFourCorners && (
-               <>
-                 <div className="absolute -top-2 -left-2 w-14 h-6 bg-[#F87171]/80 rotate-[-45deg] shadow-sm z-20" />
-                 <div className="absolute -top-2 -right-2 w-14 h-6 bg-[#F87171]/80 rotate-[45deg] shadow-sm z-20" />
-                 <div className="absolute -bottom-2 -left-2 w-14 h-6 bg-[#F87171]/80 rotate-[45deg] shadow-sm z-20" />
-                 <div className="absolute -bottom-2 -right-2 w-14 h-6 bg-[#F87171]/80 rotate-[-45deg] shadow-sm z-20" />
-               </>
+             {activeStyleConfig.tapeType && (
+                 <WashiTape variant={activeStyleConfig.tapeType} position={tapePosition} />
              )}
              <img 
                 src={preview} 
@@ -722,7 +701,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                 {/* 1. Edit Style Button (Pen) - Non-Covers Only */}
                 {!isCover && (
                     <button 
-                        onClick={() => onOpenDrawer('STYLE', { categories: STYLE_CATEGORIES, currentStyle }, handleStyleSelect, 'Image Style')}
+                        onClick={() => onOpenDrawer('STYLE', { categories: STYLE_CATEGORIES, currentStyle, tapePosition, polaroidPosition }, handleStyleSelect, 'Image Style', { onTapePosChange: handleTapePosChange, onPolaroidPosChange: handlePolaroidPosChange })}
                         className={`absolute top-4 right-4 bg-white text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-50 transition-all`}
                         title="Edit Style"
                     >

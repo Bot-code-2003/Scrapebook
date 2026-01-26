@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import BookPreview from '@/components/scrapbook/BookPreview';
 import { HOME_BOOK } from '@/app/constants/home-book';
 import MidSection from '@/components/homepage/MidSection.jsx';
+import SupportButton from '@/components/SupportButton';
 
 // Book Card Component - looks like a physical book
 function BookCard({ book, onClick }) {
@@ -404,7 +405,7 @@ export default function Home() {
                </ul>
             </div>
 
-            {/* The MyScrapebook Way */}
+            {/* The myscrapbook Way */}
             <div className="p-8 md:p-12 rounded-3xl bg-lime-50 border border-lime-100 text-center shadow-2xl scale-105 relative z-0">
                <div className="absolute top-0 right-0 p-4">
                   <span className="bg-lime-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Better</span>
@@ -498,14 +499,14 @@ export default function Home() {
                 <li><a href="#" className="hover:text-black transition-colors">TikTok</a></li>
                 <li><a href="#" className="hover:text-black transition-colors">Instagram</a></li>
                 <li><a href="#" className="hover:text-black transition-colors">Twitter</a></li>
-                <li><a href="mailto:hello@myscrapebook.com" className="hover:text-black transition-colors">Contact Us</a></li>
+                <li><a href="mailto:hello@myscrapbook.com" className="hover:text-black transition-colors">Contact Us</a></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-xs font-medium">
-              © {new Date().getFullYear()} MYSCRAPEBOOK. ALL RIGHTS RESERVED.
+              © {new Date().getFullYear()} myscrapbook. ALL RIGHTS RESERVED.
             </p>
             <div className="flex gap-6 text-gray-400 text-xs font-medium">
               <Link href="/privacy" className="hover:text-gray-900 transition-colors">Privacy</Link>
@@ -515,11 +516,14 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* STICKY "FEEDBACK" BUTTON */}
-      <button className="fixed bottom-6 right-6 z-50 bg-black text-white rounded-full px-5 py-2.5 font-bold text-xs shadow-lg hover:bg-gray-800 transition-all hidden md:flex items-center gap-2">
-        <MessageCircle className="w-4 h-4" />
-        Give Feedback
-      </button>
+      {/* STICKY "FEEDBACK" & "SUPPORT" BUTTONS */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 items-end">
+        <SupportButton iconOnly={true} />
+        <button className="bg-black text-white rounded-full px-3 py-2 sm:px-4 sm:py-2 font-black text-sm shadow-lg hover:bg-gray-800 transition-all flex items-center gap-2 border-2 border-transparent">
+            <MessageCircle className="w-5 h-5 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Give Feedback</span>
+        </button>
+      </div>
     </div>
   );
 }

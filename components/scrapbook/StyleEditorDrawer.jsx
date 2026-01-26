@@ -2,7 +2,7 @@
 import React from 'react';
 import { X, Check } from 'lucide-react';
 
-export default function StyleEditorDrawer({ title, categories, currentStyle, onSelect, onClose }) {
+export default function StyleEditorDrawer({ title, categories, currentStyle, onSelect, onClose, tapePosition, onTapePosChange, polaroidPosition, onPolaroidPosChange }) {
   // State to track which category is expanded
   const [expandedCat, setExpandedCat] = React.useState(null);
 
@@ -12,6 +12,7 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
         for (const cat of categories) {
             if (cat.options.find(opt => opt.id === currentStyle)) {
                 setExpandedCat(cat.id);
+                // If it's the tape category, keep it expanded
                 break;
             }
         }
@@ -65,6 +66,52 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
                             {/* Options List (Accordion Body) */}
                             {isExpanded && (
                                 <div className="p-2 border-t border-gray-100 bg-white flex flex-col gap-1">
+                                    {/* Tape Position Selector (Only for Tape Category) */}
+                                    {cat.id === 'tape' && onTapePosChange && (
+                                        <div className="flex bg-gray-100 p-1 rounded-lg mb-2 mx-2 mt-2">
+                                            {[
+                                                { id: 'top', label: 'Top' },
+                                                { id: 'corners-2', label: '2 Corner' },
+                                                { id: 'corners-4', label: '4 Corner' }
+                                            ].map((pos) => (
+                                                <button
+                                                    key={pos.id}
+                                                    onClick={() => onTapePosChange(pos.id)}
+                                                    className={`flex-1 text-[10px] font-bold uppercase py-1.5 rounded-md transition-all ${
+                                                        (tapePosition || 'corners-4') === pos.id
+                                                            ? 'bg-white text-black shadow-sm'
+                                                            : 'text-gray-500 hover:text-gray-900'
+                                                    }`}
+                                                >
+                                                    {pos.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Polaroid Position Selector (Only for Polaroid Category) */}
+                                    {cat.id === 'polaroid' && onPolaroidPosChange && (
+                                        <div className="flex bg-gray-100 p-1 rounded-lg mb-2 mx-2 mt-2">
+                                            {[
+                                                { id: 'default', label: 'Stoic' },
+                                                { id: 'left', label: 'Left' },
+                                                { id: 'right', label: 'Right' }
+                                            ].map((pos) => (
+                                                <button
+                                                    key={pos.id}
+                                                    onClick={() => onPolaroidPosChange(pos.id)}
+                                                    className={`flex-1 text-[10px] font-bold uppercase py-1.5 rounded-md transition-all ${
+                                                        (polaroidPosition || 'default') === pos.id
+                                                            ? 'bg-white text-black shadow-sm'
+                                                            : 'text-gray-500 hover:text-gray-900'
+                                                    }`}
+                                                >
+                                                    {pos.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+
                                     {cat.options.map(opt => (
                                         <button
                                             key={opt.id}

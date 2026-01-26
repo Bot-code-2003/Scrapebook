@@ -18,11 +18,11 @@ const GIFT_STYLES = [
     id: 'scratch_section',
     label: 'Scratch Cards',
     options: [
-        { id: 'scratch-winter-1', label: 'Winter Blue' },
-        { id: 'scratch-winter-2', label: 'Winter Red' },
-        { id: 'scratch-shinchan', label: 'Shinchan' },
-        { id: 'scratch-doraemon', label: 'Doraemon' },
-        { id: 'scratch-cat-earth', label: 'Cat Earth' }
+        { id: 'scratch-blue-hearts', label: 'Blue Hearts' },
+        { id: 'scratch-indigo-hearts', label: 'Indigo Hearts' },
+        { id: 'scratch-pink-hearts', label: 'Pink Hearts' },
+        { id: 'scratch-doodles', label: 'Doodles' },
+        { id: 'scratch-oranges', label: 'Oranges' }
     ]
   },
   {
@@ -57,8 +57,8 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
   let currentStyle = giftContent.style || 'envelope';
   
   // Backward compatibility mappings
-  if (currentStyle === 'scratch') currentStyle = 'scratch-winter-1';
-  if (currentStyle === 'scratch-blue') currentStyle = 'scratch-winter-1';
+  if (currentStyle === 'scratch') currentStyle = 'scratch-blue-hearts';
+  if (currentStyle === 'scratch-blue') currentStyle = 'scratch-blue-hearts';
   if (currentStyle === 'balloon') currentStyle = 'balloon-kawaii';
 
   // --- HANDLERS ---
@@ -135,6 +135,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
           e.stopPropagation();
           if (!isOpen) { 
             const audio = new Audio('/sounds/pop.mp3');
+            audio.volume = 0.7;
             audio.play().catch(e => console.log('Audio play failed', e));
           }
           setIsOpen(!isOpen);
@@ -259,7 +260,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
 
             {/* Letter Content */}
             {isOpen && (
-              <div className="p-4 animate-in fade-in duration-700 delay-300 overflow-y-auto" style={{ maxHeight: '345px' }}>
+              <div className="p-4 pt-20 animate-in fade-in duration-700 delay-300 overflow-y-auto flex flex-col justify-start items-center h-full" style={{ maxHeight: '345px' }}>
                 {giftContent.type === 'image' ? (
                   <img
                     src={giftContent.data}
@@ -331,25 +332,28 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     // Load Audio
     useEffect(() => {
         scratchAudioRef.current = new Audio('/sounds/scratching.mp3');
+        if (scratchAudioRef.current) {
+            scratchAudioRef.current.volume = 0.7;
+        }
     }, []);
 
     // --- THEMES CONFIGURATION ---
     const getThemeLogic = () => {
         switch(variant) {
-            case 'scratch-winter-1':
-                return { id: 'winter-1', imageSrc: '/scratchcards/winter-scratch-card-1.webp', brushSize: 40 };
-            case 'scratch-winter-2':
-                return { id: 'winter-2', imageSrc: '/scratchcards/winter-scratch-card-2.webp', brushSize: 40 };
-            case 'scratch-shinchan':
-                return { id: 'shinchan', imageSrc: '/scratchcards/shinchan.webp', brushSize: 40 };
-            case 'scratch-doraemon':
-                return { id: 'doraemon', imageSrc: '/scratchcards/doraemon.webp', brushSize: 40 };
-            case 'scratch-cat-earth':
-                return { id: 'cat-earth', imageSrc: '/scratchcards/cat-earth.webp', brushSize: 40 };
+            case 'scratch-blue-hearts':
+                return { id: 'blue-hearts', imageSrc: '/polaroid/polaroid-blue-hearts.webp', brushSize: 40 };
+            case 'scratch-indigo-hearts':
+                return { id: 'indigo-hearts', imageSrc: '/polaroid/polaroid-indigo-hearts.webp', brushSize: 40 };
+            case 'scratch-pink-hearts':
+                return { id: 'pink-hearts', imageSrc: '/polaroid/polaroid-pink-hearts.webp', brushSize: 40 };
+            case 'scratch-doodles':
+                return { id: 'doodles', imageSrc: '/polaroid/polaroid-doodles.webp', brushSize: 40 };
+            case 'scratch-oranges':
+                return { id: 'oranges', imageSrc: '/polaroid/polaroid-oranges.webp', brushSize: 40 };
             default: 
                 return {
-                        id: 'winter-1',
-                        imageSrc: '/scratchcards/winter-scratch-card-1.webp', 
+                        id: 'blue-hearts',
+                        imageSrc: '/polaroid/polaroid-blue-hearts.webp', 
                         brushSize: 40,
                 };
         }
@@ -443,9 +447,11 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
                 
                 {/* Scratch Hint (Complete Outside Text) */}
                 {!isRevealed && readOnly && (
-                    <div className="pointer-events-none z-30 whitespace-nowrap animate-bounce">
-                        <div className="bg-white/90 backdrop-blur-md text-gray-900 border-2 border-gray-100 px-4 py-2 rounded-full font-bold shadow-sm text-sm tracking-wide uppercase">
-                            🖌️ Scratch the Card below
+                    <div className="pointer-events-none z-30 mb-2">
+                        <div className="px-6 py-2 bg-white/60 backdrop-blur-md rounded-full border border-white/50 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                            <p className="font-handwriting text-2xl text-gray-800 tracking-wide text-shadow-sm rotate-[-2deg]">
+                                Scratch to reveal...
+                            </p>
                         </div>
                     </div>
                 )}
@@ -499,6 +505,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
         if(!readOnly || isOpen) return;
         
         const audio = new Audio('/sounds/balloon-burst.mp3');
+        audio.volume = 0.7;
         audio.play().catch(() => {});
         
         const rect = e.target.getBoundingClientRect();

@@ -106,6 +106,10 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
   React.useEffect(() => {
     if(soundId === 'page-flip') {
         audioRef.current = new Audio('/sounds/page-flip.m4a');
+    } else if (soundId === 'cute-click') {
+        audioRef.current = new Audio('/sounds/Cute-click.mp3');
+    } else if (soundId === 'heavy-flip') {
+        audioRef.current = new Audio('/sounds/heavy-flip.mp3');
     } else {
         audioRef.current = null;
     }

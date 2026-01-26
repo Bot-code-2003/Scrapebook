@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
     
     if (!scrapbook) {
       return {
-        title: 'Scrapbook Not Found - MyScrapebook',
+        title: 'Scrapbook Not Found - myscrapbook',
         description: 'This scrapbook could not be found.',
       };
     }
@@ -21,19 +21,19 @@ export async function generateMetadata({ params }) {
     const title = scrapbook.title || 'Untitled Scrapbook';
     
     return {
-      title: `${title} - MyScrapebook`,
-      description: `View this beautiful digital scrapbook "${title}" created on MyScrapebook. An interactive memory book with ${scrapbook.pages?.length || 0} pages.`,
-      keywords: 'digital scrapbook, photo album, memory book, MyScrapebook, shared scrapbook, digital gift',
+      title: `${title} - myscrapbook`,
+      description: `View this beautiful digital scrapbook "${title}" created on myscrapbook. An interactive memory book with ${scrapbook.pages?.length || 0} pages.`,
+      keywords: 'digital scrapbook, photo album, memory book, myscrapbook, shared scrapbook, digital gift',
       openGraph: {
-        title: `${title} - MyScrapebook`,
+        title: `${title} - myscrapbook`,
         description: `View this interactive digital scrapbook with ${scrapbook.pages?.length || 0} pages.`,
         type: 'website',
       },
     };
   } catch (error) {
     return {
-      title: 'MyScrapebook',
-      description: 'View digital scrapbooks and photo albums on MyScrapebook.',
+      title: 'myscrapbook',
+      description: 'View digital scrapbooks and photo albums on myscrapbook.',
     };
   }
 }
@@ -60,6 +60,7 @@ export default async function ViewScrapbook({ params }) {
       pageBorder: scrapbook.pageBorder || 'none',
       bookStyle: scrapbook.bookStyle || 'classic',
       title: scrapbook.title || 'Untitled Scrapbook',
+      appBackground: scrapbook.appBackground || 'none',
     }));
 
     return <ScrapbookViewer scrapbook={serializedData} />;

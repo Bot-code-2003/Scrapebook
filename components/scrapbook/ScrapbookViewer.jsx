@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import BookPreview from './BookPreview';
 import { Bookmark, X, Loader2, Check, LogIn, Book, Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import SupportButton from '@/components/SupportButton';
 
 export default function ScrapbookViewer({ scrapbook }) {
   const { user, loading: authLoading } = useAuth();
@@ -88,9 +89,22 @@ export default function ScrapbookViewer({ scrapbook }) {
     }
   };
 
+  const appBackground = scrapbook.appBackground || 'none';
+
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center bg-zinc-900 overflow-hidden relative">
-      {/* Book Preview */}
+    <div 
+      className="h-screen w-full flex flex-col items-center justify-center bg-zinc-900 overflow-hidden relative"
+      style={{
+          backgroundImage: appBackground !== 'none' ? appBackground : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+      }}
+    >
+      {/* Background Overlay */}
+      {appBackground !== 'none' && (
+          <div className="absolute inset-0 bg-black/30 pointer-events-none z-0" />
+      )}
+
       {/* Loading Animation Overlay */}
       {isLoading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900">
@@ -161,9 +175,13 @@ export default function ScrapbookViewer({ scrapbook }) {
         />
         <div className="flex flex-col">
             <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest leading-none mb-0.5">Made With</span>
-            <span className="text-sm font-bold text-white group-hover:text-lime-400 transition-colors leading-none">MyScrapebook</span>
+            <span className="text-sm font-bold text-white group-hover:text-lime-400 transition-colors leading-none">myscrapbook</span>
         </div>
       </Link>
+
+      <div className="fixed top-6 right-6 z-40">
+          <SupportButton iconOnly={true} />
+      </div>
 
       {/* Save CTA Button (bottom right) */}
       {!authLoading && !checkingIfSaved && !saved && (

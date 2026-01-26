@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Book, Plus, Loader2, LogOut, ArrowLeft, Bookmark, User, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import SupportButton from '@/components/SupportButton';
 import { useRouter } from 'next/navigation';
 
 // Book Card Component - looks like a physical book
@@ -218,7 +219,8 @@ export default function ProfilePage() {
                 </div>
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
+                 <SupportButton />
                  <Link 
                   href="/scrapbook"
                   className="bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all flex items-center gap-2 shadow-lg hover:translate-y-[-2px]"

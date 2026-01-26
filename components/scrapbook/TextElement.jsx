@@ -141,7 +141,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
 
   return (
     <div 
-      className={`w-full h-full flex flex-col justify-center relative ${isCover ? 'items-center text-center p-12' : 'items-start text-left px-6 py-8'}`}
+      className={`w-full h-full flex flex-col justify-center relative ${isCover ? 'items-center text-center p-12' : 'items-start text-left px-10 md:px-16 py-10'}`}
       style={isCover ? { backgroundColor: coverBgColor, color: computedTextColor } : { color: computedTextColor }}
     >
         {/* Edit Style Button - Opens Sidebar Drawer */}

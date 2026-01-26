@@ -41,10 +41,10 @@ function LoginForm() {
   });
 
   return (
-    <div className="min-h-screen w-full bg-[#f8eadd] font-sans relative overflow-hidden flex flex-col items-center justify-center p-4 selection:bg-[#8b5e3c] selection:text-white">
+    <div className="min-h-screen w-full bg-[#f8eadd] font-sans flex flex-col p-4 selection:bg-[#8b5e3c] selection:text-white overflow-y-auto">
         
         {/* Branding (Top Left) */}
-        <div className="absolute top-6 left-6 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="w-full flex justify-start p-2 md:p-6 mb-4 md:mb-0">
             <Link href="/" className="group flex items-center gap-2">
                 <img src="/heart-favicon.ico" alt="Logo" className="w-10 h-10 group-hover:scale-110 transition-transform drop-shadow-sm" />
                 <span className="font-black text-xl text-[#6d4c41] tracking-tight group-hover:text-[#5d4037]">MyScrapbook</span>
@@ -52,13 +52,13 @@ function LoginForm() {
         </div>
         
         {/* Main Content Group */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 animate-in fade-in zoom-in duration-500">
+        <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-20 animate-in fade-in zoom-in duration-500 w-full mb-8">
             
             {/* Left Side: Cute Bear Illustration */}
             <div className="flex flex-col items-center text-center">
                     <div className="relative mb-6">
                         {/* Image from User */}
-                        <div className="w-64 h-64 flex items-center justify-center relative hover:scale-105 transition-transform duration-500">
+                        <div className="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center relative hover:scale-105 transition-transform duration-500">
                              <img 
                                 src="/login-page.webp" 
                                 alt="Cute Login Illustration" 
@@ -128,7 +128,7 @@ function LoginForm() {
         </div>
 
         {/* Footer Text */}
-        <div className="absolute bottom-6 text-[#8d6e63]/60 text-xs font-bold tracking-widest uppercase">
+        <div className="w-full text-center py-4 text-[#8d6e63]/60 text-xs font-bold tracking-widest uppercase">
             Designed for Memories
         </div>
 
