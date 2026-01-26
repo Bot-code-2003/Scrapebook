@@ -183,7 +183,7 @@ export default function RootLayout({ children }) {
           </AuthProvider>
         </GoogleOAuthProvider>
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-DHDS1YH1TZ"
+          src="https://www.googletagmanager.com/gtag/js?id=G-GLKTTKC6WR"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
