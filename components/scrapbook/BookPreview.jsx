@@ -288,9 +288,9 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
                       { min: 251, max: 300, scale: 1 },
                       { min: 300, max: 350, scale: 1.2 },
                         { min: 0,   max: 379, scale: 1.35 },   // Very small (iPhone SE ~375px)
-                        { min: 380, max: 449, scale: 1.7 },    // Small phones
-                        { min: 450, max: 549, scale: 1.60 },   // Medium phones
-                        { min: 550, max: 9999, scale: 1.70 },  // Large phones / tablets
+                        { min: 380, max: 449, scale: 1.45 },    // Small phones
+                        { min: 450, max: 549, scale: 1.7 },   // Medium phones
+                        { min: 550, max: 9999, scale: 2 },  // Large phones / tablets
                     ];
                     
                     // Find matching breakpoint using tracked windowWidth
