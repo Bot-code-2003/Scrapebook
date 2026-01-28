@@ -183,22 +183,23 @@ export default function ScrapbookViewer({ scrapbook }) {
           <SupportButton iconOnly={true} />
       </div>
 
-      {/* Save CTA Button (bottom right) */}
+      {/* Save CTA Button (Mobile: Top Right under Support, Desktop: Bottom Right) */}
       {!authLoading && !checkingIfSaved && !saved && (
         <button 
           onClick={() => setShowCTA(true)}
-          className="fixed bottom-8 right-8 z-50 bg-white text-black px-6 py-3 font-bold rounded-full shadow-lg shadow-black/20 hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2 group"
+          className="fixed z-50 transition-all top-20 right-6 md:top-auto md:right-8 md:bottom-8 bg-white text-black px-4 py-2 md:px-6 md:py-3 font-bold rounded-full shadow-lg shadow-black/20 hover:scale-105 hover:shadow-xl flex items-center gap-2 group border border-gray-100"
         >
-          <Bookmark className="w-5 h-5 group-hover:fill-current" />
+          <Bookmark className="w-4 h-4 md:w-5 md:h-5 group-hover:fill-current" />
           <span className="hidden sm:inline">Save This Book</span>
+          <span className="sm:hidden text-xs">Save</span>
         </button>
       )}
 
       {/* Saved Confirmation */}
       {saved && (
-        <div className="fixed bottom-8 right-8 z-50 bg-lime-400 text-lime-900 px-6 py-3 font-bold rounded-full shadow-lg shadow-lime-900/20 flex items-center gap-2 animate-in slide-in-from-bottom duration-500">
-          <Check className="w-5 h-5" />
-          Saved to Library
+        <div className="fixed z-50 transition-all top-20 right-6 md:top-auto md:right-8 md:bottom-8 bg-lime-400 text-lime-900 px-4 py-2 md:px-6 md:py-3 font-bold rounded-full shadow-lg shadow-lime-900/20 flex items-center gap-2 animate-in slide-in-from-top md:slide-in-from-bottom duration-500">
+          <Check className="w-4 h-4 md:w-5 md:h-5" />
+          <span className="text-sm md:text-base">Saved</span>
         </div>
       )}
 

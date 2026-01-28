@@ -293,7 +293,8 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                   </div>
                 </AccordionSection>
 
-                {/* ANIMATION SECTION */}
+                {/* ANIMATION SECTION - Only show if there are multiple options */}
+                {animOptions && animOptions.length > 1 && (
                 <AccordionSection
                   title="Flip Style"
                   icon="📖"
@@ -318,6 +319,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                     ))}
                   </div>
                 </AccordionSection>
+                )}
 
                 {/* SOUNDS SECTION */}
                 <AccordionSection

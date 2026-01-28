@@ -7,7 +7,9 @@ export default function SlideFlip({
     onFlipNext, 
     onFlipPrev, 
     bgColor, 
-    renderPage 
+    renderPage,
+    styleConfig,
+    isCoverPage = false  // When true, hide the left page stack (sliver)
 }) {
     
   // Dimensions 
@@ -56,6 +58,10 @@ export default function SlideFlip({
            // Flipped (Left Stack): Ascending visibility. (Sheet 0 is bottom, Sheet 1 is above it...)
            const zIndex = isFlipped ? index : (sheets.length - index);
 
+           // CRITICAL: When on a cover page, completely hide ALL flipped sheets
+           // This removes the left sliver effect for front cover (1/n) and back cover (n/n)
+           const shouldHideFlippedSheet = isFlipped && isCoverPage;
+
            return (
              <div
                key={sheet.id}
@@ -69,10 +75,15 @@ export default function SlideFlip({
                  top: 0,
                  width: PAGE_WIDTH,
                  height: PAGE_HEIGHT,
-                 transition: 'transform 0.5s ease-in-out',
+                 transition: shouldHideFlippedSheet
+                   ? 'transform 0.5s ease-in-out, opacity 0.3s ease-out 0.4s'
+                   : 'transform 0.5s ease-in-out, opacity 0.3s ease-out',
                  transform: isFlipped ? 'translateX(-100%)' : 'translateX(0%)',
                  zIndex: zIndex,
                  cursor: 'pointer',
+                 // Fade out flipped sheets on cover pages (with delay to allow slide animation to complete)
+                 opacity: shouldHideFlippedSheet ? 0 : 1,
+                 pointerEvents: shouldHideFlippedSheet ? 'none' : 'auto',
                }}
                className="group shadow-xl"
              >
@@ -111,8 +122,9 @@ export default function SlideFlip({
                  style={{
                    position: 'absolute',
                    inset: 0,
-                   opacity: isFlipped ? 1 : 0,
-                   pointerEvents: isFlipped ? 'auto' : 'none',
+                   // Hide if: not flipped OR we're on a cover page (to hide left sliver)
+                   opacity: (isFlipped && !isCoverPage) ? 1 : 0,
+                   pointerEvents: (isFlipped && !isCoverPage) ? 'auto' : 'none',
                    transition: 'opacity 0.2s 0.2s',
                    backgroundColor: bgColor || '#FFFDF5'
                  }}

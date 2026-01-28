@@ -5,6 +5,7 @@ import Page from './Page';
 import DefaultFlip from './animations/DefaultFlip';
 import SlideFlip from './animations/SlideFlip';
 import BinderFlip from './animations/BinderFlip';
+import MobileFlip from './animations/MobileFlip';
 
 // Book style configurations
 const BOOK_STYLES = {
@@ -161,23 +162,53 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
   // ============================================
   const [mobilePageIndex, setMobilePageIndex] = useState(0);
   
-  // Flatten pages for mobile reading order: 0 (Front), 2, 3, 4... (Inner), 1 (Back)
-  const mobilePages = useMemo(() => {
-      if (pages.length < 2) return [];
-      const ordered = [];
-      // 1. Front Cover
-      ordered.push({ ...pages[0], pageType: 'cover-front' });
-      // 2. Inner Pages (In numerical order of ID usually, but here index 2 onwards)
-      for(let k=2; k<pages.length; k++) {
-          ordered.push({ ...pages[k], pageType: 'inner' });
+  // Flatten pages for mobile reading order but structured as SHEETS for the flip animation
+  // User Requirement: "Left page empty, Right page content filled."
+  // Left sliver visibility:
+  //   - 1/n (Front Cover): NO left sliver (viewing first sheet, nothing flipped yet)
+  //   - 2/n to (n-1)/n (Inner Pages): YES left sliver (previous sheets are flipped)
+  //   - n/n (Back Cover): NO left sliver (hidden via isCoverPage prop)
+  const mobileSheets = useMemo(() => {
+      if (!pages || pages.length === 0) return [];
+      
+      const mSheets = [];
+
+      // 1. Front Cover (pages[0]) - shown at 1/N
+      // When this sheet is flipped (viewing 2/N onwards), its back creates the left sliver
+      if (pages[0]) {
+        mSheets.push({
+            id: 'mobile-sheet-front-cover',
+            front: { ...pages[0], pageType: 'cover-front' },
+            // IMPORTANT: Give it a placeholder back so it shows as sliver when flipped
+            back: { id: 'placeholder-front-cover-back', pageType: 'inner', elements: [] }
+        });
       }
-      // 3. Back Cover
-      ordered.push({ ...pages[1], pageType: 'cover-back' });
-      return ordered;
+      
+      // 2. Inner Pages (pages[2] onwards) - shown at 2/N to (N-1)/N
+      // Inner pages get left slivers for aesthetics (when flipped, their back shows as sliver)
+      for(let k=2; k<pages.length; k++) {
+          mSheets.push({
+             id: `mobile-sheet-${k}`,
+             front: { ...pages[k], pageType: 'inner' },
+             back: { id: `placeholder-${k}`, pageType: 'inner', elements: [] }
+          });
+      }
+      
+      // 3. Back Cover (pages[1]) - shown LAST at N/N
+      // No back needed since this is the last page (nothing after it to flip to)
+      if (pages.length > 1 && pages[1]) {
+          mSheets.push({
+              id: 'mobile-sheet-back-cover',
+              front: { ...pages[1], pageType: 'cover-back' },
+              back: null
+          });
+      }
+      
+      return mSheets;
   }, [pages]);
 
   const handleMobileNext = () => {
-      if (mobilePageIndex < mobilePages.length - 1) {
+      if (mobilePageIndex < mobileSheets.length - 1) {
           playFlipSound();
           setMobilePageIndex(prev => prev + 1);
       }
@@ -195,7 +226,6 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
       
       {/* --- DESKTOP VIEW (SPREADS) --- */}
       <div className="hidden md:flex scale-[0.90] sm:scale-100 origin-center">
-        {/* Book Component */}
         {animId === 'slide' ? (
           <SlideFlip
              sheets={sheets}
@@ -229,42 +259,87 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
         )}
       </div>
 
-      {/* --- MOBILE VIEW (SINGLE PAGE) --- */}
-      <div className="md:hidden flex flex-col items-center justify-center w-full h-full p-4 overflow-y-auto">
-          
-          {/* Page Container: Responsive Width, Aspect Ratio Preserved */}
-          <div className="relative w-[90vw] md:max-w-[600px] aspect-[5/7] shadow-2xl flex-shrink-0 bg-white">
-              {/* Render Current Mobile Page */}
-              <div className={` h-full overflow-hidden ${styleConfig.rounded} ${styleConfig.border} relative`}>
-                  {renderPageContent(mobilePages[mobilePageIndex], 'right')}
-              </div>
+      {/* --- MOBILE VIEW (SCALED DESKTOP FLIP) --- */}
+      {/* We reuse the desktop components but with 'mobileSheets' and Scaled Down */}
+      <div className="md:hidden flex flex-col items-center justify-center w-full h-full overflow-hidden">
+        <div 
+            className="origin-center transition-transform duration-500 will-change-transform"
+            style={{
+                transform: (() => {
+                    const currentId = mobileSheets[mobilePageIndex]?.id || '';
+                    const isCover = currentId.includes('cover');
+                    
+                    // We must include scale here because inline transform overrides Tailwind classes
+                    // Increased scale for larger book display
+                    const scale = (typeof window !== 'undefined' && window.innerWidth < 400) ? 'scale(1.40)' : 'scale(1.70)';
+                    
+                    // Unified positioning: -12% ensures all pages align consistently
+                    const translate = 'translateX(-11%)';
+                    
+                    return `${scale} ${translate}`;
+                })()
+            }}
+        >
+            {animId === 'slide' ? (
+            <SlideFlip
+                sheets={mobileSheets}
+                currentSheetIndex={mobilePageIndex}
+                onFlipNext={handleMobileNext}
+                onFlipPrev={handleMobilePrev}
+                bgColor={bgColor}
+                renderPage={renderPageContent}
+                styleConfig={styleConfig}
+                isCoverPage={mobilePageIndex === mobileSheets.length - 1}
+            />
+            ) : animId === 'binder' ? (
+            <BinderFlip
+                sheets={mobileSheets}
+                currentSheetIndex={mobilePageIndex}
+                onFlipNext={handleMobileNext}
+                onFlipPrev={handleMobilePrev}
+                bgColor={bgColor}
+                renderPage={renderPageContent}
+                styleConfig={styleConfig}
+                isCoverPage={mobilePageIndex === mobileSheets.length - 1}
+            />
+            ) : (
+            <DefaultFlip
+                sheets={mobileSheets}
+                currentSheetIndex={mobilePageIndex}
+                onFlipNext={handleMobileNext}
+                onFlipPrev={handleMobilePrev}
+                bgColor={bgColor}
+                renderPage={renderPageContent}
+                styleConfig={styleConfig}
+                isCoverPage={mobilePageIndex === mobileSheets.length - 1}
+            />
+            )}
+        </div>
+      </div>
 
-             
-          </div>
-
-          {/* Mobile Toolbar (Bottom) */}
-          <div className="mt-8 flex items-center gap-6 z-50 flex-shrink-0">
+       {/* Mobile Toolbar (Bottom - Fixed/Independent) */}
+      <div className="md:hidden fixed bottom-8 left-0 right-0 flex justify-center items-center gap-6 z-50 pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-6 drop-shadow-2xl">
               <button 
                 onClick={handleMobilePrev}
                 disabled={mobilePageIndex === 0}
-                className="bg-white/10 text-white p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90"
+                className="bg-black/60 text-white p-4 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90 hover:bg-black/80"
               >
                   <ChevronLeft className="w-6 h-6" />
               </button>
 
-              <div className="font-bold text-white/90 text-sm tracking-[0.2em] uppercase bg-black/40 px-6 py-2 rounded-full backdrop-blur-md border border-white/10 shadow-lg">
-                  {mobilePageIndex + 1} / {mobilePages.length}
+              <div className="font-bold text-white text-sm tracking-[0.2em] uppercase bg-black/60 px-6 py-3 rounded-full backdrop-blur-md border border-white/10 shadow-lg min-w-[100px] text-center">
+                  {mobilePageIndex + 1} / {mobileSheets.length}
               </div>
 
               <button 
                 onClick={handleMobileNext}
-                disabled={mobilePageIndex === mobilePages.length - 1}
-                className="bg-white/10 text-white p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90"
+                disabled={mobilePageIndex >= mobileSheets.length - 1}
+                className="bg-black/60 text-white p-4 rounded-full backdrop-blur-md border border-white/20 shadow-lg disabled:opacity-30 disabled:border-transparent transition-all active:scale-90 hover:bg-black/80"
               >
                   <ChevronRight className="w-6 h-6" />
               </button>
           </div>
-
       </div>
 
       

@@ -7,14 +7,13 @@ import {
   Volume2, Ship, Plane, PartyPopper, MessageCircle, Type, Smartphone, Bookmark
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import BookPreview from '@/components/scrapbook/BookPreview';
 import { HOME_BOOK } from '@/app/constants/home-book';
 import MidSection from '@/components/homepage/MidSection.jsx';
 import SupportButton from '@/components/SupportButton';
 
 // Book Card Component - looks like a physical book
 function BookCard({ book, onClick }) {
-  const coverImage = book.pages?.[0]?.content?.url;
+  const coverImage = book.coverImageUrl;
   const bgColor = book.bgColor || '#FFFDF5';
   
   return (
@@ -70,7 +69,7 @@ function BookCard({ book, onClick }) {
         <h3 className="font-black text-2xl truncate group-hover:text-lime-600 transition-colors">
           {book.title || 'Untitled Scrapbook'}
         </h3>
-        <p className="text-sm font-medium text-gray-400 mt-2">{book.pages?.length || 0} Pages • Custom Made</p>
+        <p className="text-sm font-medium text-gray-400 mt-2">{book.pageCount || 0} Pages • Custom Made</p>
       </div>
     </div>
   );
@@ -78,7 +77,6 @@ function BookCard({ book, onClick }) {
 
 export default function Home() {
   const { user, loading, logout } = useAuth();
-  const [openedBookIndex, setOpenedBookIndex] = useState(null);
 
   return (
     <div className="min-h-screen text-black font-sans selection:text-black">
@@ -246,7 +244,7 @@ export default function Home() {
                     <div className="transform hover:scale-105 transition-transform duration-300">
                       <BookCard 
                         book={book} 
-                        onClick={() => setOpenedBookIndex(index)}
+                        onClick={() => window.open('http://localhost:3000/scrapbook/xryr2fbjxilbryin', '_blank')}
                       />
                     </div>
                     <p className="mt-6 text-gray-500 font-medium text-sm">
@@ -257,39 +255,7 @@ export default function Home() {
               </div>
 
               {/* Modal Overlay for Open Book */}
-              {openedBookIndex !== null && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300">
-                    {/* Backdrop */}
-                    <div 
-                        className="absolute inset-0 bg-black/60 backdrop-blur-md"
-                        onClick={() => setOpenedBookIndex(null)}
-                    ></div>
-                    
-                    {/* Modal Content */}
-                    <div className="relative z-10 w-full max-w-6xl h-full max-h-[90vh] flex flex-col items-center justify-center">
-                        <button 
-                            onClick={() => setOpenedBookIndex(null)}
-                            className="absolute top-4 right-4 md:top-0 md:-right-12 text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full backdrop-blur-md"
-                        >
-                            <X className="w-6 h-6" />
-                        </button>
-                        
-                        <div className="w-full h-full flex items-center justify-center scale-75 md:scale-90 lg:scale-100 transition-transform">
-                             <BookPreview 
-                                pages={HOME_BOOK[openedBookIndex].pages}
-                                bgPattern={HOME_BOOK[openedBookIndex].bgPattern}
-                                bgColor={HOME_BOOK[openedBookIndex].bgColor}
-                                pageBorder={HOME_BOOK[openedBookIndex].pageBorder}
-                                animId={HOME_BOOK[openedBookIndex].animId}
-                                bookStyle={HOME_BOOK[openedBookIndex].bookStyle}
-                                soundId="page-flip"
-                                defaultPage={0}
-                                showControls={false}
-                              />
-                        </div>
-                    </div>
-                </div>
-              )}
+
           </div>
         </div>
       </main>
@@ -367,77 +333,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* COMPARISON - REFINED */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black mb-4 text-gray-900 tracking-tight">
-              Why A Digital Album Beats A Text Message
-            </h2>
-            <p className="text-lg text-gray-500">Some memories are too precious for a blue bubble.</p>
-          </div>
-
-          <div className="relative grid md:grid-cols-2 gap-8 items-center">
-            
-            {/* VS Badge */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex w-16 h-16 bg-black text-white rounded-full items-center justify-center font-black text-xl border-4 border-white shadow-xl">
-              VS
-            </div>
-
-            {/* The Text Message Way */}
-            <div className="p-8 md:p-12 rounded-3xl bg-gray-50 border border-gray-100 text-center opacity-80 hover:opacity-100 transition-opacity">
-               <div className="w-16 h-16 mx-auto bg-gray-200 text-gray-500 rounded-full flex items-center justify-center mb-6">
-                 <MessageCircle className="w-8 h-8" />
-               </div>
-               <h3 className="text-xl font-bold text-gray-500 mb-8 uppercase tracking-widest">The Usual Way</h3>
-               
-               <ul className="space-y-6 text-left">
-                 {[
-                   { text: "Buried in the chat history forever", icon: "📉" },
-                   { text: "Consumed in 3 seconds", icon: "⚡" },
-                   { text: "Just another notification", icon: "🔔" },
-                 ].map((item, i) => (
-                   <li key={i} className="flex items-center gap-4 text-gray-500 font-medium">
-                     <span className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full text-sm grayscale">{item.icon}</span>
-                     <span>{item.text}</span>
-                   </li>
-                 ))}
-               </ul>
-            </div>
-
-            {/* The myscrapbook Way */}
-            <div className="p-8 md:p-12 rounded-3xl bg-lime-50 border border-lime-100 text-center shadow-2xl scale-105 relative z-0">
-               <div className="absolute top-0 right-0 p-4">
-                  <span className="bg-lime-400 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Better</span>
-               </div>
-               <div className="w-16 h-16 mx-auto bg-black text-lime-400 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-lime-400/20">
-                 <Gift className="w-8 h-8" />
-               </div>
-               <h3 className="text-xl font-bold text-gray-900 mb-8 uppercase tracking-widest">MyScrapbook</h3>
-               
-               <ul className="space-y-6 text-left">
-                 {[
-                   { text: "Saved to both your dashboards", icon: "💎" },
-                   { text: "Interactive 3D unboxing", icon: "⏳" },
-                   { text: "Forever accessible library", icon: "🎁" },
-                 ].map((item, i) => (
-                   <li key={i} className="flex items-center gap-4 text-gray-900 font-bold">
-                     <span className="w-8 h-8 flex items-center justify-center bg-white shadow-sm rounded-full text-sm">{item.icon}</span>
-                     <span>{item.text}</span>
-                   </li>
-                 ))}
-               </ul>
-            </div>
-
-          </div>
-          
-          <div className="text-center mt-16">
-            <p className="text-xl md:text-2xl font-serif text-gray-400 italic">
-              "It’s not just a file. It’s a feeling."
-            </p>
-          </div>
-        </div>
-      </section>
+      
 
       {/* FINAL CTA - REFINED */}
       <section className="py-24 md:py-32 px-4 text-center relative overflow-hidden">
@@ -479,7 +375,7 @@ export default function Home() {
                 <span className="text-xl font-bold tracking-tight text-gray-900">MyScrapbook</span>
               </div>
               <p className="text-lg text-gray-500 max-w-sm leading-relaxed">
-                Create beautiful aesthetic scrapbooks, cute digital albums, and personalized memory books. Transform your photos and memories into interactive gifts that last forever.
+                Transform your photos and memories into interactive gifts that last forever.
               </p>
             </div>
             
@@ -487,8 +383,8 @@ export default function Home() {
               <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-6">Product</h4>
               <ul className="space-y-4 text-gray-500 text-sm font-medium">
                 <li><Link href="/scrapbook" className="hover:text-black transition-colors">Create Book</Link></li>
-                <li><Link href="/templates" className="hover:text-black transition-colors">Templates</Link></li>
-                <li><Link href="/showcase" className="hover:text-black transition-colors">Showcase</Link></li>
+                {/* <li><Link href="/templates" className="hover:text-black transition-colors">Templates</Link></li>
+                <li><Link href="/showcase" className="hover:text-black transition-colors">Showcase</Link></li> */}
                 <li><Link href="/pricing" className="hover:text-black transition-colors">Pricing (Free)</Link></li>
               </ul>
             </div>
@@ -496,10 +392,8 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-6">Connect</h4>
               <ul className="space-y-4 text-gray-500 text-sm font-medium">
-                <li><a href="#" className="hover:text-black transition-colors">TikTok</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Instagram</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Twitter</a></li>
-                <li><a href="mailto:hello@myscrapbook.com" className="hover:text-black transition-colors">Contact Us</a></li>
+                <li><a href="https://www.instagram.com/myscrapbook.app/" className="hover:text-black transition-colors">Instagram</a></li>
+                <li><a href="mailto:futurepiratekingxx@gmail.com" className="hover:text-black transition-colors">Contact Us</a></li>
               </ul>
             </div>
           </div>

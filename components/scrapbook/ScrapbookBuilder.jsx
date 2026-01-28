@@ -189,7 +189,6 @@ export default function ScrapbookBuilder() {
 
   const ANIM_OPTIONS = [
     { id: 'default', label: 'Classic Flip', icon: '📖' },
-    { id: 'slide', label: 'Card Slide', icon: '🃏' },
   ];
 
   const addPagePair = () => {
@@ -557,7 +556,7 @@ export default function ScrapbookBuilder() {
             </div>
           )}
 
-          <div className={`${isPreview ? 'scale-[0.90] sm:scale-75 md:scale-90' : ''} transition-transform duration-500`}>
+          <div className={`${isPreview ? 'w-full h-full flex items-center justify-center scale-100 sm:scale-90' : ''} transition-transform duration-500`}>
               {isPreview ? (
                 <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} pageBorder={pageBorder} soundId={soundId} animId={animId} />
               ) : (

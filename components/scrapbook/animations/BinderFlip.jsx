@@ -7,7 +7,9 @@ export default function BinderFlip({
     onFlipNext, 
     onFlipPrev, 
     bgColor, 
-    renderPage 
+    renderPage,
+    styleConfig,
+    isCoverPage = false  // When true, hide the left page stack (sliver)
 }) {
     
   // Dimensions 
@@ -39,6 +41,10 @@ export default function BinderFlip({
         {sheets.map((sheet, index) => {
            const isFlipped = index < currentSheetIndex;
            const zIndex = isFlipped ? index : (sheets.length - index);
+
+           // CRITICAL: When on a cover page, completely hide ALL flipped sheets
+           // This removes the left sliver effect for front cover (1/n) and back cover (n/n)
+           const shouldHideFlippedSheet = isFlipped && isCoverPage;
 
            return (
              <div
@@ -72,9 +78,14 @@ export default function BinderFlip({
                  transformStyle: 'preserve-3d',
                  transformOrigin: `-${RING_RADIUS}px center`, // Pivot is at the Spine (which is 30px left of this element)
                  transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
-                 transition: 'transform 0.7s cubic-bezier(0.455, 0.03, 0.515, 0.955)',
+                 transition: shouldHideFlippedSheet
+                   ? 'transform 0.7s cubic-bezier(0.455, 0.03, 0.515, 0.955), opacity 0.3s ease-out 0.6s'
+                   : 'transform 0.7s cubic-bezier(0.455, 0.03, 0.515, 0.955), opacity 0.3s ease-out',
                  zIndex: zIndex,
                  cursor: 'pointer',
+                 // Fade out flipped sheets on cover pages (with delay to allow flip animation to complete)
+                 opacity: shouldHideFlippedSheet ? 0 : 1,
+                 pointerEvents: shouldHideFlippedSheet ? 'none' : 'auto',
                }}
                className="group"
              >
@@ -101,7 +112,9 @@ export default function BinderFlip({
                    inset: 0,
                    backfaceVisibility: 'hidden',
                    transform: 'rotateY(180deg)',
-                   backgroundColor: bgColor || '#FFFDF5'
+                   backgroundColor: bgColor || '#FFFDF5',
+                   // Hide the back face on cover pages (1/n and n/n)
+                   visibility: isCoverPage ? 'hidden' : 'visible'
                  }}
                  className={`overflow-hidden border-4 border-r-0 border-black border-y-4 border-l-4 rounded-l-md`}
                >
