@@ -284,6 +284,9 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
                     
                     // Define breakpoints: { min, max, scale }
                     const breakpoints = [
+                      { min: 0,   max: 250, scale: 1 },
+                      { min: 251, max: 300, scale: 1 },
+                      { min: 300, max: 350, scale: 1.2 },
                         { min: 0,   max: 379, scale: 1.35 },   // Very small (iPhone SE ~375px)
                         { min: 380, max: 449, scale: 1.7 },    // Small phones
                         { min: 450, max: 549, scale: 1.60 },   // Medium phones
