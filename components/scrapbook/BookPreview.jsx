@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Page from './Page';
 import DefaultFlip from './animations/DefaultFlip';
@@ -162,6 +162,15 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
   // ============================================
   const [mobilePageIndex, setMobilePageIndex] = useState(0);
   
+  // Track window width for responsive scaling (re-renders on resize)
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 400);
+  
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   // Flatten pages for mobile reading order but structured as SHEETS for the flip animation
   // User Requirement: "Left page empty, Right page content filled."
   // Left sliver visibility:
@@ -269,11 +278,23 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
                     const currentId = mobileSheets[mobilePageIndex]?.id || '';
                     const isCover = currentId.includes('cover');
                     
-                    // We must include scale here because inline transform overrides Tailwind classes
-                    // Increased scale for larger book display
-                    const scale = (typeof window !== 'undefined' && window.innerWidth < 400) ? 'scale(1.40)' : 'scale(1.70)';
+                    // Responsive scaling with explicit min-max breakpoints
+                    // Each range is independent - change one without affecting others
+                    // Uses windowWidth state which updates on resize
                     
-                    // Unified positioning: -12% ensures all pages align consistently
+                    // Define breakpoints: { min, max, scale }
+                    const breakpoints = [
+                        { min: 0,   max: 379, scale: 1.35 },   // Very small (iPhone SE ~375px)
+                        { min: 380, max: 449, scale: 1.7 },    // Small phones
+                        { min: 450, max: 549, scale: 1.60 },   // Medium phones
+                        { min: 550, max: 9999, scale: 1.70 },  // Large phones / tablets
+                    ];
+                    
+                    // Find matching breakpoint using tracked windowWidth
+                    const match = breakpoints.find(bp => windowWidth >= bp.min && windowWidth <= bp.max);
+                    const scale = match ? `scale(${match.scale})` : 'scale(1.5)';
+                    
+                    // Unified positioning
                     const translate = 'translateX(-11%)';
                     
                     return `${scale} ${translate}`;
