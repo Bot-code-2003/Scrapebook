@@ -112,35 +112,78 @@ const comfortaa = Comfortaa({
 });
 
 export const metadata = {
-  title: "myscrapbook | Interactive Digital Scrapbooks, Scratch Cards & Virtual Albums",
-  description: "Create professional yet cute digital scrapbooks with interactive features. Build aesthetic memory books with scratch cards, secret envelopes, and polaroid galleries. The perfect virtual gift for birthdays, anniversaries, and visual storytelling.",
-  keywords: "digital scrapbook, scratch cards online, interactive photo album, virtual polaroid book, digital memory book, cute scrapbook ideas, online gift maker, aesthetic digital album, myscrapbook, digital envelopes, secret message cards, virtual scraping, love letter online, interactive scrapbook maker, digital gifts",
-  authors: [{ name: "myscrapbook" }],
+  title: "myscrapbook | Cute Digital Scrapbooks & Kawaii Memory Books Online",
+  description: "Create adorable, aesthetic digital scrapbooks with interactive features like scratch cards, secret envelopes, and polaroid galleries. The cutest way to make personalized gifts for birthdays, anniversaries, Valentine's Day, and long-distance relationships. Free kawaii scrapbook maker!",
+  keywords: [
+    // Core product keywords
+    "digital scrapbook", "online scrapbook maker", "virtual scrapbook", "digital memory book",
+    "interactive photo album", "digital photo book", "online memory album", "virtual photo album",
+    
+    // Cute/Kawaii aesthetic keywords
+    "cute scrapbook", "kawaii scrapbook", "aesthetic scrapbook", "pretty digital album",
+    "cute memory book", "adorable photo book", "pastel scrapbook", "soft aesthetic album",
+    "kawaii gift ideas", "cute online gift", "aesthetic gift", "pretty memory book",
+    
+    // Gift occasion keywords  
+    "birthday gift ideas", "anniversary gift", "valentine gift online", "romantic gift",
+    "long distance relationship gift", "ldr gift ideas", "gift for girlfriend", "gift for boyfriend",
+    "personalized gift", "custom photo gift", "sentimental gift", "meaningful gift ideas",
+    "friendship gift", "best friend gift", "thank you gift", "graduation gift",
+    
+    // Interactive features
+    "scratch cards online", "digital envelopes", "secret message cards", "interactive gift",
+    "virtual polaroid book", "flip book online", "3d flip book", "page turning animation",
+    
+    // Emotional/descriptive
+    "handmade digital gift", "heartfelt gift", "romantic scrapbook", "love letter online",
+    "memory keeper", "photo memories", "cherish memories", "keepsake album",
+    
+    // Alternative searches
+    "canva alternative scrapbook", "free scrapbook maker", "easy photo book creator",
+    "diy digital scrapbook", "no download scrapbook", "browser scrapbook maker",
+    "myscrapbook", "my scrapbook online", "scrapbook app"
+  ].join(", "),
+  authors: [{ name: "myscrapbook", url: "https://myscrapbook.thestorybits.com" }],
   creator: "myscrapbook",
   publisher: "myscrapbook",
+  category: "Design",
+  classification: "Gift & Memory App",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "myscrapbook | Interactive Digital Scrapbooks & Scratch Cards",
-    description: "Design stunning digital scrapbooks with interactive scratch cards, envelopes, and polaroids. The cutest way to share memories online.",
+    title: "myscrapbook | Create Cute Digital Scrapbooks & Kawaii Gifts",
+    description: "The cutest way to make digital scrapbooks! Create aesthetic memory books with scratch cards, secret envelopes & polaroids. Perfect for birthdays, anniversaries & LDR gifts. Free & easy! 💕",
     type: "website",
     siteName: "myscrapbook",
     locale: "en_US",
+    url: "https://myscrapbook.thestorybits.com",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "myscrapbook - Create cute digital scrapbooks",
+      }
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "myscrapbook | Interactive Digital Scrapbooks & Scratch Cards",
-    description: "Create aesthetic, interactive scrapbooks with virtual scratch cards and polaroids. Start your story today.",
+    title: "myscrapbook | Cute Digital Scrapbooks & Kawaii Memory Books",
+    description: "Create adorable digital scrapbooks with scratch cards & polaroids. The prettiest way to share memories! 💕",
+    images: ["/og-image.png"],
+    creator: "@myscrapbookapp",
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
@@ -149,10 +192,19 @@ export const metadata = {
   alternates: {
     canonical: "https://myscrapbook.thestorybits.com",
   },
+  // verification: {
+  //   google: "ADD_YOUR_SEARCH_CONSOLE_CODE_HERE",
+  // },
   icons: {
     icon: '/heart-favicon.ico',
     shortcut: '/heart-favicon.ico',
     apple: '/heart-favicon.ico',
+  },
+  other: {
+    "theme-color": "#FFFBF7",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "myscrapbook",
   },
 };
 
