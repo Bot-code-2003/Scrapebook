@@ -38,6 +38,8 @@ function LoginForm() {
           setError('Google Login Failed');
           setIsLoading(false);
       },
+      flow: 'implicit',
+      ux_mode: 'popup',
   });
 
   return (
