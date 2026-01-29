@@ -148,8 +148,8 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
         {!readOnly && (
           <button 
             onClick={openTextStyleDrawer}
-            className={`absolute top-4 right-4 bg-white text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-30 transition-all ${
-              isCover ? 'bg-white/90 hover:bg-[#FFD43B]' : ''
+            className={`absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 p-2 rounded-xl hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 shadow-sm z-30 transition-all ${
+              isCover ? 'bg-white/90' : ''
             }`}
             title="Edit Text Style"
           >
@@ -166,7 +166,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
               onChange={(e) => handleChange('heading', e.target.value)}
               className={`w-full bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
                   ${isCover ? 'text-center text-3xl md:text-4xl' : 'text-left text-3xl placeholder-gray-300'}
-                  ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
+                  ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-rose-300' : 'outline-none cursor-default'}
               `}
               rows={1}
               onInput={(e) => autoResize(e.target)}
@@ -198,7 +198,7 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
                 onChange={(e) => handleChange('body', e.target.value)}
                 className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-0 rounded-md overflow-hidden
                     ${isCover ? `${textSizeClass} opacity-80 h-48 placeholder-current/40` : `${textSizeClass} text-gray-700 placeholder-gray-300`}
-                    hover:border-dashed hover:border-current/20 focus:outline-none focus:border-[#A3E635]
+                    hover:border-dashed hover:border-current/20 focus:outline-none focus:border-rose-300
                 `}
                 rows={1}
                 onInput={(e) => autoResize(e.target)}

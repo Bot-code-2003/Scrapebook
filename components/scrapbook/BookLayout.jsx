@@ -1,7 +1,22 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Page from './Page';
 import { Trash2 } from 'lucide-react';
+
+// WYSIWYG: Render pages at "reference" size (matching preview) and scale down for editor view
+// Reference size matches preview dimensions
+const REFERENCE_WIDTH = 500;
+const REFERENCE_HEIGHT = 700;
+
+// Editor display dimensions (smaller for compact view)
+const EDITOR_WIDTH_MOBILE = 280;
+const EDITOR_HEIGHT_MOBILE = 392;
+const EDITOR_WIDTH_DESKTOP = 360;
+const EDITOR_HEIGHT_DESKTOP = 504;
+
+// Calculate scale factors for WYSIWYG
+const SCALE_MOBILE = EDITOR_WIDTH_MOBILE / REFERENCE_WIDTH; // 0.56
+const SCALE_DESKTOP = EDITOR_WIDTH_DESKTOP / REFERENCE_WIDTH; // 0.72
 
 export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   
@@ -11,15 +26,11 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
   const editSpreads = useMemo(() => {
     if (readOnly) return [];
     const spreads = [];
-    // pages[0] and pages[1] are Front/Back covers
-    // pages[2] starts the inner content
     for (let i = 0; i < pages.length; i += 2) {
       spreads.push(pages.slice(i, i + 2));
     }
     return spreads;
   }, [pages, readOnly]);
-
-  // Preview Mode logic removed. Use BookPreview for preview mode.
 
   // ============================================
   // EDIT MODE RENDER
@@ -28,7 +39,7 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
     <div className="flex flex-col gap-8 items-center w-full max-w-6xl px-4">
       {editSpreads.map((spread, index) => (
         <div key={index} className="flex flex-col items-center relative group/spread">
-            {/* ... Spread Header ... */}
+            {/* Spread Header */}
             <div className="mb-3 w-full flex justify-between items-end px-4 max-w-[1000px]">
                 <div className="font-bold text-gray-400 text-xs tracking-wide">
                     {index === 0 ? "Cover (Front & Back)" : `Spread ${index}`}
@@ -44,16 +55,19 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
             </div>
 
             {/* The Book Spread */}
-            <div className="flex flex-col md:flex-row shadow-2xl rounded-sm transform md:scale-90 md:origin-top md:-mb-16">
-                {/* Left Page */}
+            <div className="flex flex-col md:flex-row shadow-2xl rounded-sm">
+                {/* Left Page - Outer container sets visual size */}
                 <div 
-                    className={`w-[350px] h-[490px] md:w-[500px] md:h-[700px] relative z-10 overflow-hidden ${index === 0 ? 'rounded-l-sm' : ''}`}
-                    style={{ backgroundColor: 'transparent' }} 
+                    className={`relative z-10 overflow-hidden w-[280px] h-[392px] md:w-[360px] md:h-[504px] ${index === 0 ? 'rounded-l-sm' : ''}`}
                 >
                     <div className="absolute inset-0 border border-gray-200 pointer-events-none z-30" style={{ borderRight: 'none' }}></div>
+                    
+                    {/* Scaled Content Container - renders at full size, scaled down */}
                     <div 
-                        className="w-full h-full relative"
-                        style={{ backgroundColor: bgColor || '#FFFDF5' }}
+                        className="origin-top-left absolute top-0 left-0 w-[500px] h-[700px] scale-[0.56] md:scale-[0.72]"
+                        style={{ 
+                            backgroundColor: bgColor || '#FFFDF5'
+                        }}
                     >
                         <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none z-20 mix-blend-multiply opacity-50"></div>
                         <Page 
@@ -76,13 +90,16 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                 {/* Right Page */}
                 {spread[1] && (
                     <div 
-                        className={`w-[350px] h-[490px] md:w-[500px] md:h-[700px] relative z-10 overflow-hidden md:left-[-1px] ${index === 0 ? 'rounded-r-sm' : ''}`}
-                        style={{ backgroundColor: 'transparent' }}
+                        className={`relative z-10 overflow-hidden w-[280px] h-[392px] md:w-[360px] md:h-[504px] md:ml-[-1px] ${index === 0 ? 'rounded-r-sm' : ''}`}
                     >
                         <div className="absolute inset-0 border border-gray-200 pointer-events-none z-30" style={{ borderLeft: 'none' }}></div>
+                        
+                        {/* Scaled Content Container */}
                         <div 
-                            className="w-full h-full relative"
-                            style={{ backgroundColor: bgColor || '#FFFDF5' }}
+                            className="origin-top-left absolute top-0 left-0 w-[500px] h-[700px] scale-[0.56] md:scale-[0.72]"
+                            style={{ 
+                                backgroundColor: bgColor || '#FFFDF5'
+                            }}
                         >
                             <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-20 mix-blend-multiply opacity-50"></div>
                             <Page 

@@ -333,16 +333,16 @@ export default function ScrapbookBuilder() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative bg-gray-50 selection:bg-lime-100 selection:text-lime-900">
+    <div className="h-screen flex flex-col overflow-hidden relative bg-[#FFFBF7] selection:bg-rose-100 selection:text-rose-900">
       {/* Share Modal */}
       {shareUrl && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
            {/* ... existing share modal content ... */}
            <div className="bg-white p-8 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 transform transition-all scale-100">
-              <div className="w-16 h-16 bg-lime-100 text-lime-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-8 h-8" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-center text-gray-900">Scrapbook Ready!</h2>
+              <h2 className="text-2xl font-bold mb-2 text-center text-gray-800">Scrapbook Ready!</h2>
               <p className="mb-8 text-gray-500 text-center leading-relaxed">Your digital scrapbook has been saved. Share this link with your lucky recipient!</p>
               
               <div className="flex gap-2 mb-6">
@@ -350,14 +350,14 @@ export default function ScrapbookBuilder() {
                     type="text" 
                     readOnly 
                     value={shareUrl} 
-                    className="flex-1 border border-gray-200 p-3 rounded-xl font-mono text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+                    className="flex-1 border border-gray-200 p-3 rounded-xl font-mono text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-rose-400/50"
                  />
                  <button 
                     onClick={() => {
                         navigator.clipboard.writeText(shareUrl);
                         alert('Link copied!');
                     }}
-                    className="bg-lime-400 text-black px-5 font-bold rounded-xl hover:bg-lime-500 transition-colors shadow-sm"
+                    className="bg-rose-400 text-white px-5 font-bold rounded-xl hover:bg-rose-500 transition-colors shadow-sm"
                  >
                     Copy
                  </button>
@@ -365,7 +365,7 @@ export default function ScrapbookBuilder() {
 
               <button 
                   onClick={() => router.push('/profile')}
-                  className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg shadow-black/10"
+                  className="w-full py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-700 transition-all shadow-lg shadow-gray-800/20"
               >
                   Go to Profile
               </button>
@@ -381,9 +381,9 @@ export default function ScrapbookBuilder() {
                   {/* Icon Animation */}
                   <div className="relative">
                       <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center animate-pulse">
-                          {savingStage === 1 && <Book className="w-10 h-10 text-lime-400 animate-bounce" />}
-                          {savingStage === 2 && <Palette className="w-10 h-10 text-pink-400 animate-spin-slow" />}
-                          {savingStage === 3 && <Share2 className="w-10 h-10 text-blue-400 animate-ping" />}
+                          {savingStage === 1 && <Book className="w-10 h-10 text-rose-400 animate-bounce" />}
+                          {savingStage === 2 && <Palette className="w-10 h-10 text-amber-400 animate-spin-slow" />}
+                          {savingStage === 3 && <Share2 className="w-10 h-10 text-rose-300 animate-ping" />}
                       </div>
                   </div>
 
@@ -391,29 +391,29 @@ export default function ScrapbookBuilder() {
                   <div className="w-full space-y-4">
                       {/* Step 1 */}
                       <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 ${savingStage >= 1 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 1 ? 'bg-lime-400 border-lime-400 text-black' : (savingStage === 1 ? 'border-lime-400 text-lime-400' : 'border-white/30')}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 1 ? 'bg-rose-400 border-rose-400 text-white' : (savingStage === 1 ? 'border-rose-400 text-rose-400' : 'border-white/30')}`}>
                               {savingStage > 1 ? <Check className="w-3 h-3" /> : '1'}
                           </div>
                           <span className={`font-bold ${savingStage === 1 ? 'text-white' : 'text-white/60'}`}>Binding the book...</span>
-                          {savingStage === 1 && <div className="ml-auto w-4 h-4 border-2 border-lime-400 border-t-transparent rounded-full animate-spin"></div>}
+                          {savingStage === 1 && <div className="ml-auto w-4 h-4 border-2 border-rose-400 border-t-transparent rounded-full animate-spin"></div>}
                       </div>
 
                       {/* Step 2 */}
                       <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 delay-100 ${savingStage >= 2 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 2 ? 'bg-pink-400 border-pink-400 text-black' : (savingStage === 2 ? 'border-pink-400 text-pink-400' : 'border-white/30')}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 2 ? 'bg-amber-400 border-amber-400 text-white' : (savingStage === 2 ? 'border-amber-400 text-amber-400' : 'border-white/30')}`}>
                               {savingStage > 2 ? <Check className="w-3 h-3" /> : '2'}
                           </div>
                           <span className={`font-bold ${savingStage === 2 ? 'text-white' : 'text-white/60'}`}>Stitching pages...</span>
-                          {savingStage === 2 && <div className="ml-auto w-4 h-4 border-2 border-pink-400 border-t-transparent rounded-full animate-spin"></div>}
+                          {savingStage === 2 && <div className="ml-auto w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>}
                       </div>
 
                       {/* Step 3 */}
                       <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/10 transition-all duration-500 delay-200 ${savingStage >= 3 ? 'bg-white/10 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 3 ? 'bg-blue-400 border-blue-400 text-black' : (savingStage === 3 ? 'border-blue-400 text-blue-400' : 'border-white/30')}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${savingStage > 3 ? 'bg-rose-300 border-rose-300 text-white' : (savingStage === 3 ? 'border-rose-300 text-rose-300' : 'border-white/30')}`}>
                               {savingStage > 3 ? <Check className="w-3 h-3" /> : '3'}
                           </div>
                           <span className={`font-bold ${savingStage === 3 ? 'text-white' : 'text-white/60'}`}>Delivering gift...</span>
-                          {savingStage === 3 && <div className="ml-auto w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>}
+                          {savingStage === 3 && <div className="ml-auto w-4 h-4 border-2 border-rose-300 border-t-transparent rounded-full animate-spin"></div>}
                       </div>
                   </div>
 
@@ -436,7 +436,7 @@ export default function ScrapbookBuilder() {
               <div className="flex flex-col gap-3">
                  <button 
                     onClick={handleContinueDraft}
-                    className="w-full py-3 bg-lime-400 text-black font-bold rounded-xl hover:bg-lime-500 transition-all shadow-lg shadow-lime-500/20"
+                    className="w-full py-3 bg-rose-400 text-white font-bold rounded-xl hover:bg-rose-500 transition-all shadow-lg shadow-rose-500/20"
                  >
                     Continue Editing
                  </button>
@@ -454,18 +454,22 @@ export default function ScrapbookBuilder() {
       {/* Header */}
       {/* Header - Hidden in Preview */}
       {!isPreview && (
-        <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-white/80 border-b border-gray-100 shadow-sm/50 backdrop-blur-md">
+        <header className="px-4 py-4 md:px-6 flex justify-between items-center sticky top-0 z-50 bg-[#FFFBF7]/90 border-b border-gray-100/50 backdrop-blur-md">
             <div className="flex items-center shrink-0">
                 <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-80 transition-opacity">
                     <img 
                         src="/heart-favicon.ico" 
                         alt="Logo" 
-                        className="w-10 h-10 transform group-hover:rotate-6 transition-transform"
+                        className="w-8 h-8 transform group-hover:rotate-12 transition-transform"
                     />
-                    <span className="text-lg md:text-xl font-bold tracking-tight text-gray-900">myscrapbook</span>
+                    <span className="text-lg md:text-xl font-bold tracking-tight text-gray-700">myscrapbook</span>
                 </Link>
             </div>
             <div className="flex gap-2 md:gap-3 shrink-0">
+                <div className="scale-90 origin-right">
+                    <SupportButton iconOnly={true} />
+                </div>
+
                 <button 
                     onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId }, () => {}, 'Page Theme')}
                     className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-3 sm:px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all hover:shadow-sm"
@@ -475,23 +479,8 @@ export default function ScrapbookBuilder() {
                 </button>
 
                 <button 
-                    onClick={handleShare}
-                    disabled={isSaving}
-                    className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-105 bg-lime-400 text-black hover:bg-lime-500 disabled:opacity-50 disabled:hover:scale-100"
-                >
-                    {isSaving ? (
-                        <span className="text-xs">Saving...</span>
-                    ) : (
-                        <>
-                            <Share2 className="w-4 h-4" />
-                            <span className="hidden sm:inline">Share</span>
-                        </>
-                    )}
-                </button>
-
-                <button 
                     onClick={() => setIsPreview(true)}
-                    className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-black/20 hover:shadow-xl hover:scale-105 bg-black text-white hover:bg-gray-800"
+                    className="flex items-center gap-2 px-3 sm:px-5 py-2 rounded-full font-medium text-sm transition-all hover:scale-105 bg-gray-800 text-white hover:bg-gray-700"
                 >
                     <Eye className="w-4 h-4" />
                     <span className="hidden sm:inline">Preview</span>
@@ -503,7 +492,6 @@ export default function ScrapbookBuilder() {
       {/* Floating Controls in Preview Mode */}
       {isPreview && (
            <div className="fixed top-6 right-6 z-50 flex gap-2 sm:gap-3 animate-in slide-in-from-top-4 duration-500 items-center">
-                <SupportButton iconOnly={true} />
                 <button 
                      onClick={() => setIsPreview(false)}
                      className="flex items-center gap-2 bg-white/90 backdrop-blur text-gray-900 border border-gray-200 px-3 py-2 sm:px-6 sm:py-3 rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg"
@@ -515,7 +503,7 @@ export default function ScrapbookBuilder() {
                 <button 
                      onClick={handleShare}
                      disabled={isSaving}
-                     className="flex items-center gap-2 bg-lime-400 text-black px-3 py-2 sm:px-6 sm:py-3 rounded-full font-bold shadow-lg shadow-lime-500/30 hover:shadow-xl hover:scale-105 hover:bg-lime-500 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                     className="flex items-center gap-2 bg-rose-400 text-white px-3 py-2 sm:px-6 sm:py-3 rounded-full font-bold shadow-lg shadow-rose-500/30 hover:shadow-xl hover:scale-105 hover:bg-rose-500 transition-all disabled:opacity-50 disabled:hover:scale-100"
                      title="Share"
                 >
                     <Share2 className="w-4 h-4" />
@@ -529,7 +517,7 @@ export default function ScrapbookBuilder() {
 
       {/* Main Workspace */}
       <main 
-        className={`flex-1 overflow-auto relative flex ${isPreview ? 'items-center justify-center' : 'flex-col items-center'} transition-colors duration-500 ${isPreview ? 'bg-[#1a1a1a]' : 'bg-gray-50'}`}
+        className={`flex-1 overflow-auto relative flex ${isPreview ? 'items-center justify-center' : 'flex-col items-center'} transition-colors duration-500 ${isPreview ? 'bg-[#1a1a1a]' : 'bg-[#FFFBF7]'}`}
         style={{
             backgroundImage: isPreview && appBackground !== 'none' ? appBackground : undefined,
             backgroundSize: 'cover',
@@ -545,14 +533,17 @@ export default function ScrapbookBuilder() {
           
           {/* Title Input */}
           {!isPreview && (
-            <div className="my-8 w-full max-w-md flex flex-col items-center z-10 relative px-4">
-                <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="text-center text-2xl md:text-3xl font-bold tracking-tight bg-transparent border-b border-transparent hover:border-gray-300 focus:border-gray-900 focus:outline-none placeholder-gray-300 w-full pb-2 text-gray-900 transition-all"
-                    placeholder="Untitled Scrapbook"
-                />
+            <div className="my-8 w-full max-w-md flex flex-col items-center z-10 relative px-4 group/title">
+                <div className="relative w-full">
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="text-center text-2xl md:text-3xl font-bold tracking-tight bg-transparent border-b-2 border-dashed border-gray-300/50 hover:border-gray-300 focus:border-rose-400 focus:border-solid focus:outline-none placeholder-gray-300 w-full pb-2 text-gray-800 transition-all pr-8"
+                        placeholder="Name your story..."
+                    />
+                    <Pencil className="w-5 h-5 text-gray-300 absolute right-0 top-1/2 -translate-y-full sm:-translate-y-1/2 group-hover/title:text-rose-400 transition-colors pointer-events-none" />
+                </div>
             </div>
           )}
 
@@ -652,9 +643,9 @@ export default function ScrapbookBuilder() {
               <div className="mt-12 pb-24">
                 <button 
                     onClick={addPagePair}
-                    className="group flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all border border-gray-100"
+                    className="group flex items-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all border border-gray-100"
                 >
-                    <div className="w-6 h-6 rounded-full bg-lime-100 text-lime-600 flex items-center justify-center group-hover:bg-lime-200 transition-colors">
+                    <div className="w-6 h-6 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center group-hover:bg-rose-200 transition-colors">
                       <Plus className="w-4 h-4" />
                     </div>
                     <span>Add Pages</span>

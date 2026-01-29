@@ -58,14 +58,6 @@ const STYLE_CATEGORIES = [
         ]
     },
     {
-        id: 'sticker',
-        label: 'Sticker',
-        options: [
-            { id: 'sticker', label: 'White Border', class: 'rounded-xl', containerClass: 'p-2 bg-white ring-4 ring-white shadow-lg w-[90%] h-auto' },
-            { id: 'sticker-c', label: 'Circle', class: 'rounded-full aspect-square object-cover', containerClass: 'p-2 bg-white ring-4 ring-white shadow-lg w-[80%] h-auto rounded-full' },
-        ]
-    },
-    {
         id: 'tape',
         label: 'Washi Tape',
         options: [
@@ -107,43 +99,11 @@ const STYLE_CATEGORIES = [
         ]
     },
     {
-        id: 'music',
-        label: 'Music Player',
+        id: 'sticker',
+        label: 'Sticker',
         options: [
-             { 
-                 id: 'player-blue', 
-                 label: 'Retro Blue', 
-                 class: 'w-full h-full object-cover rounded-lg border-2 border-white/50 bg-sky-200 flex-1 min-h-0', 
-                 containerClass: 'bg-[#60A5FA] p-4 pb-4 shadow-xl w-[90%] h-[90%] rounded-xl flex flex-col gap-3',
-                 patternType: 'player-blue' 
-             },
-             { 
-                 id: 'player-peach', 
-                 label: 'Peach Jam', 
-                 class: 'w-full h-full object-cover rounded-lg border-2 border-[#7F1D1D]/10 bg-orange-100 flex-1 min-h-0', 
-                 containerClass: 'bg-[#FECACA] p-4 pb-4 shadow-xl w-[90%] h-[90%] rounded-xl flex flex-col gap-3 border-2 border-[#FCA5A5]',
-                 patternType: 'player-peach' 
-             },
-        ]
-    },
-    {
-        id: 'browser',
-        label: 'Cute Browser',
-        options: [
-             { 
-                 id: 'browser-pink', 
-                 label: 'Pinky Web', 
-                 class: 'w-full h-full object-cover border-2 border-pink-200 bg-white', 
-                 containerClass: 'bg-pink-50 p-1 pb-1 shadow-xl w-[85%] h-auto rounded-xl flex flex-col gap-1 border-2 border-pink-200',
-                 patternType: 'browser-pink' 
-             },
-             { 
-                 id: 'browser-paint', 
-                 label: 'Dreamy Paint', 
-                 class: 'w-full h-full object-cover border-2 border-purple-200 bg-white rounded-sm', 
-                 containerClass: 'bg-purple-50 p-2 pb-8 shadow-xl w-[85%] h-[85%] rounded-lg flex flex-col relative border-2 border-purple-200',
-                 patternType: 'browser-paint' 
-             },
+            { id: 'sticker', label: 'White Border', class: 'rounded-xl', containerClass: 'p-2 bg-white ring-4 ring-white shadow-lg w-[90%] h-auto' },
+            { id: 'sticker-c', label: 'Circle', class: 'rounded-full aspect-square object-cover', containerClass: 'p-2 bg-white ring-4 ring-white shadow-lg w-[80%] h-auto rounded-full' },
         ]
     },
     {
@@ -511,7 +471,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                              />
                              <button 
                                 onClick={() => setIsEditingText(false)}
-                                className="bg-[#A3E635] text-black font-bold uppercase py-2 px-4 rounded-full self-center hover:scale-110 transition-transform shadow-lg border-2 border-black"
+                                className="bg-rose-400 text-white font-bold py-2 px-4 rounded-full self-center hover:scale-110 hover:bg-rose-500 transition-all shadow-lg"
                              >
                                 Done
                              </button>
@@ -703,7 +663,7 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                 {!isCover && (
                     <button 
                         onClick={() => onOpenDrawer('STYLE', { categories: STYLE_CATEGORIES, currentStyle, tapePosition, polaroidPosition }, handleStyleSelect, 'Image Style', { onTapePosChange: handleTapePosChange, onPolaroidPosChange: handlePolaroidPosChange })}
-                        className={`absolute top-4 right-4 bg-white text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-50 transition-all`}
+                        className="absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 p-2 rounded-xl hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 shadow-sm z-50 transition-all"
                         title="Edit Style"
                     >
                         <PenTool className="w-4 h-4" />
@@ -711,23 +671,15 @@ export default function ImageElement({ content, onUpdate, isCover, readOnly, onO
                 )}
 
                 {/* 2. Add/Edit Text Button - Covers Only */}
-                {isCover && (
+                {isCover && !isEditingText && (
                     <button 
                         onClick={() => setIsEditingText(true)}
-                        className={`absolute top-4 right-4 bg-white text-black border-2 border-black py-2 px-3 rounded-lg hover:bg-[#A3E635] shadow-[2px_2px_0px_0px_black] z-50 transition-all flex items-center gap-2 ${isEditingText ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                        className="absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 py-2 px-3 rounded-xl hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 shadow-sm z-50 transition-all flex items-center gap-2"
                         title="Add Text"
                     >
                         <Type className="w-4 h-4" />
-                        <span className="text-xs font-black uppercase">Add Text</span>
+                        <span className="text-xs font-medium">Add Text</span>
                     </button>
-                )}
-
-                {/* 3. Change Image Button - All */}
-                {!isEditingText && (
-                    <label className={`absolute bottom-4 right-4 bg-black text-white p-2 rounded-full cursor-pointer transition-all z-40 shadow-lg border-2 border-white hover:scale-110 ${!isCover ? 'opacity-100 md:opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
-                        <Upload className="w-4 h-4" />
-                        <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                    </label>
                 )}
             </>
         )}

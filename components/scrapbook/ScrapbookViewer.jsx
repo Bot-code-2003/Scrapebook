@@ -9,6 +9,8 @@ import SupportButton from '@/components/SupportButton';
 export default function ScrapbookViewer({ scrapbook }) {
   const { user, loading: authLoading } = useAuth();
   const [showCTA, setShowCTA] = useState(false);
+  const [showAlreadySaved, setShowAlreadySaved] = useState(false);
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -113,9 +115,9 @@ export default function ScrapbookViewer({ scrapbook }) {
                   {/* Animated Icon */}
                   <div className="relative">
                       <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
-                          {loadingStage === 1 && <Search className="w-10 h-10 text-lime-400 animate-bounce" />}
+                          {loadingStage === 1 && <Search className="w-10 h-10 text-rose-400 animate-bounce" />}
                           {loadingStage === 2 && <Book className="w-10 h-10 text-pink-400 animate-pulse" />}
-                          {loadingStage === 3 && <Sparkles className="w-10 h-10 text-blue-400 animate-spin-slow" />}
+                          {loadingStage === 3 && <Sparkles className="w-10 h-10 text-amber-400 animate-spin-slow" />}
                       </div>
                   </div>
 
@@ -123,7 +125,7 @@ export default function ScrapbookViewer({ scrapbook }) {
                   <div className="w-full space-y-4">
                       {/* Step 1 */}
                       <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/5 transition-all duration-500 ${loadingStage >= 1 ? 'bg-white/5 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 1 ? 'bg-lime-400 border-lime-400 text-black' : (loadingStage === 1 ? 'border-lime-400 text-lime-400' : 'border-white/10 text-white/10')}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 1 ? 'bg-rose-400 border-rose-400 text-white' : (loadingStage === 1 ? 'border-rose-400 text-rose-400' : 'border-white/10 text-white/10')}`}>
                               {loadingStage > 1 ? <Check className="w-3 h-3" /> : '1'}
                           </div>
                           <span className={`font-bold ${loadingStage === 1 ? 'text-white' : 'text-white/50'}`}>Finding your story...</span>
@@ -139,7 +141,7 @@ export default function ScrapbookViewer({ scrapbook }) {
 
                       {/* Step 3 */}
                       <div className={`flex items-center gap-4 p-4 rounded-xl border border-white/5 transition-all duration-500 delay-200 ${loadingStage >= 3 ? 'bg-white/5 opacity-100 scale-100' : 'opacity-30 scale-95'}`}>
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 3 ? 'bg-blue-400 border-blue-400 text-black' : (loadingStage === 3 ? 'border-blue-400 text-blue-400' : 'border-white/10 text-white/10')}`}>
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${loadingStage > 3 ? 'bg-amber-400 border-amber-400 text-white' : (loadingStage === 3 ? 'border-amber-400 text-amber-400' : 'border-white/10 text-white/10')}`}>
                               {loadingStage > 3 ? <Check className="w-3 h-3" /> : '3'}
                           </div>
                           <span className={`font-bold ${loadingStage === 3 ? 'text-white' : 'text-white/50'}`}>Adding magic dust...</span>
@@ -171,35 +173,52 @@ export default function ScrapbookViewer({ scrapbook }) {
         <img 
             src="/heart-favicon.ico" 
             alt="Logo" 
-            className="w-8 h-8 shadow-lg shadow-lime-400/20 group-hover:scale-110 transition-transform"
+            className="w-8 h-8 shadow-lg shadow-rose-400/20 group-hover:scale-110 transition-transform"
         />
         <div className="flex flex-col">
             <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest leading-none mb-0.5">Made With</span>
-            <span className="text-sm font-bold text-white group-hover:text-lime-400 transition-colors leading-none">myscrapbook</span>
+            <span className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors leading-none">myscrapbook</span>
         </div>
       </Link>
 
-      <div className="fixed top-6 right-6 z-40">
-          <SupportButton iconOnly={true} />
-      </div>
+      {/* Top Right Controls */}
+      {!authLoading && !checkingIfSaved && (
+        <div className="fixed top-6 right-6 z-50 flex items-center gap-3">
+           <div className="scale-90 origin-right block">
+              <SupportButton iconOnly={true} />
+           </div>
 
-      {/* Save CTA Button (Mobile: Top Right under Support, Desktop: Bottom Right) */}
-      {!authLoading && !checkingIfSaved && !saved && (
-        <button 
-          onClick={() => setShowCTA(true)}
-          className="fixed z-50 transition-all top-20 right-6 md:top-auto md:right-8 md:bottom-8 bg-white text-black px-4 py-2 md:px-6 md:py-3 font-bold rounded-full shadow-lg shadow-black/20 hover:scale-105 hover:shadow-xl flex items-center gap-2 group border border-gray-100"
-        >
-          <Bookmark className="w-4 h-4 md:w-5 md:h-5 group-hover:fill-current" />
-          <span className="hidden sm:inline">Save This Book</span>
-          <span className="sm:hidden text-xs">Save</span>
-        </button>
-      )}
-
-      {/* Saved Confirmation */}
-      {saved && (
-        <div className="fixed z-50 transition-all top-20 right-6 md:top-auto md:right-8 md:bottom-8 bg-lime-400 text-lime-900 px-4 py-2 md:px-6 md:py-3 font-bold rounded-full shadow-lg shadow-lime-900/20 flex items-center gap-2 animate-in slide-in-from-top md:slide-in-from-bottom duration-500">
-          <Check className="w-4 h-4 md:w-5 md:h-5" />
-          <span className="text-sm md:text-base">Saved</span>
+           {!saved ? (
+              <button 
+                onClick={() => setShowCTA(true)}
+                className="bg-white text-black px-3 py-2 sm:px-4 sm:py-2 font-bold rounded-full shadow-lg shadow-black/20 hover:scale-105 hover:shadow-xl flex items-center gap-2 group border border-gray-100 transition-all"
+              >
+                <Bookmark className="w-4 h-4 group-hover:fill-current" />
+                <span className="hidden sm:inline">Save This Book</span>
+              </button>
+           ) : (
+              <div className="relative">
+                  <button 
+                    onClick={() => {
+                        setShowAlreadySaved(true);
+                        setTimeout(() => setShowAlreadySaved(false), 2000);
+                    }}
+                    className="bg-rose-400 text-white px-3 py-2 sm:px-4 sm:py-2 font-bold rounded-full shadow-lg shadow-rose-900/20 flex items-center gap-2 animate-in slide-in-from-top duration-500 hover:bg-rose-500 transition-colors cursor-pointer"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span className="hidden sm:inline text-sm">Saved</span>
+                  </button>
+                  
+                  {/* Cute Popup */}
+                  {showAlreadySaved && (
+                      <div className="absolute top-full right-0 mt-3 w-40 bg-white text-gray-600 text-xs font-bold py-2 px-3 rounded-2xl shadow-xl border border-rose-100 animate-in zoom-in-95 slide-in-from-top-2 duration-200 text-center z-50 flex flex-col items-center gap-1">
+                          <div className="absolute -top-1.5 right-6 w-3 h-3 bg-white transform rotate-45 border-l border-t border-rose-100"></div>
+                          <span>Already saved!</span>
+                          <span className="text-[10px] text-rose-400">safe & sound 💖</span>
+                      </div>
+                  )}
+              </div>
+           )}
         </div>
       )}
 
@@ -214,9 +233,9 @@ export default function ScrapbookViewer({ scrapbook }) {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center pt-2">
-              <div className="bg-lime-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 border border-lime-100 shadow-sm">
-                <Bookmark className="w-8 h-8 text-black" />
+              <div className="text-center pt-2">
+              <div className="bg-rose-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 border border-rose-100 shadow-sm">
+                <Bookmark className="w-8 h-8 text-rose-500" />
               </div>
               
               <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">
@@ -240,7 +259,7 @@ export default function ScrapbookViewer({ scrapbook }) {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="w-full bg-black text-white py-3.5 font-bold rounded-xl shadow-lg shadow-black/10 hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-rose-400 text-white py-3.5 font-bold rounded-xl shadow-lg shadow-rose-400/20 hover:bg-rose-500 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? 'Saving...' : 'Save to My Library'}
@@ -249,7 +268,7 @@ export default function ScrapbookViewer({ scrapbook }) {
                 <div className="space-y-3">
                   <Link
                     href={`/signup?redirect=${encodeURIComponent(`/scrapbook/${scrapbook.shareId}`)}`}
-                    className="w-full bg-lime-400 text-lime-950 py-3.5 font-bold rounded-xl shadow-lg shadow-lime-400/20 hover:bg-lime-300 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-rose-400 text-white py-3.5 font-bold rounded-xl shadow-lg shadow-rose-400/20 hover:bg-rose-500 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                   >
                     Sign Up Free
                   </Link>

@@ -114,7 +114,7 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
                         onUpdate('empty', null);
                     }
                 }}
-                className="absolute top-4 left-4 p-2 bg-white text-red-500 border-2 border-transparent hover:border-red-500 rounded-lg shadow-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-50 hover:bg-red-50"
+                className="absolute top-4 left-4 p-2 bg-white text-red-400 border border-gray-200 hover:border-red-300 hover:text-red-500 rounded-xl shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all z-50 hover:bg-red-50"
                 title="Remove Content"
             >
                 <Trash2 className="w-4 h-4" />

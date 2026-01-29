@@ -4,7 +4,7 @@ import ScrapbookBuilder from '@/components/scrapbook/ScrapbookBuilder';
 
 export default function ScrapbookPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0F0] text-black font-sans selection:bg-black selection:text-[#A3E635]">
+    <div className="min-h-screen bg-[#FFFBF7] text-gray-800 font-sans selection:bg-rose-100">
         <ScrapbookBuilder />
     </div>
   );

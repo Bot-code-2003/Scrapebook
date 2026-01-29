@@ -93,7 +93,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
             
             <header className="mb-6 mt-2">
                 <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">Page Theme</h2>
-                <div className="h-1 w-12 bg-lime-400 rounded-full"></div>
+                <div className="h-1 w-12 bg-rose-400 rounded-full"></div>
                 <p className="text-gray-500 text-sm mt-3 font-medium leading-relaxed">Customize the look and feel of your scrapbook pages.</p>
             </header>
 
@@ -114,7 +114,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                             onClick={() => setAppBackground(bg.value)}
                             className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-2 aspect-square transition-all ${
                               (appBackground === bg.value || (bg.value !== 'none' && appBackground?.includes(bg.value.replace(/url\("|"\)/g, '').split('?')[0])))
-                                ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                                ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                                 : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                             }`}
                         >
@@ -147,7 +147,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                           onClick={() => setBookStyle(opt.id)}
                           className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-2 transition-all ${
                             bookStyle === opt.id 
-                              ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                              ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                               : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >
@@ -174,7 +174,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         onClick={() => setBgPattern(opt.id)}
                         className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-2 aspect-square transition-all ${
                           bgPattern === opt.id 
-                            ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                            ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                             : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                       >
@@ -209,7 +209,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         onClick={() => setPageBorder(opt.id)}
                         className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-2 aspect-square transition-all ${
                           pageBorder === opt.id 
-                            ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                            ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                             : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                       >
@@ -263,7 +263,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                                  // For now let's just ensure it starts with #
                              }
                           }}
-                          className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent"
                           placeholder="#000000"
                         />
                       </div>
@@ -277,7 +277,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                           onClick={() => setBgColor(opt.value)}
                           className={`flex items-center gap-4 p-3 border rounded-xl transition-all ${
                             bgColor === opt.value
-                              ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm'
+                              ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm'
                               : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         >   
@@ -309,7 +309,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         onClick={() => setAnimId(opt.id)}
                         className={`p-4 border rounded-xl flex flex-col items-center justify-center gap-2 transition-all ${
                           animId === opt.id 
-                            ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                            ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                             : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                       >
@@ -342,7 +342,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         }}
                         className={`p-4 border rounded-xl flex flex-col items-center justify-center gap-2 transition-all ${
                           soundId === opt.id 
-                            ? 'border-lime-400 bg-lime-50 text-lime-800 shadow-sm' 
+                            ? 'border-rose-400 bg-rose-50 text-rose-700 shadow-sm' 
                             : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                       >
@@ -358,7 +358,7 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
              <div className="mt-auto pt-4 text-center border-t border-gray-100">
                  <button 
                     onClick={onClose}
-                    className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-black/5"
+                    className="w-full py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-700 transition-colors"
                  >
                     Apply Theme
                  </button>

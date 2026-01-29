@@ -7,6 +7,7 @@ import {
   Cake, Gift, Globe, MessageCircle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import SupportButton from '@/components/SupportButton';
 
 // Avatar gifs for random selection
 const AVATAR_GIFS = [
@@ -134,12 +135,6 @@ export default function Home() {
               </Link>
             )
           )}
-          <Link 
-            href="/scrapbook"
-            className="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-700 transition-all"
-          >
-            create →
-          </Link>
         </div>
       </header>
 
@@ -379,13 +374,17 @@ export default function Home() {
         </div>
 
         {/* Personal Note / Footer */}
-        <section className="text-center text-sm text-gray-400">
+        <section className="text-center text-sm text-gray-400 flex flex-col items-center">
           <p className="mb-4">
             made with lots of chai ☕ and late nights 🌙
           </p>
           <p className="mb-6">
             if you like this, tell a friend. that means a lot. 💕
           </p>
+          
+          <div className="mb-8 scale-90">
+            <SupportButton />
+          </div>
           
           <div className="flex justify-center gap-6 text-gray-400">
             <a 

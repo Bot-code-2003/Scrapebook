@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check, Type, Layers, Palette } from 'lucide-react';
 
 // Font style presets
@@ -67,6 +67,19 @@ export default function CoverStyleEditorDrawer({
   const [localColor, setLocalColor] = useState(currentOverlayColor || '#000000');
   const [localOpacity, setLocalOpacity] = useState(currentOverlayOpacity ?? 0.4);
   const [localTextColor, setLocalTextColor] = useState(currentTextColor || '#FFFFFF');
+  
+  // LOCAL state for selected font (updates immediately on click)
+  const [selectedFont, setSelectedFont] = useState(currentFontStyle || 'classic');
+
+  // Sync if prop changes
+  useEffect(() => {
+    setSelectedFont(currentFontStyle || 'classic');
+  }, [currentFontStyle]);
+
+  const handleFontSelect = (fontId) => {
+    setSelectedFont(fontId);
+    onFontChange && onFontChange(fontId);
+  };
 
   const handleColorChange = (color) => {
     setLocalColor(color);
@@ -97,7 +110,7 @@ export default function CoverStyleEditorDrawer({
 
       <header className="mb-6 mt-2">
         <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">Cover Style</h2>
-        <div className="h-1 w-12 bg-lime-400 rounded-full"></div>
+        <div className="h-1 w-12 bg-rose-400 rounded-full"></div>
       </header>
 
       {/* Tab Switcher */}
@@ -143,18 +156,18 @@ export default function CoverStyleEditorDrawer({
           {FONT_STYLES.map((font) => (
             <button
               key={font.id}
-              onClick={() => onFontChange(font.id)}
+              onClick={() => handleFontSelect(font.id)}
               className={`w-full text-left p-4 rounded-xl border transition-all ${
-                currentFontStyle === font.id 
-                  ? 'border-lime-400 bg-lime-50/50 shadow-sm ring-1 ring-lime-400' 
+                selectedFont === font.id 
+                  ? 'border-rose-400 bg-rose-50/50 shadow-sm ring-1 ring-rose-400' 
                   : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xl">{font.emoji}</span>
-                <span className={`font-bold text-sm ${currentFontStyle === font.id ? 'text-lime-700' : 'text-gray-700'}`}>{font.label}</span>
-                {currentFontStyle === font.id && (
-                  <Check className="ml-auto w-5 h-5 text-lime-600" />
+                <span className={`font-bold text-sm ${selectedFont === font.id ? 'text-rose-600' : 'text-gray-700'}`}>{font.label}</span>
+                {selectedFont === font.id && (
+                  <Check className="ml-auto w-5 h-5 text-rose-500" />
                 )}
               </div>
               <div 
@@ -209,7 +222,7 @@ export default function CoverStyleEditorDrawer({
                     handleTextColorChange('#FFFFFF');
                   }
                 }}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg font-mono text-sm uppercase focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent"
                 placeholder="#FFFFFF"
               />
             </div>
@@ -225,7 +238,7 @@ export default function CoverStyleEditorDrawer({
                   onClick={() => handleTextColorChange(color)}
                   className={`w-9 h-9 rounded-full border transition-all hover:scale-110 ${
                     localTextColor.toUpperCase() === color.toUpperCase()
-                      ? 'border-gray-300 ring-2 ring-lime-400 ring-offset-2' 
+                      ? 'border-gray-300 ring-2 ring-rose-400 ring-offset-2' 
                       : 'border-black/5 hover:border-black/20 hover:shadow-sm'
                   }`}
                   style={{ backgroundColor: color }}
@@ -263,7 +276,7 @@ export default function CoverStyleEditorDrawer({
                   onClick={() => handleColorChange(color.value)}
                   className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all hover:scale-105 ${
                     localColor === color.value 
-                      ? 'border-lime-400 bg-lime-50 shadow-sm' 
+                      ? 'border-rose-400 bg-rose-50 shadow-sm' 
                       : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                   }`}
                 >
@@ -289,7 +302,7 @@ export default function CoverStyleEditorDrawer({
               step="0.1"
               value={localOpacity}
               onChange={(e) => handleOpacityChange(parseFloat(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-lime-500"
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-rose-500"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-2 font-medium">
               <span>Light</span>
@@ -328,7 +341,7 @@ export default function CoverStyleEditorDrawer({
       <div className="mt-auto pt-4 border-t border-gray-100">
         <button 
           onClick={onClose}
-          className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-black/5"
+          className="w-full py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-700 transition-colors"
         >
           Done
         </button>

@@ -28,7 +28,7 @@ const MidSection = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-end mb-24">
             <div>
-              <span className="inline-block px-3 py-1 rounded-full bg-lime-300 text-black border border-black text-[10px] font-bold uppercase tracking-widest mb-6">
+              <span className="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-bold uppercase tracking-widest mb-6">
                 Features
               </span>
               <h2 className="text-5xl md:text-7xl font-medium tracking-tighter leading-none">

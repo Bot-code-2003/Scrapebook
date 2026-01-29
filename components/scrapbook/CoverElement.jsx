@@ -166,7 +166,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
                     onChange={(e) => setUrlInput(e.target.value)}
                     className="w-full border-b-2 border-gray-300 focus:border-black outline-none p-2 text-center bg-transparent placeholder-gray-400"
                   />
-                  <button type="submit" className="text-xs font-black uppercase bg-[#A3E635] px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_black] hover:-translate-y-0.5 transition-transform">
+                  <button type="submit" className="text-xs font-bold bg-rose-400 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors shadow-sm">
                     Add Image
                   </button>
                 </form>
@@ -214,7 +214,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
         {!readOnly && (
           <button 
             onClick={openCoverStyleDrawer}
-            className="absolute top-4 right-4 bg-white/90 text-black border-2 border-black p-2 rounded-lg hover:bg-[#FFD43B] shadow-[2px_2px_0px_0px_black] z-30 transition-all"
+            className="absolute top-4 right-4 bg-white/90 text-gray-600 border border-gray-200 p-2 rounded-xl hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 shadow-sm z-30 transition-all"
             title="Edit Cover Style"
           >
             <PenTool className="w-4 h-4" />
@@ -229,7 +229,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
           value={data.title}
           onChange={(e) => updateData({ title: e.target.value })}
           className={`w-full text-center bg-transparent border-b-2 border-transparent mb-4 text-3xl md:text-5xl
-            ${!readOnly ? 'hover:border-white/30 focus:outline-none focus:border-[#A3E635]' : 'outline-none cursor-default'}
+            ${!readOnly ? 'hover:border-white/30 focus:outline-none focus:border-rose-300' : 'outline-none cursor-default'}
           `}
           style={{ 
             fontFamily: currentFontStyle.headingFont,
@@ -259,7 +259,7 @@ export default function CoverElement({ content, onUpdate, side, readOnly, onOpen
             value={data.description}
             onChange={(e) => updateData({ description: e.target.value })}
             className={`w-full bg-transparent resize-none leading-relaxed border-2 border-transparent p-0 rounded-md ${textSizeClass} h-24
-              hover:border-dashed hover:border-white/20 focus:outline-none focus:border-[#A3E635]
+              hover:border-dashed hover:border-white/20 focus:outline-none focus:border-rose-300
             `}
             style={{ 
               fontFamily: currentFontStyle.bodyFont,

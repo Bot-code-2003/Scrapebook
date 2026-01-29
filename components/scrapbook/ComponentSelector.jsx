@@ -15,19 +15,19 @@ export default function ComponentSelector({ onSelect, onClose }) {
             
             <header className="mb-8 mt-2">
                 <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">Add Content</h2>
-                <div className="h-1 w-12 bg-lime-400 rounded-full"></div>
+                <div className="h-1 w-12 bg-rose-400 rounded-full"></div>
             </header>
 
             <div className="flex flex-col gap-4">
                  <button 
                     onClick={() => onSelect('image')}
-                    className="group relative overflow-hidden bg-gray-50 border border-gray-200 p-5 rounded-2xl text-left hover:bg-white hover:border-lime-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                    className="group relative overflow-hidden bg-gray-50 border border-gray-200 p-5 rounded-2xl text-left hover:bg-white hover:border-rose-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                          <Image className="w-24 h-24" />
                     </div>
                     <div className="bg-white text-gray-900 w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-transform">
-                        <Image className="w-6 h-6 text-lime-600" />
+                        <Image className="w-6 h-6 text-rose-500" />
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Photo</h3>
                     <p className="text-xs font-medium text-gray-500 mt-1 group-hover:text-gray-600">Upload or add images</p>

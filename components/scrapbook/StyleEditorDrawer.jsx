@@ -1,30 +1,62 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 
 export default function StyleEditorDrawer({ title, categories, currentStyle, onSelect, onClose, tapePosition, onTapePosChange, polaroidPosition, onPolaroidPosChange }) {
+  // LOCAL state to track selected style (updates immediately on click)
+  const [selectedStyle, setSelectedStyle] = useState(currentStyle);
+  const [selectedTapePos, setSelectedTapePos] = useState(tapePosition || 'corners-4');
+  const [selectedPolaroidPos, setSelectedPolaroidPos] = useState(polaroidPosition || 'default');
+
   // State to track which category is expanded
-  const [expandedCat, setExpandedCat] = React.useState(null);
+  const [expandedCat, setExpandedCat] = useState(null);
+
+  // Sync if prop changes externally
+  useEffect(() => {
+    setSelectedStyle(currentStyle);
+  }, [currentStyle]);
+
+  useEffect(() => {
+    setSelectedTapePos(tapePosition || 'corners-4');
+  }, [tapePosition]);
+
+  useEffect(() => {
+    setSelectedPolaroidPos(polaroidPosition || 'default');
+  }, [polaroidPosition]);
 
   // Auto-expand the category containing the current style on mount
-  React.useEffect(() => {
+  useEffect(() => {
     if (categories) {
         for (const cat of categories) {
-            if (cat.options.find(opt => opt.id === currentStyle)) {
+            if (cat.options.find(opt => opt.id === selectedStyle)) {
                 setExpandedCat(cat.id);
-                // If it's the tape category, keep it expanded
                 break;
             }
         }
     }
-  }, [currentStyle, categories]);
+  }, [selectedStyle, categories]);
 
   const toggleCategory = (catId) => {
     if (expandedCat === catId) {
-        setExpandedCat(null); // Close if already open
+        setExpandedCat(null);
     } else {
-        setExpandedCat(catId); // Open new one (closing others)
+        setExpandedCat(catId);
     }
+  };
+
+  const handleStyleSelect = (styleId) => {
+    setSelectedStyle(styleId);
+    onSelect(styleId);
+  };
+
+  const handleTapePosSelect = (pos) => {
+    setSelectedTapePos(pos);
+    if (onTapePosChange) onTapePosChange(pos);
+  };
+
+  const handlePolaroidPosSelect = (pos) => {
+    setSelectedPolaroidPos(pos);
+    if (onPolaroidPosChange) onPolaroidPosChange(pos);
   };
 
   return (
@@ -39,13 +71,13 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
             
             <header className="mb-8 mt-2">
                 <h2 className="text-2xl font-bold tracking-tight mb-2 text-gray-900">{title || "Edit Style"}</h2>
-                <div className="h-1 w-12 bg-lime-400 rounded-full"></div>
+                <div className="h-1 w-12 bg-rose-400 rounded-full"></div>
             </header>
 
             <div className="flex flex-col gap-3 overflow-y-auto pb-10 flex-1 px-1">
                 {categories?.map(cat => {
                     const isExpanded = expandedCat === cat.id;
-                    const isActiveCategory = cat.options.some(opt => opt.id === currentStyle);
+                    const isActiveCategory = cat.options.some(opt => opt.id === selectedStyle);
 
                     return (
                         <div key={cat.id} className={`border rounded-xl ${isExpanded ? 'border-gray-200 shadow-sm bg-white' : 'border-transparent bg-gray-50'}`}>
@@ -55,8 +87,8 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
                                 className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
                             >
                                 <div className="flex items-center gap-3">
-                                     <span className={`font-bold text-sm ${isActiveCategory ? 'text-lime-600' : 'text-gray-700'}`}>{cat.label}</span>
-                                     {isActiveCategory && <div className="w-2 h-2 rounded-full bg-lime-400" />}
+                                     <span className={`font-bold text-sm ${isActiveCategory ? 'text-rose-500' : 'text-gray-700'}`}>{cat.label}</span>
+                                     {isActiveCategory && <div className="w-2 h-2 rounded-full bg-rose-400" />}
                                 </div>
                                 <span className="text-gray-400">
                                     {isExpanded ? <span className="text-lg leading-none">−</span> : <span className="text-lg leading-none">+</span>}
@@ -76,10 +108,10 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
                                             ].map((pos) => (
                                                 <button
                                                     key={pos.id}
-                                                    onClick={() => onTapePosChange(pos.id)}
+                                                    onClick={() => handleTapePosSelect(pos.id)}
                                                     className={`flex-1 text-[10px] font-bold uppercase py-1.5 rounded-md transition-all ${
-                                                        (tapePosition || 'corners-4') === pos.id
-                                                            ? 'bg-white text-black shadow-sm'
+                                                        selectedTapePos === pos.id
+                                                            ? 'bg-white text-gray-900 shadow-sm'
                                                             : 'text-gray-500 hover:text-gray-900'
                                                     }`}
                                                 >
@@ -99,10 +131,10 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
                                             ].map((pos) => (
                                                 <button
                                                     key={pos.id}
-                                                    onClick={() => onPolaroidPosChange(pos.id)}
+                                                    onClick={() => handlePolaroidPosSelect(pos.id)}
                                                     className={`flex-1 text-[10px] font-bold uppercase py-1.5 rounded-md transition-all ${
-                                                        (polaroidPosition || 'default') === pos.id
-                                                            ? 'bg-white text-black shadow-sm'
+                                                        selectedPolaroidPos === pos.id
+                                                            ? 'bg-white text-gray-900 shadow-sm'
                                                             : 'text-gray-500 hover:text-gray-900'
                                                     }`}
                                                 >
@@ -115,15 +147,15 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
                                     {cat.options.map(opt => (
                                         <button
                                             key={opt.id}
-                                            onClick={() => onSelect(opt.id)}
+                                            onClick={() => handleStyleSelect(opt.id)}
                                             className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-all flex items-center justify-between group ${
-                                                currentStyle === opt.id 
-                                                    ? 'bg-lime-50 text-lime-700' 
+                                                selectedStyle === opt.id 
+                                                    ? 'bg-rose-50 text-rose-600' 
                                                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                         >
                                             <span>{opt.label}</span>
-                                            {currentStyle === opt.id && <Check className="w-4 h-4 text-lime-600" />}
+                                            {selectedStyle === opt.id && <Check className="w-4 h-4 text-rose-500" />}
                                         </button>
                                     ))}
                                 </div>
@@ -136,7 +168,7 @@ export default function StyleEditorDrawer({ title, categories, currentStyle, onS
              <div className="mt-auto pt-4 text-center border-t border-gray-100">
                  <button 
                     onClick={onClose}
-                    className="w-full py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-black/5"
+                    className="w-full py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-700 transition-colors"
                  >
                     Done
                  </button>
