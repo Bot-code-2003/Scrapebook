@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Book, Plus, Loader2, LogOut, ArrowLeft, Bookmark, User, Trash2 } from 'lucide-react';
+import { Book, Plus, Loader2, ArrowLeft, Bookmark, Trash2, Heart, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import SupportButton from '@/components/SupportButton';
 import { useRouter } from 'next/navigation';
@@ -14,28 +14,22 @@ function BookCard({ book, isSaved, onDelete }) {
   return (
     <Link 
       href={`/scrapbook/${book.shareId}`}
-      className="group block"
+      className="group block relative"
     >
       {/* Book Container with 3D effect */}
-      <div className="relative transition-all duration-300 group-hover:-translate-y-2">
+      <div className="relative transition-all duration-300 group-hover:-translate-y-2 group-hover:rotate-1">
         {/* Book Spine */}
         <div 
-          className="absolute left-0 top-2 bottom-2 w-3 bg-gradient-to-r from-gray-400 to-gray-300 rounded-l-sm transform -skew-y-3 origin-left"
-          style={{ backgroundColor: bgColor, filter: 'brightness(0.7)' }}
+          className="absolute left-0 top-1 bottom-1 w-4 bg-gray-300 rounded-l-sm transform -skew-y-2 origin-left shadow-inner"
+          style={{ backgroundColor: bgColor, filter: 'brightness(0.8)' }}
         />
         
         {/* Book Pages (side view) */}
-        <div className="absolute left-2 top-1 bottom-1 w-1 bg-gradient-to-r from-gray-200 to-gray-100 rounded-r-xs">
-          <div className="h-full w-full flex flex-col justify-evenly py-2">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-px bg-gray-300" />
-            ))}
-          </div>
-        </div>
+        <div className="absolute left-3 top-1 bottom-1 w-2 bg-white border-l border-gray-200 z-0 shadow-sm" />
         
         {/* Book Cover */}
         <div 
-          className="relative ml-3 aspect-[3/4] rounded-r-md overflow-hidden border-2 border-black shadow-[4px_4px_0px_0px_black] group-hover:shadow-[6px_6px_0px_0px_black] transition-shadow"
+          className="relative ml-4 aspect-[3/4] rounded-r-lg rounded-bl-sm overflow-hidden border border-gray-200/50 shadow-md group-hover:shadow-xl transition-shadow bg-white z-10"
           style={{ backgroundColor: bgColor }}
         >
           {/* Cover Image or Pattern */}
@@ -43,11 +37,13 @@ function BookCard({ book, isSaved, onDelete }) {
             <img 
               src={coverImage} 
               alt={book.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-95 group-hover:opacity-100 transition-opacity"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Book className="w-12 h-12 text-gray-300" />
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50/50 p-4 text-center">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-2">
+                 <Book className="w-5 h-5 text-gray-300" />
+              </div>
             </div>
           )}
           
@@ -58,43 +54,33 @@ function BookCard({ book, isSaved, onDelete }) {
               e.stopPropagation();
               onDelete(book);
             }}
-            className="absolute top-2 right-2 bg-white p-1.5 rounded-full border border-black hover:bg-red-50 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100"
+            className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-gray-100 text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 shadow-sm z-20"
             title={isSaved ? "Remove from saved" : "Delete book"}
           >
-            <Trash2 className="w-3 h-3" />
+            <Trash2 className="w-4 h-4" />
           </button>
-
-          {/* Saved Badge - Only show if saved AND NOT hovered (to avoid overlap with delete) OR position differently if needed. 
-              Actually, let's put the delete button in top-right and saved badge in top-left? 
-              Or just let the delete button replace the saved badge on hover?
-              The saved badge is checking `isSaved`. 
-              Let's keep saved badge but maybe move it or just let them coexist. 
-              The current saved badge is top-right. 
-              Let's move saved badge to top-left if we want to avoid conflict, or just stack them.
-           */}
            
           {/* Saved Badge */}
           {isSaved && (
-            <div className="absolute top-2 left-2 bg-[#FFD43B] p-1.5 rounded-full border border-black z-10">
-              <Bookmark className="w-3 h-3" />
+            <div className="absolute top-2 left-2 bg-rose-400 text-white p-1.5 rounded-full shadow-sm z-20">
+              <Bookmark className="w-3 h-3 fill-current" />
             </div>
           )}
           
           {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition-colors pointer-events-none" />
         </div>
       </div>
       
       {/* Book Info */}
-      <div className="mt-4 ml-3">
-        <h3 className="font-bold text-sm truncate group-hover:text-[#A3E635] transition-colors">
-          {book.title || 'Untitled Scrapbook'}
+      <div className="mt-5 ml-4 text-center">
+        <h3 className="font-bold text-gray-800 text-sm truncate group-hover:text-rose-500 transition-colors">
+          {book.title || 'Untitled Book'}
         </h3>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-gray-400 mt-1">
           {new Date(book.createdAt).toLocaleDateString('en-US', {
             month: 'short',
-            day: 'numeric',
-            year: 'numeric'
+            day: 'numeric'
           })}
         </p>
       </div>
@@ -172,8 +158,8 @@ export default function ProfilePage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-[#f0f0f0] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+      <div className="min-h-screen bg-[#FFFBF7] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-rose-300" />
       </div>
     );
   }
@@ -185,112 +171,123 @@ export default function ProfilePage() {
   const displayBooks = activeTab === 'my' ? myBooks : savedBooks;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans">
-      {/* Navbar similar to Homepage */}
-      <nav className="px-4 py-4 md:px-8 flex justify-between items-center sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <Link href="/" className="flex items-center gap-2 select-none group cursor-pointer hover:opacity-70 transition-opacity">
-          <ArrowLeft className="w-5 h-5" />
-          <span className="font-bold tracking-tight">Back to Home</span>
+    <div className="min-h-screen bg-[#FFFBF7] text-gray-800 font-sans selection:bg-rose-100">
+      {/* Navbar */}
+      <nav className="px-6 py-4 flex justify-between items-center sticky top-0 z-50 bg-[#FFFBF7]/80 backdrop-blur-md border-b border-gray-100/50 max-w-7xl mx-auto w-full">
+        <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity">
+          <ArrowLeft className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:-translate-x-1 transition-all" />
+          <span className="font-bold text-gray-700">back home</span>
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
             <button 
               onClick={handleLogout}
-              className="text-sm font-medium text-gray-500 hover:text-red-500 transition-colors"
+              className="text-sm font-medium text-gray-400 hover:text-rose-400 transition-colors"
             >
-              Sign out
+              sign out
             </button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-        {/* Profile Header - Clean & Minimal */}
-        <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 mb-16 border-b border-gray-100 pb-8">
-            <div className="flex items-center gap-6">
-                {user.image ? (
-                    <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full border border-gray-200 object-cover" />
-                ) : (
-                    <div className="w-24 h-24 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
-                        {user.name?.charAt(0).toUpperCase()}
-                    </div>
-                )}
-                <div>
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2 text-gray-900">{user.name}</h1>
-                    <p className="text-gray-500 font-medium text-lg">{user.email}</p>
-                </div>
-            </div>
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        {/* Profile Card */}
+        <div className="relative mb-16">
+             {/* Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-rose-100/50 to-amber-100/50 rounded-3xl blur-2xl opacity-60 pointer-events-none" />
             
-            <div className="flex gap-4 items-center">
-                 <SupportButton />
-                 <Link 
-                  href="/scrapbook"
-                  className="bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all flex items-center gap-2 shadow-lg hover:translate-y-[-2px]"
-                >
-                  <Plus className="w-5 h-5" />
-                  New Book
-                </Link>
+            <div className="relative bg-white/60 backdrop-blur-xl border border-white/50 p-8 md:p-10 rounded-3xl shadow-sm flex flex-col md:flex-row items-center md:items-end justify-between gap-8">
+                <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                     {user.image ? (
+                        <div className="relative">
+                            <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full border-4 border-white shadow-md object-cover" />
+                            <div className="absolute -bottom-1 -right-1 bg-white p-1.5 rounded-full shadow-sm text-rose-400">
+                                <Heart className="w-4 h-4 fill-current" />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="w-24 h-24 rounded-full bg-rose-50 border-4 border-white shadow-md flex items-center justify-center text-3xl font-bold text-rose-300">
+                            {user.name?.charAt(0).toUpperCase()}
+                        </div>
+                    )}
+                    
+                    <div>
+                         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 tracking-tight mb-2">hey, {user.name.split(' ')[0]}!</h1>
+                         <p className="text-gray-500 font-medium">welcome to your little studio ✨</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                     <SupportButton />
+                     <Link 
+                        href="/scrapbook"
+                        className="bg-gray-800 text-white px-6 py-3 rounded-full font-bold hover:bg-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-gray-200 hover:scale-105 active:scale-95"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span>New Book</span>
+                    </Link>
+                </div>
             </div>
         </div>
 
-        {/* Tabs - Underlined Style */}
-        <div className="mb-10">
-          <div className="flex gap-8 border-b border-gray-100">
+        {/* Tabs */}
+        <div className="mb-12 flex justify-center">
+          <div className="inline-flex bg-white p-1.5 rounded-full border border-gray-100 shadow-sm">
             <button
               onClick={() => setActiveTab('my')}
-              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
                 activeTab === 'my' 
-                  ? 'border-b-2 border-black text-black' 
+                  ? 'bg-rose-50 text-rose-500 shadow-sm' 
                   : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              My Creations <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">{myBooks.length}</span>
+              My Books <span className="ml-1 opacity-60 text-xs">({myBooks.length})</span>
             </button>
             <button
               onClick={() => setActiveTab('saved')}
-              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
                 activeTab === 'saved' 
-                  ? 'border-b-2 border-black text-black' 
+                   ? 'bg-amber-50 text-amber-600 shadow-sm' 
                   : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              Saved Collection <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">{savedBooks.length}</span>
+              Saved <span className="ml-1 opacity-60 text-xs">({savedBooks.length})</span>
             </button>
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="min-h-[400px]">
+        {/* Content Grid */}
+        <div className="min-h-[300px]">
           {displayBooks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/50">
+            <div className="flex flex-col items-center justify-center py-20 text-center">
               {activeTab === 'my' ? (
                 <>
-                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-6 text-gray-400">
-                      <Book className="w-8 h-8" />
+                  <div className="bg-white p-6 rounded-full shadow-sm mb-6 border border-gray-50 rotate-3">
+                      <Book className="w-10 h-10 text-rose-200" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">You haven't made any books yet.</h3>
-                  <p className="text-gray-500 max-w-md mx-auto mb-8">
-                    Your studio is empty! Start creating memories today, it only takes a few minutes.
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">it's a bit quiet here...</h3>
+                  <p className="text-gray-400 max-w-sm mx-auto mb-8 leading-relaxed">
+                    your studio is waiting for its first story. why not make something cute today?
                   </p>
                   <Link 
                     href="/scrapbook"
-                    className="text-lime-600 font-bold hover:underline"
+                    className="text-rose-400 font-bold hover:text-rose-500 hover:underline flex items-center gap-1 group"
                   >
-                    Start your first masterpiece →
+                    start creating <Sparkles className="w-3 h-3 group-hover:scale-110 transition-transform" />
                   </Link>
                 </>
               ) : (
                 <>
-                   <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-6 text-gray-400">
-                      <Bookmark className="w-8 h-8" />
+                   <div className="bg-white p-6 rounded-full shadow-sm mb-6 border border-gray-50 -rotate-3">
+                      <Bookmark className="w-10 h-10 text-amber-200" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No saved books found.</h3>
-                  <p className="text-gray-500 max-w-md mx-auto">
-                    When friends send you a digital gift, click "Save to Library" to keep it here forever.
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">no saved treasures yet</h3>
+                  <p className="text-gray-400 max-w-sm mx-auto leading-relaxed">
+                    when friends send you a gift, click "save to library" to keep it safe here forever.
                   </p>
                 </>
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12 px-4">
               {displayBooks.map((book) => (
                 <BookCard 
                   key={book._id} 
