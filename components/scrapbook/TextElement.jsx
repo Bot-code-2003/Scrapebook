@@ -158,24 +158,39 @@ export default function TextElement({ content, onUpdate, isCover, readOnly, onOp
         )}
 
         {(!readOnly || data.heading) && (
-          <textarea 
-              ref={headingRef}
-              readOnly={readOnly}
-              placeholder={!readOnly ? (isCover ? "TITLE HERE" : "HEADLINE GOES HERE") : ""}
-              value={data.heading}
-              onChange={(e) => handleChange('heading', e.target.value)}
-              className={`w-full bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
-                  ${isCover ? 'text-center text-3xl md:text-4xl' : 'text-left text-3xl placeholder-gray-300'}
-                  ${!readOnly ? 'hover:border-current/30 focus:outline-none focus:border-rose-300' : 'outline-none cursor-default'}
+          readOnly ? (
+            <div
+              className={`w-full mb-4 whitespace-pre-wrap leading-tight
+                  ${isCover ? 'text-center text-3xl md:text-4xl' : 'text-left text-3xl'}
               `}
-              rows={1}
-              onInput={(e) => autoResize(e.target)}
               style={{ 
                 color: computedTextColor,
                 fontFamily: currentFontStyle.headingFont,
                 fontWeight: currentFontStyle.headingWeight
               }}
-          />
+            >
+              {data.heading}
+            </div>
+          ) : (
+            <textarea 
+                ref={headingRef}
+                readOnly={readOnly}
+                placeholder={isCover ? "TITLE HERE" : "HEADLINE GOES HERE"}
+                value={data.heading}
+                onChange={(e) => handleChange('heading', e.target.value)}
+                className={`w-full bg-transparent border-b-2 border-transparent mb-4 placeholder-current/50 resize-none overflow-hidden
+                    ${isCover ? 'text-center text-3xl md:text-4xl' : 'text-left text-3xl placeholder-gray-300'}
+                    hover:border-current/30 focus:outline-none focus:border-rose-300
+                `}
+                rows={1}
+                onInput={(e) => autoResize(e.target)}
+                style={{ 
+                  color: computedTextColor,
+                  fontFamily: currentFontStyle.headingFont,
+                  fontWeight: currentFontStyle.headingWeight
+                }}
+            />
+          )
         )}
         
         {readOnly ? (
