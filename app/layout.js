@@ -18,6 +18,7 @@ import {
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { AudioProvider } from "@/context/AudioContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 
@@ -231,7 +232,9 @@ export default function RootLayout({ children }) {
       `}>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "272467631091-l5msn1iovv10vmqjnjumtvbpem29s31i.apps.googleusercontent.com"}>
           <AuthProvider>
-            {children}
+            <AudioProvider>
+              {children}
+            </AudioProvider>
           </AuthProvider>
         </GoogleOAuthProvider>
         <Script

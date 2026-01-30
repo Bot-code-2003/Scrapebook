@@ -298,6 +298,7 @@ export default function Home() {
                   <img 
                     src={randomAvatar} 
                     alt="avatar" 
+                    loading="lazy"
                     className="w-16 h-16 rounded-full object-cover shadow-sm border-2 border-rose-100"
                   />
                   <div>

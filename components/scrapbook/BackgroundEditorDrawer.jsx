@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { X, Check, ChevronDown } from 'lucide-react';
+import { useAudio } from '@/context/AudioContext';
 
 
 // APP BACKGROUND OPTIONS
@@ -389,10 +390,8 @@ export default function BackgroundEditorDrawer({ bgPattern, setBgPattern, bgColo
                         key={opt.id}
                         onClick={() => {
                           setSoundId(opt.id);
-                          if(opt.src) {
-                            const audio = new Audio(opt.src);
-                            audio.play().catch(e => console.error(e));
-                          }
+                          // Sound preview is now handled by centralized audio context
+                          // The playSound will be triggered on actual use, not preview
                         }}
                         className={`p-4 border rounded-xl flex flex-col items-center justify-center gap-2 transition-all ${
                           soundId === opt.id 

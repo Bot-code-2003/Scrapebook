@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Type, Gift, X, PenTool, RefreshCw, Sparkles, Link, Check, Heart, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useAudio } from '@/context/AudioContext';
 
 const GIFT_STYLES = [
   {
@@ -41,6 +42,9 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
   const [uploadType, setUploadType] = useState(null); // For edit mode selection
   const [imageInputMode, setImageInputMode] = useState('url');
   const [urlInput, setUrlInput] = useState('');
+  
+  // Use centralized audio context
+  const { playSound } = useAudio();
 
   const handleUrlSubmit = (e) => {
       e.preventDefault();
@@ -134,9 +138,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
         onClick={(e) => {
           e.stopPropagation();
           if (!isOpen) { 
-            const audio = new Audio('/sounds/pop.mp3');
-            audio.volume = 0.7;
-            audio.play().catch(e => console.log('Audio play failed', e));
+            playSound('pop');
           }
           setIsOpen(!isOpen);
         }}
@@ -329,13 +331,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
     const scratchAudioRef = useRef(null);
     const isDragging = useRef(false);
 
-    // Load Audio
-    useEffect(() => {
-        scratchAudioRef.current = new Audio('/sounds/scratching.mp3');
-        if (scratchAudioRef.current) {
-            scratchAudioRef.current.volume = 0.7;
-        }
-    }, []);
+    // Scratch audio handled by centralized context
 
     // --- THEMES CONFIGURATION ---
     const getThemeLogic = () => {
@@ -431,8 +427,8 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
         ctx.arc(x, y, theme.brushSize, 0, Math.PI * 2);
         ctx.fill();
 
-        if (scratchAudioRef.current && scratchAudioRef.current.paused) {
-            scratchAudioRef.current.play().catch(() => {});
+        if (!isDragging.current) {
+            playSound('scratching');
         }
     };
 
@@ -504,9 +500,7 @@ export default function GiftElement({ content, onUpdate, isCover, readOnly, onOp
         e.stopPropagation();
         if(!readOnly || isOpen) return;
         
-        const audio = new Audio('/sounds/balloon-burst.mp3');
-        audio.volume = 0.7;
-        audio.play().catch(() => {});
+        playSound('balloon-burst');
         
         const rect = e.target.getBoundingClientRect();
         const x = (rect.left + rect.width / 2) / window.innerWidth;

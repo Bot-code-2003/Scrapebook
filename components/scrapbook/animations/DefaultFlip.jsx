@@ -27,6 +27,7 @@ export default function DefaultFlip({
           width: SPREAD_WIDTH, 
           height: PAGE_HEIGHT,
           transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d',
         }}
       >
         {/* FLIPPING STACK */}
@@ -57,16 +58,17 @@ export default function DefaultFlip({
                  width: PAGE_WIDTH,
                  height: PAGE_HEIGHT,
                  transformStyle: 'preserve-3d',
+                 WebkitTransformStyle: 'preserve-3d',
                  transformOrigin: 'left center',
-                 transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
-                 transition: shouldHideFlippedSheet 
-                   ? 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s ease-out 0.5s'
-                   : 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s ease-out',
+                 transform: isFlipped ? 'rotateY(-180deg) translateZ(0)' : 'rotateY(0deg) translateZ(0)',
+                 transition: 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1)',
                  zIndex: zIndex,
                  cursor: 'pointer',
-                 // Fade out flipped sheets on cover pages (with delay to allow flip animation to complete)
+                 // Fade out flipped sheets on cover pages
                  opacity: shouldHideFlippedSheet ? 0 : 1,
                  pointerEvents: shouldHideFlippedSheet ? 'none' : 'auto',
+                 // GPU optimization
+                 contain: 'strict',
                }}
                className="group"
              >
@@ -79,8 +81,8 @@ export default function DefaultFlip({
                    inset: 0,
                    backfaceVisibility: 'hidden',
                    WebkitBackfaceVisibility: 'hidden',
-                   transform: 'rotateY(0deg)',
-                   backgroundColor: bgColor || '#FFFDF5'
+                   transform: 'rotateY(0deg) translateZ(1px)',
+                   backgroundColor: bgColor || '#FFFDF5',
                  }}
                  // Matching Edit Mode Borders and visual style
                  className={`overflow-hidden ${borderClass} border-l-0 ${styleConfig.rounded} ${styleConfig.shadow}`}
@@ -106,10 +108,10 @@ export default function DefaultFlip({
                    inset: 0,
                    backfaceVisibility: 'hidden',
                    WebkitBackfaceVisibility: 'hidden',
-                   transform: 'rotateY(180deg)',
+                   transform: 'rotateY(180deg) translateZ(1px)',
                    backgroundColor: bgColor || '#FFFDF5',
                    // Hide the back face if there's no content
-                   visibility: sheet.back ? 'visible' : 'hidden'
+                   visibility: sheet.back ? 'visible' : 'hidden',
                  }}
                  // Matching Edit Mode Borders
                  className={`overflow-hidden ${borderClass} border-r-0 ${styleConfig.rounded}`}

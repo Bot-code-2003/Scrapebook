@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { X, Smile, ChevronDown, ChevronRight } from 'lucide-react';
 
 const STICKER_CATEGORIES = [
@@ -33,6 +34,36 @@ const STICKER_CATEGORIES = [
             '/stickers/animals/piggy.webp',
             '/stickers/animals/pink-bunny.webp',
             '/stickers/animals/rat-give-flowers.webp',
+        ]
+    },
+    {
+        id: 'ribbons',
+        label: 'Ribbons 🎀',
+        items: [
+            '/stickers/ribbons/big-red-ribbon.webp',
+            '/stickers/ribbons/blue-glass-ribbon.webp',
+            '/stickers/ribbons/minimal-pink-ribbon.webp',
+            '/stickers/ribbons/pink-doodle-ribbon.webp',
+            '/stickers/ribbons/puffy-ribbon.webp',
+            '/stickers/ribbons/red-ribbon.webp',
+            '/stickers/ribbons/toffee-ribbon.webp',
+            '/stickers/ribbons/water-color-ribbon.webp',
+            '/stickers/ribbons/water-pink-ribbon.webp',
+        ]
+    },
+    {
+        id: 'stars',
+        label: 'Stars ⭐',
+        items: [
+            '/stickers/stars/devil-star.webp',
+            '/stickers/stars/pink-star.webp',
+            '/stickers/stars/random-star.webp',
+            '/stickers/stars/red-sparkle-star.webp',
+            '/stickers/stars/relaxed-star.webp',
+            '/stickers/stars/slime-star.webp',
+            '/stickers/stars/starfish-star.webp',
+            '/stickers/stars/three-star.webp',
+            '/stickers/stars/yellow-sparkle-star.webp',
         ]
     }
 ];
@@ -88,9 +119,16 @@ export default function StickerSelectorDrawer({ onClose, onSelect }) {
                                                     onSelect(url);
                                                     onClose();
                                                 }}
-                                                className="aspect-square flex items-center justify-center p-2 rounded-xl border border-gray-100 hover:border-rose-300 hover:bg-rose-50 transition-all hover:scale-105 group bg-white shadow-sm"
+                                                className="aspect-square flex items-center justify-center p-2 rounded-xl border border-gray-100 hover:border-rose-300 hover:bg-rose-50 transition-all hover:scale-105 group bg-white shadow-sm relative"
                                             >
-                                                <img src={url} alt="sticker" className="w-full h-full object-contain drop-shadow-sm group-hover:drop-shadow-md" />
+                                                <Image 
+                                                    src={url} 
+                                                    alt="sticker" 
+                                                    fill
+                                                    sizes="100px"
+                                                    loading="lazy"
+                                                    className="object-contain drop-shadow-sm group-hover:drop-shadow-md p-2" 
+                                                />
                                             </button>
                                         ))}
                                     </div>

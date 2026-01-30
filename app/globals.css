@@ -152,3 +152,22 @@ h1, h2, h3, h4, h5, h6 {
   background: #000;
   color: #FFF;
 }
+
+/* Mobile 3D Transform Optimizations */
+@media (max-width: 768px) {
+  /* Force GPU acceleration for 3D transforms on mobile */
+  .preserve-3d {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Prevent flickering during animations */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

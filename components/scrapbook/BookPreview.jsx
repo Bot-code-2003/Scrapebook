@@ -6,6 +6,7 @@ import DefaultFlip from './animations/DefaultFlip';
 import SlideFlip from './animations/SlideFlip';
 import BinderFlip from './animations/BinderFlip';
 import MobileFlip from './animations/MobileFlip';
+import { useAudio } from '@/context/AudioContext';
 
 // Book style configurations
 const BOOK_STYLES = {
@@ -101,25 +102,12 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
   // Current Sheet Index (0 = Cover is visible)
   const [currentSheetIndex, setCurrentSheetIndex] = useState(defaultPage);
 
-  // Audio Ref
-  const audioRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if(soundId === 'page-flip') {
-        audioRef.current = new Audio('/sounds/page-flip.m4a');
-    } else if (soundId === 'cute-click') {
-        audioRef.current = new Audio('/sounds/Cute-click.mp3');
-    } else if (soundId === 'heavy-flip') {
-        audioRef.current = new Audio('/sounds/heavy-flip.mp3');
-    } else {
-        audioRef.current = null;
-    }
-  }, [soundId]);
+  // Use centralized audio context
+  const { playSound } = useAudio();
 
   const playFlipSound = () => {
-    if (audioRef.current && soundId !== 'none') {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(e => console.error("Audio play failed", e));
+    if (soundId && soundId !== 'none') {
+      playSound(soundId);
     }
   };
   
@@ -274,8 +262,9 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
       {/* We reuse the desktop components but with 'mobileSheets' and Scaled Down */}
       <div className="md:hidden flex flex-col items-center justify-center w-full h-full overflow-hidden">
         <div 
-            className="origin-center transition-transform duration-500"
+            className="origin-center"
             style={{
+                // Use CSS custom property for cleaner transform
                 transform: (() => {
                     const currentId = mobileSheets[mobilePageIndex]?.id || '';
                     const isCover = currentId.includes('cover');
