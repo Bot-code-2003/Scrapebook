@@ -1,13 +1,14 @@
 'use client';
 import React, { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Smile } from 'lucide-react';
 import ComponentSelector from './ComponentSelector';
 import ImageElement from './ImageElement';
 import TextElement from './TextElement';
 import CoverElement from './CoverElement';
 import GiftElement from './GiftElement';
+import Sticker from './Sticker';
 
-export default function Page({ data, onUpdate, side, isCover, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
+export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   // data: { id, type, content }
   const [showSelector, setShowSelector] = useState(false);
 
@@ -18,6 +19,50 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
 
   const handleContentUpdate = (newContent) => {
     onUpdate(data.type, newContent);
+  };
+
+  // Sticker Logic
+  const stickers = data.stickers || [];
+  const [selectedStickerId, setSelectedStickerId] = useState(null);
+  const pageRef = React.useRef(null);
+
+  const handleStickerUpdate = (id, updates) => {
+      const newStickers = stickers.map(s => s.id === id ? { ...s, ...updates } : s);
+      onUpdateStickers(newStickers);
+  };
+
+  const handleAddSticker = (url) => {
+      const newSticker = {
+          id: Date.now().toString(),
+          url,
+          x: 50,
+          y: 50,
+          rotation: (Math.random() * 20) - 10,
+          scale: 1,
+          zIndex: stickers.length + 10
+      };
+      onUpdateStickers([...stickers, newSticker]);
+  };
+
+  const handleLayerChange = (id, direction) => {
+    // Simple z-index swapping or reordering logic
+    // For now, simpler approach: just reorder array (last is top)
+    const index = stickers.findIndex(s => s.id === id);
+    if (index === -1) return;
+    
+    const newStickers = [...stickers];
+    if (direction === 'forward' && index < stickers.length - 1) {
+        [newStickers[index], newStickers[index + 1]] = [newStickers[index + 1], newStickers[index]];
+    } else if (direction === 'backward' && index > 0) {
+        [newStickers[index], newStickers[index - 1]] = [newStickers[index - 1], newStickers[index]];
+    }
+    
+    onUpdateStickers(newStickers);
+  };
+
+  // Deselect sticker when clicking bg
+  const handleBgClick = () => {
+      setSelectedStickerId(null);
   };
 
   // Background Styles configuration
@@ -48,6 +93,8 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
 
   return (
     <div 
+        ref={pageRef}
+        onClick={handleBgClick}
         className={`w-full h-full relative overflow-hidden group ${isCover ? 'bg-gray-100' : ''}`}
         style={{ backgroundColor: isCover ? undefined : (bgColor || '#FFFDF5') }}
     >
@@ -104,6 +151,35 @@ export default function Page({ data, onUpdate, side, isCover, readOnly, bgPatter
                 <GiftElement content={data.content} onUpdate={handleContentUpdate} isCover={isCover} readOnly={readOnly} onOpenDrawer={onOpenDrawer} />
             )}
         </div>
+
+        {/* STICKERS LAYER */}
+        {stickers.map((sticker, index) => (
+            <Sticker 
+                key={sticker.id}
+                data={{...sticker, zIndex: index + 10}} 
+                isSelected={selectedStickerId === sticker.id}
+                onSelect={setSelectedStickerId}
+                onUpdate={handleStickerUpdate}
+                onRemove={(id) => onUpdateStickers(stickers.filter(s => s.id !== id))}
+                onLayerChange={handleLayerChange}
+                readOnly={readOnly}
+                containerRef={pageRef}
+            />
+        ))}
+
+        {/* ADD STICKER BUTTON */}
+        {!readOnly && (
+            <button 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenDrawer('STICKERS', {}, handleAddSticker, 'Pick a Sticker');
+                }}
+                className={`absolute top-20 right-3 z-[40] w-9 h-9 bg-white/90 backdrop-blur text-rose-400 border border-rose-200 rounded-full flex items-center justify-center shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:scale-110 hover:bg-rose-50 transition-all`}
+                title="Add Sticker"
+            >
+                <Smile className="w-5 h-5" />
+            </button>
+        )}
 
         {/* DELETE CONTENT BUTTON */}
         {!readOnly && data.type !== 'empty' && (

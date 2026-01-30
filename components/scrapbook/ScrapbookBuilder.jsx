@@ -13,6 +13,7 @@ import CoverStyleEditorDrawer from './CoverStyleEditorDrawer';
 import BackgroundEditorDrawer from './BackgroundEditorDrawer';
 import { Palette } from 'lucide-react';
 import SupportButton from '@/components/SupportButton';
+import StickerSelectorDrawer from './StickerSelectorDrawer';
 
 // ... (imports remain same)
 
@@ -24,11 +25,12 @@ export default function ScrapbookBuilder() {
   // Each page object: { id: string, type: 'empty' | 'image' | 'text', content: any }
   // We initialize with 2 empty pages.
   const [pages, setPages] = useState([
-    { id: 'p1', type: 'empty', content: null },
-    { id: 'p2', type: 'empty', content: null },
-    { id: 'p3', type: 'empty', content: null },
-    { id: 'p4', type: 'empty', content: null },
+    { id: 'p1', type: 'empty', content: null, stickers: [] },
+    { id: 'p2', type: 'empty', content: null, stickers: [] },
+    { id: 'p3', type: 'empty', content: null, stickers: [] },
+    { id: 'p4', type: 'empty', content: null, stickers: [] },
   ]);
+
   const [isPreview, setIsPreview] = useState(false);
   const [bgPattern, setBgPattern] = useState('graphy'); // options: graphy, dots, lines, plain
   const [bgColor, setBgColor] = useState('#FFFDF5');
@@ -196,14 +198,20 @@ export default function ScrapbookBuilder() {
     const newId2 = `p${pages.length + 2}`;
     setPages([
       ...pages,
-      { id: newId1, type: 'empty', content: null },
-      { id: newId2, type: 'empty', content: null },
+      { id: newId1, type: 'empty', content: null, stickers: [] },
+      { id: newId2, type: 'empty', content: null, stickers: [] },
     ]);
   };
 
   const updatePage = (pageId, type, content) => {
       setPages(prev => prev.map(p => 
           p.id === pageId ? { ...p, type, content } : p
+      ));
+  };
+
+  const updatePageStickers = (pageId, stickers) => {
+      setPages(prev => prev.map(p => 
+          p.id === pageId ? { ...p, stickers } : p
       ));
   };
 
@@ -554,6 +562,7 @@ export default function ScrapbookBuilder() {
                 <BookLayout 
                     pages={pages} 
                     onUpdatePage={updatePage} 
+                    onStickerUpdate={updatePageStickers}
                     onRemovePair={removePagePair} 
                     readOnly={false} 
                     bgPattern={bgPattern} 
@@ -634,6 +643,13 @@ export default function ScrapbookBuilder() {
                   onFontChange={(fontStyleId) => activeDrawer.onAction.onFontChange(fontStyleId)}
                   onOverlayChange={(color, opacity) => activeDrawer.onAction.onOverlayChange(color, opacity)}
                   onTextColorChange={(color) => activeDrawer.onAction.onTextColorChange?.(color)}
+                  onClose={closeDrawer}
+              />
+          )}
+
+          {activeDrawer.type === 'STICKERS' && (
+              <StickerSelectorDrawer
+                  onSelect={(url) => activeDrawer.onAction(url)}
                   onClose={closeDrawer}
               />
           )}

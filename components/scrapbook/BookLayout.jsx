@@ -18,7 +18,7 @@ const EDITOR_HEIGHT_DESKTOP = 504;
 const SCALE_MOBILE = EDITOR_WIDTH_MOBILE / REFERENCE_WIDTH; // 0.56
 const SCALE_DESKTOP = EDITOR_WIDTH_DESKTOP / REFERENCE_WIDTH; // 0.72
 
-export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
+export default function BookLayout({ pages, onUpdatePage, onStickerUpdate, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
   
   // ============================================
   // EDIT MODE: Display pages as vertical pairs (spreads)
@@ -73,6 +73,7 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                         <Page 
                             data={spread[0]} 
                             onUpdate={(type, content) => onUpdatePage(spread[0].id, type, content)}
+                            onUpdateStickers={(stickers) => onStickerUpdate(spread[0].id, stickers)}
                             side="left"
                             isCover={index === 0}
                             readOnly={false}
@@ -105,6 +106,7 @@ export default function BookLayout({ pages, onUpdatePage, onRemovePair, readOnly
                             <Page 
                                 data={spread[1]} 
                                 onUpdate={(type, content) => onUpdatePage(spread[1].id, type, content)}
+                                onUpdateStickers={(stickers) => onStickerUpdate(spread[1].id, stickers)}
                                 side="right"
                                 isCover={index === 0}
                                 readOnly={false}
