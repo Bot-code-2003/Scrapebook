@@ -44,11 +44,10 @@ export default function PrivacyPage() {
                       <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center border border-blue-100">
                         <Shield className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">what we collect</h2>
+                      <h2 className="text-xl font-bold text-gray-700">content privacy</h2>
                     </div>
                     <p className="text-gray-500 leading-relaxed pl-14">
-                      we keep it simple. when you log in with google, we only save your <span className="text-gray-700 font-medium">name, email, and profile picture</span>. 
-                      we also store the beautiful <span className="text-gray-700 font-medium">scrapbooks</span> you create, including the photos and text you add to them, so you can access them forever.
+                      when you log in with google, we see your name, email, and profile picture. any scrapbooks you create are <span className="text-gray-700 font-medium">stored securely</span> to let you access and edit them. we do not access, view, or use your private content for any purpose other than providing this storage service.
                     </p>
                   </section>
 
@@ -58,7 +57,7 @@ export default function PrivacyPage() {
                       <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center border border-purple-100">
                         <Eye className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">how we use it</h2>
+                      <h2 className="text-xl font-bold text-gray-700">your data, your control</h2>
                     </div>
                     <div className="pl-14 space-y-4 text-gray-500 leading-relaxed">
                         <p>we use your data strictly to:</p>

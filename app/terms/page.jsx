@@ -44,10 +44,10 @@ export default function TermsPage() {
                       <div className="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center border border-pink-100">
                         <Heart className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">be nice & creative</h2>
+                      <h2 className="text-xl font-bold text-gray-700">neutral tool & platform</h2>
                     </div>
                     <p className="text-gray-500 leading-relaxed pl-14">
-                      myscrapbook is a place for joy and memories. please don't create or share content that is hurtful, illegal, overly inappropriate, or mean. we want to keep this corner of the internet <span className="text-rose-400 font-medium">safe</span> and <span className="text-rose-400 font-medium">cute!</span>
+                      myscrapbook is a <span className="text-gray-700 font-medium">neutral creation tool</span>. we provide the canvas, but you are the artist. <span className="text-gray-700 font-medium">we do not pre-screen, select, or monitor user-generated content</span> uploaded to the service.
                     </p>
                   </section>
 
@@ -57,10 +57,10 @@ export default function TermsPage() {
                       <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center border border-blue-100">
                         <UserCheck className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">your account</h2>
+                      <h2 className="text-xl font-bold text-gray-700">user responsibility</h2>
                     </div>
                     <p className="text-gray-500 leading-relaxed pl-14">
-                      you are responsible for your account. since we use google login, keeping your google account safe keeps your myscrapbook safe too. if you think someone is using your account without permission, let us know!
+                      you are <span className="text-rose-500 font-bold">solely and legally responsible</span> for the content you upload. if you use images from third-party sources (like pinterest, google, or other artists), you certify that you have the right to use them. we act purely as a passive conduit and assume no liability for your content.
                     </p>
                   </section>
 
@@ -70,11 +70,16 @@ export default function TermsPage() {
                       <div className="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center border border-amber-100">
                         <AlertCircle className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">content ownership</h2>
+                      <h2 className="text-xl font-bold text-gray-700">takedown & repeat infringers</h2>
                     </div>
-                    <p className="text-gray-500 leading-relaxed pl-14">
-                     <span className="text-gray-700 font-bold">you own your photos and memories.</span> by uploading them, you grant us permission to host and display them for you. we don't claim ownership over your personal creations.
-                    </p>
+                    <div className="text-gray-500 leading-relaxed pl-14 space-y-3">
+                        <p>
+                            <span className="text-gray-700 font-bold">Content Removal:</span> if you believe your copyright is being infringed, please email us with details. upon receipt of a valid notice, we will remove the infringing content promptly.
+                        </p>
+                        <p>
+                            <span className="text-gray-700 font-bold">Repeat Infringer Policy:</span> we take intellectual property rights seriously. we will terminate the accounts of users who are determined to be repeat infringers of copyright.
+                        </p>
+                    </div>
                   </section>
                   
                    {/* Section 4 */}
@@ -83,17 +88,17 @@ export default function TermsPage() {
                       <div className="w-10 h-10 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center border border-gray-100">
                         <Scale className="w-5 h-5" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-700">the legal stuff</h2>
+                      <h2 className="text-xl font-bold text-gray-700">safe harbor status</h2>
                     </div>
                     <p className="text-gray-500 leading-relaxed pl-14">
-                     we do our absolute best to keep the service running smoothly 24/7. however, myscrapbook is provided "as is," and we can't promise that it will never have a hiccup. we aren't liable for any lost data, though we have backups to prevent that!
+                     we operate as a service provider under applicable safe harbor laws (such as the DMCA). the service is provided "as is," and strictly enables users to store and view their own private content.
                     </p>
                   </section>
 
                   {/* Contact */}
                   <div className="mt-12 pt-8 border-t border-gray-100 text-center">
-                     <p className="text-gray-400 text-sm mb-2">
-                        got a weird legal question?
+                     <p className="text-gray-400 text-sm mb-2 font-medium">
+                        legal & copyright inquiries
                      </p>
                      <a 
                         href="mailto:futurepiratekingxx@gmail.com" 
