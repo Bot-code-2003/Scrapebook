@@ -174,7 +174,7 @@ export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, 
                     e.stopPropagation();
                     onOpenDrawer('STICKERS', {}, handleAddSticker, 'Pick a Sticker');
                 }}
-                className={`absolute top-20 right-3 z-[40] w-9 h-9 bg-white/90 backdrop-blur text-rose-400 border border-rose-200 rounded-full flex items-center justify-center shadow-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:scale-110 hover:bg-rose-50 transition-all`}
+                className={`absolute top-20 right-3 z-[40] w-9 h-9 bg-white/90 backdrop-blur text-rose-400 border border-rose-200 rounded-full flex items-center justify-center shadow-sm hover:scale-110 hover:bg-rose-50 transition-all`}
                 title="Add Sticker"
             >
                 <Smile className="w-5 h-5" />
