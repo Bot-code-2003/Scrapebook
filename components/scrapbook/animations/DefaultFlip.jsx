@@ -77,7 +77,8 @@ export default function DefaultFlip({
                  style={{
                    position: 'absolute',
                    inset: 0,
-                   backfaceVisibility: 'hidden', // Hides this face when flipped
+                   backfaceVisibility: 'hidden',
+                   WebkitBackfaceVisibility: 'hidden',
                    transform: 'rotateY(0deg)',
                    backgroundColor: bgColor || '#FFFDF5'
                  }}
@@ -104,6 +105,7 @@ export default function DefaultFlip({
                    position: 'absolute',
                    inset: 0,
                    backfaceVisibility: 'hidden',
+                   WebkitBackfaceVisibility: 'hidden',
                    transform: 'rotateY(180deg)',
                    backgroundColor: bgColor || '#FFFDF5',
                    // Hide the back face if there's no content

@@ -274,7 +274,7 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
       {/* We reuse the desktop components but with 'mobileSheets' and Scaled Down */}
       <div className="md:hidden flex flex-col items-center justify-center w-full h-full overflow-hidden">
         <div 
-            className="origin-center transition-transform duration-500 will-change-transform"
+            className="origin-center transition-transform duration-500"
             style={{
                 transform: (() => {
                     const currentId = mobileSheets[mobilePageIndex]?.id || '';

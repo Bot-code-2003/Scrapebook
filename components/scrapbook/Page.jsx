@@ -123,7 +123,7 @@ export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, 
 
         {/* EMPTY STATE */}
         {data.type === 'empty' && (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center relative z-10">
                 {!readOnly && (
                     <button 
                         onClick={() => onOpenDrawer('COMPONENT', {}, handleSelectType, 'Add Content')}

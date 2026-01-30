@@ -54,6 +54,7 @@ export default function MobileFlip({
                  className={`absolute inset-0 bg-white overflow-hidden backface-hidden ${styleConfig.rounded} ${styleConfig.border}`}
                  style={{
                    backfaceVisibility: 'hidden',
+                   WebkitBackfaceVisibility: 'hidden',
                    transform: 'rotateY(0deg)',
                  }}
                >
@@ -76,6 +77,7 @@ export default function MobileFlip({
                  className={`absolute inset-0 overflow-hidden backface-hidden ${styleConfig.rounded}`}
                  style={{
                    backfaceVisibility: 'hidden',
+                   WebkitBackfaceVisibility: 'hidden',
                    transform: 'rotateY(180deg)',
                    backgroundColor: bgColor || '#f5f5f5' // The "Back" of the page
                  }}
