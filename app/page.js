@@ -218,55 +218,63 @@ export default function Home() {
               </div>
             </a>
 
-            {/* Example 2: Placeholder */}
-             <div className="group relative aspect-[3/4] bg-[#F0FDF4] rounded-2xl border-2 border-gray-100 p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                {/* Decorative Cover Elements */}
-                <div className="absolute top-0 inset-x-0 h-2 bg-black/5" />
-                <div className="absolute right-0 inset-y-0 w-2 bg-gradient-to-l from-black/5 to-transparent" />
-                <div className="absolute left-0 inset-y-0 w-3 bg-gradient-to-r from-black/10 to-transparent z-10" />
+            {/* Example 2: Small Book */}
+            <a 
+              href="https://myscrapbook.thestorybits.com/scrapbook/54t3dcrtzor2hrr7" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group relative aspect-[3/4] bg-cover bg-center rounded-2xl border-2 border-gray-100 p-6 flex flex-col items-center justify-end text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              style={{ backgroundImage: 'url("https://i.pinimg.com/1200x/62/c8/b3/62c8b3c16f4f34b715a4179f47d391c6.jpg")' }}
+            >
+              {/* Overlay for legibility */}
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
 
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform text-2xl border border-green-100">
-                  🌿
-                </div>
-                
-                <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-green-600 transition-colors">
-                  Travel Diary
+              {/* Decorative Cover Elements */}
+              <div className="absolute top-0 inset-x-0 h-2 bg-white/10" />
+              <div className="absolute right-0 inset-y-0 w-2 bg-gradient-to-l from-white/10 to-transparent" />
+              <div className="absolute left-0 inset-y-0 w-3 bg-gradient-to-r from-black/30 to-transparent z-10" />
+
+              <div className="relative z-10 w-full">
+                <h3 className="font-bold text-white text-lg mb-1 shadow-black/50 drop-shadow-md leading-tight">
+                  hi. i'm a small book.
                 </h3>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-6">
-                  Summer 2025
-                </p>
+  
+                <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold text-white border border-white/30 group-hover:bg-white group-hover:text-rose-500 transition-all mt-4">
+                  <BookOpen className="w-3 h-3" />
+                  Open Book
+                </span>
+              </div>
+            </a>
 
-                <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl z-20">
-                     <Link href="/scrapbook" className="bg-green-500 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-lg hover:bg-green-600 transition-colors flex items-center gap-2">
-                        <Plus className="w-4 h-4" /> Create Yours
-                     </Link>
-                </div>
-            </div>
+            {/* Example 3: Little Things */}
+            <a 
+              href="https://myscrapbook.thestorybits.com/scrapbook/4mzvey2hojelu8vh" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group relative aspect-[3/4] bg-cover bg-center rounded-2xl border-2 border-gray-100 p-6 flex flex-col items-center justify-end text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              style={{ backgroundImage: 'url("https://i.pinimg.com/1200x/cd/99/95/cd9995acea99d40f0915211e59046c61.jpg")' }}
+            >
+              {/* Overlay for legibility */}
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
 
-            {/* Example 3: Placeholder */}
-            <div className="group relative aspect-[3/4] bg-[#FFFBEB] rounded-2xl border-2 border-gray-100 p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-               {/* Decorative Cover Elements */}
-               <div className="absolute top-0 inset-x-0 h-2 bg-black/5" />
-               <div className="absolute right-0 inset-y-0 w-2 bg-gradient-to-l from-black/5 to-transparent" />
-               <div className="absolute left-0 inset-y-0 w-3 bg-gradient-to-r from-black/10 to-transparent z-10" />
+              {/* Decorative Cover Elements */}
+              <div className="absolute top-0 inset-x-0 h-2 bg-white/10" />
+              <div className="absolute right-0 inset-y-0 w-2 bg-gradient-to-l from-white/10 to-transparent" />
+              <div className="absolute left-0 inset-y-0 w-3 bg-gradient-to-r from-black/30 to-transparent z-10" />
 
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform text-2xl border border-amber-100">
-                  🧸
-                </div>
-                
-                <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-amber-500 transition-colors">
-                  Our Anniversary
+              <div className="relative z-10 w-full">
+                <h3 className="font-bold text-white text-lg mb-1 shadow-black/50 drop-shadow-md leading-tight">
+                  Little things about me
                 </h3>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-6">
-                  1 Year Together
-                </p>
-
-                <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl z-20">
-                     <Link href="/scrapbook" className="bg-amber-400 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-lg hover:bg-amber-500 transition-colors flex items-center gap-2">
-                        <Plus className="w-4 h-4" /> Create Yours
-                     </Link>
-                </div>
-            </div>
+  
+                <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold text-white border border-white/30 group-hover:bg-white group-hover:text-rose-500 transition-all mt-4">
+                  <BookOpen className="w-3 h-3" />
+                  Open Book
+                </span>
+              </div>
+            </a>
 
           </div>
         </section>
