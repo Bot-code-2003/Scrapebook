@@ -28,6 +28,8 @@ export default function DefaultFlip({
           height: PAGE_HEIGHT,
           transformStyle: 'preserve-3d',
           WebkitTransformStyle: 'preserve-3d',
+          perspective: '2000px',
+          WebkitPerspective: '2000px',
         }}
       >
         {/* FLIPPING STACK */}
@@ -35,15 +37,31 @@ export default function DefaultFlip({
            // Logic: Pages with index < currentSheetIndex are flipped (-180deg)
            const isFlipped = index < currentSheetIndex;
            
+           // Is this the page currently being interacted with?
+           const isCurrentPage = index === currentSheetIndex;
+           const isPreviousPage = index === currentSheetIndex - 1;
+           const isActiveFlip = isCurrentPage || isPreviousPage;
+           
            // Z-Index Logic:
-           // Right Stack (Unflipped): 0 is Top, 1 is under. (Descending z-index)
-           // Left Stack (Flipped): 0 is Bottom, 1 is Top. (Ascending z-index)
-           // We add a small offset to flipped pages to prevent z-fighting during the exact crossover
-           const zIndex = isFlipped ? index : (sheets.length - index);
+           // The currently flipping page should ALWAYS be on top
+           // Right Stack (Unflipped): Higher index = lower z (top of stack has highest z)
+           // Left Stack (Flipped): Higher index = higher z (most recently flipped on top)
+           let zIndex;
+           if (isActiveFlip) {
+             // Active flip page gets highest z-index
+             zIndex = sheets.length + 10;
+           } else if (isFlipped) {
+             zIndex = index + 1;
+           } else {
+             zIndex = sheets.length - index;
+           }
 
            // CRITICAL: When on a cover page, completely hide ALL flipped sheets
-           // This removes the left sliver effect for front cover (1/n) and back cover (n/n)
            const shouldHideFlippedSheet = isFlipped && isCoverPage;
+
+           // Use different translateZ values to create depth separation
+           // Flipped pages sit slightly back, unflipped pages sit slightly forward
+           const zDepth = isFlipped ? -1 : 1;
 
            return (
              <div
@@ -54,21 +72,20 @@ export default function DefaultFlip({
                }}
                style={{
                  position: 'absolute',
-                 right: 0, // Anchor to the spine (center of container)
+                 right: 0,
                  width: PAGE_WIDTH,
                  height: PAGE_HEIGHT,
                  transformStyle: 'preserve-3d',
                  WebkitTransformStyle: 'preserve-3d',
                  transformOrigin: 'left center',
-                 transform: isFlipped ? 'rotateY(-180deg) translateZ(0)' : 'rotateY(0deg) translateZ(0)',
+                 transform: isFlipped 
+                   ? `rotateY(-180deg) translateZ(${zDepth}px)` 
+                   : `rotateY(0deg) translateZ(${zDepth}px)`,
                  transition: 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1)',
                  zIndex: zIndex,
                  cursor: 'pointer',
-                 // Fade out flipped sheets on cover pages
                  opacity: shouldHideFlippedSheet ? 0 : 1,
                  pointerEvents: shouldHideFlippedSheet ? 'none' : 'auto',
-                 // GPU optimization
-                 contain: 'strict',
                }}
                className="group"
              >
@@ -81,7 +98,7 @@ export default function DefaultFlip({
                    inset: 0,
                    backfaceVisibility: 'hidden',
                    WebkitBackfaceVisibility: 'hidden',
-                   transform: 'rotateY(0deg) translateZ(1px)',
+                   transform: 'rotateY(0deg) translateZ(2px)',
                    backgroundColor: bgColor || '#FFFDF5',
                  }}
                  // Matching Edit Mode Borders and visual style
@@ -91,12 +108,6 @@ export default function DefaultFlip({
                  
                  {/* Spine Shadow / Gradient for depth */}
                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
-                 
-                 {/* Lighting effect during flip */}
-                 <div 
-                    className="absolute inset-0 bg-black pointer-events-none transition-opacity duration-600"
-                    style={{ opacity: isFlipped ? 0.3 : 0 }} 
-                 />
                </div>
                
                {/* --------------------------- */}
@@ -108,7 +119,7 @@ export default function DefaultFlip({
                    inset: 0,
                    backfaceVisibility: 'hidden',
                    WebkitBackfaceVisibility: 'hidden',
-                   transform: 'rotateY(180deg) translateZ(1px)',
+                   transform: 'rotateY(180deg) translateZ(2px)',
                    backgroundColor: bgColor || '#FFFDF5',
                    // Hide the back face if there's no content
                    visibility: sheet.back ? 'visible' : 'hidden',
@@ -120,13 +131,6 @@ export default function DefaultFlip({
                  
                  {/* Spine Shadow for Left Page */}
                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/10 to-transparent pointer-events-none" />
-                 
-                 {/* Lighting effect: Darken when it is UNDER other pages on the left */}
-                 <div 
-                    className="absolute inset-0 bg-black pointer-events-none transition-opacity duration-600"
-                    // If this is not the top-most flipped page, darken it slightly
-                    style={{ opacity: index < currentSheetIndex - 1 ? 0.1 : 0 }} 
-                 />
                </div>
              </div>
            );
