@@ -40,6 +40,8 @@ export default function ScrapbookBuilder() {
 
   const [animId, setAnimId] = useState('default'); // options: default, slide
   const [appBackground, setAppBackground] = useState('none');
+  const [pageBgImage, setPageBgImage] = useState(null);
+  const [pageBgOpacity, setPageBgOpacity] = useState(0.8);
 
   const [isSaving, setIsSaving] = useState(false);
   const [savingStage, setSavingStage] = useState(0); // 0: Idle, 1: Binding, 2: Stitching, 3: Delivering, 4: Done
@@ -108,8 +110,6 @@ export default function ScrapbookBuilder() {
           bgColor,
           pageBorder,
           soundId,
-          title,
-          animId
       };
 
       const handler = setTimeout(() => {
@@ -118,7 +118,7 @@ export default function ScrapbookBuilder() {
       }, 1000); // Debounce 1s
 
       return () => clearTimeout(handler);
-  }, [pages, bgPattern, bgColor, pageBorder, soundId, title, animId, isInitialized, user]);
+  }, [pages, bgPattern, bgColor, pageBorder, soundId, title, animId, isInitialized, user, pageBgImage, pageBgOpacity]);
 
   const handleContinueDraft = () => {
     if (draftData) {
@@ -128,12 +128,11 @@ export default function ScrapbookBuilder() {
         setPageBorder(draftData.pageBorder || pageBorder);
         setSoundId(draftData.soundId || soundId);
         setTitle(draftData.title || title);
-        setAnimId(draftData.animId || animId);
-
-        // If we migrated a guest draft, clear it so it doesn't persist
         if (draftData.source === 'guest') {
             localStorage.removeItem('scrapbook_draft_guest');
         }
+        setPageBgImage(draftData.pageBgImage || null);
+        setPageBgOpacity(draftData.pageBgOpacity !== undefined ? draftData.pageBgOpacity : 0.8);
     }
     setShowDraftModal(false);
     setIsInitialized(true); 
@@ -226,7 +225,7 @@ export default function ScrapbookBuilder() {
     if (!user) {
         // Force save draft before redirecting to login
         const currentData = {
-           pages, bgPattern, bgColor, pageBorder, soundId, title, animId
+           pages, bgPattern, bgColor, pageBorder, soundId, title, animId, pageBgImage, pageBgOpacity
         };
         localStorage.setItem('scrapbook_draft', JSON.stringify(currentData));
         router.push('/login?redirect=/scrapbook');
@@ -314,7 +313,7 @@ export default function ScrapbookBuilder() {
       const res = await fetch('/api/scrapbook/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pages: processedPages, bgPattern, bgColor, pageBorder, title, soundId, animId, appBackground }),
+        body: JSON.stringify({ pages: processedPages, bgPattern, bgColor, pageBorder, title, soundId, animId, appBackground, pageBgImage, pageBgOpacity }),
       });
       const data = await res.json();
       
@@ -479,7 +478,7 @@ export default function ScrapbookBuilder() {
                 </div>
 
                 <button 
-                    onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId }, () => {}, 'Page Theme')}
+                    onClick={() => openDrawer('THEME', { bgPattern, bgColor, soundId, pageBgImage, pageBgOpacity }, () => {}, 'Page Theme')}
                     className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-3 sm:px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition-all hover:shadow-sm"
                 >
                     <Palette className="w-4 h-4" />
@@ -557,7 +556,16 @@ export default function ScrapbookBuilder() {
 
           <div className={`${isPreview ? 'w-full h-full flex items-center justify-center scale-100 sm:scale-90' : ''} transition-transform duration-500`}>
               {isPreview ? (
-                <BookPreview pages={pages} bgPattern={bgPattern} bgColor={bgColor} pageBorder={pageBorder} soundId={soundId} animId={animId} />
+                <BookPreview 
+                  pages={pages} 
+                  bgPattern={bgPattern} 
+                  bgColor={bgColor} 
+                  pageBorder={pageBorder} 
+                  soundId={soundId} 
+                  animId={animId} 
+                  pageBgImage={pageBgImage}
+                  pageBgOpacity={pageBgOpacity}
+                />
               ) : (
                 <BookLayout 
                     pages={pages} 
@@ -568,6 +576,8 @@ export default function ScrapbookBuilder() {
                     bgPattern={bgPattern} 
                     bgColor={bgColor}
                     pageBorder={pageBorder}
+                    pageBgImage={pageBgImage}
+                    pageBgOpacity={pageBgOpacity}
                     onOpenDrawer={openDrawer}
                 />
               )}
@@ -617,6 +627,10 @@ export default function ScrapbookBuilder() {
                    borderOptions={BORDER_OPTIONS}
                    soundOptions={SOUND_OPTIONS}
                    animOptions={ANIM_OPTIONS}
+                   pageBgImage={pageBgImage}
+                   setPageBgImage={setPageBgImage}
+                   pageBgOpacity={pageBgOpacity}
+                   setPageBgOpacity={setPageBgOpacity}
                    onClose={closeDrawer}
               />
           )}

@@ -161,6 +161,8 @@ export default function ScrapbookViewer({ scrapbook }) {
             soundId={scrapbook.soundId}
             animId={scrapbook.animId}
             bookStyle={scrapbook.bookStyle}
+            pageBgImage={scrapbook.pageBgImage}
+            pageBgOpacity={scrapbook.pageBgOpacity}
             showControls={false}
         />
       </div>

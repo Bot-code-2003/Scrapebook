@@ -61,6 +61,8 @@ export default async function ViewScrapbook({ params }) {
       bookStyle: scrapbook.bookStyle || 'classic',
       title: scrapbook.title || 'Untitled Scrapbook',
       appBackground: scrapbook.appBackground || 'none',
+      pageBgImage: scrapbook.pageBgImage || null,
+      pageBgOpacity: scrapbook.pageBgOpacity !== undefined ? scrapbook.pageBgOpacity : 0.8,
     }));
 
     return <ScrapbookViewer scrapbook={serializedData} />;

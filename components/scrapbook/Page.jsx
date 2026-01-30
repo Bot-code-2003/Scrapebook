@@ -8,7 +8,7 @@ import CoverElement from './CoverElement';
 import GiftElement from './GiftElement';
 import Sticker from './Sticker';
 
-export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
+export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, readOnly, bgPattern, bgColor, pageBorder, pageBgImage, pageBgOpacity, onOpenDrawer }) {
   // data: { id, type, content }
   const [showSelector, setShowSelector] = useState(false);
 
@@ -101,6 +101,17 @@ export default function Page({ data, onUpdate, onUpdateStickers, side, isCover, 
         {/* Background Texture */}
         {!isCover && bgPattern !== 'plain' && (
             <div className="absolute inset-0 opacity-40 pointer-events-none" style={getBgStyle()}></div>
+        )}
+
+        {/* Custom Page Background */}
+        {!isCover && pageBgImage && (
+             <div 
+                className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
+                style={{ 
+                    backgroundImage: `url("${pageBgImage}")`, 
+                    opacity: pageBgOpacity !== undefined ? pageBgOpacity : 0.8
+                }}
+            />
         )}
 
         {/* Page Border Overlay */}

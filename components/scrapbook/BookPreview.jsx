@@ -36,7 +36,7 @@ const BOOK_STYLES = {
   },
 };
 
-export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, soundId, animId, bookStyle = 'classic', defaultPage = 0, showControls = true }) {
+export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, soundId, animId, bookStyle = 'classic', defaultPage = 0, showControls = true, pageBgImage, pageBgOpacity }) {
 
   
   const styleConfig = BOOK_STYLES[bookStyle] || BOOK_STYLES.classic;
@@ -153,6 +153,8 @@ export default function BookPreview({ pages, bgPattern, bgColor, pageBorder, sou
         bgPattern={bgPattern}
         bgColor={bgColor}
         pageBorder={pageBorder}
+        pageBgImage={pageBgImage}
+        pageBgOpacity={pageBgOpacity}
       />
     );
   };

@@ -18,7 +18,7 @@ const EDITOR_HEIGHT_DESKTOP = 504;
 const SCALE_MOBILE = EDITOR_WIDTH_MOBILE / REFERENCE_WIDTH; // 0.56
 const SCALE_DESKTOP = EDITOR_WIDTH_DESKTOP / REFERENCE_WIDTH; // 0.72
 
-export default function BookLayout({ pages, onUpdatePage, onStickerUpdate, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, onOpenDrawer }) {
+export default function BookLayout({ pages, onUpdatePage, onStickerUpdate, onRemovePair, readOnly, bgPattern, bgColor, pageBorder, pageBgImage, pageBgOpacity, onOpenDrawer }) {
   
   // ============================================
   // EDIT MODE: Display pages as vertical pairs (spreads)
@@ -80,6 +80,8 @@ export default function BookLayout({ pages, onUpdatePage, onStickerUpdate, onRem
                             bgPattern={bgPattern}
                             bgColor={bgColor}
                             pageBorder={pageBorder}
+                            pageBgImage={pageBgImage}
+                            pageBgOpacity={pageBgOpacity}
                             onOpenDrawer={onOpenDrawer}
                         />
                         <div className="absolute bottom-3 left-4 text-[10px] text-gray-400 font-medium tracking-wide">
@@ -113,6 +115,8 @@ export default function BookLayout({ pages, onUpdatePage, onStickerUpdate, onRem
                                 bgPattern={bgPattern}
                                 bgColor={bgColor}
                                 pageBorder={pageBorder}
+                                pageBgImage={pageBgImage}
+                                pageBgOpacity={pageBgOpacity}
                                 onOpenDrawer={onOpenDrawer}
                             />
                             <div className="absolute bottom-3 right-4 text-[10px] text-gray-400 font-medium tracking-wide">
